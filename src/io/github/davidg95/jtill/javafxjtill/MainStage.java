@@ -6,20 +6,25 @@
 package io.github.davidg95.jtill.javafxjtill;
 
 import io.github.davidg95.JTill.jtill.DataConnectInterface;
+import io.github.davidg95.JTill.jtill.LoginException;
 import io.github.davidg95.JTill.jtill.Product;
 import io.github.davidg95.JTill.jtill.ProductNotFoundException;
 import io.github.davidg95.JTill.jtill.Sale;
 import io.github.davidg95.JTill.jtill.SaleItem;
+import io.github.davidg95.JTill.jtill.Screen;
+import io.github.davidg95.JTill.jtill.ScreenNotFoundException;
 import io.github.davidg95.JTill.jtill.Staff;
 import io.github.davidg95.JTill.jtill.StaffNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -27,8 +32,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -40,11 +50,13 @@ import javafx.stage.Stage;
  */
 public class MainStage extends Stage {
 
-    private final Staff staff;
+    private Staff staff;
     private final DataConnectInterface dc;
 
     private ListView<SaleItem> itemsInSale;
     private ObservableList<SaleItem> items;
+
+    private final String stylesheet;
 
     private Sale sale;
 
@@ -52,9 +64,19 @@ public class MainStage extends Stage {
 
     private BigDecimal amountDue;
 
+    //Login Scene Components
+    private Scene loginScene;
+    private GridPane loginPane;
+    private Button exit;
+    private Button login;
+
     //Main Scene Components
     private Scene mainScene;
     private GridPane mainPane;
+    private Pane buttonPane;
+    private List<FlowPane> buttonPanes;
+    private FlowPane screenPane;
+    private ToggleGroup screenButtonGroup;
     private Label staffLabel;
     private Label time;
     private Text total;
@@ -73,30 +95,44 @@ public class MainStage extends Stage {
     private Button exactValue;
     private Button card;
 
-    public MainStage(Staff s, DataConnectInterface dc) {
+    public MainStage(DataConnectInterface dc) {
         super();
-        this.staff = s;
         this.dc = dc;
         this.sale = new Sale();
         setTitle("JTill Terminal");
+        stylesheet = MainStage.class.getResource("style.css").toExternalForm();
         init();
         initPayment();
-
+        initLogin();
+        mainScene.getStylesheets().add(stylesheet);
+        paymentScene.getStylesheets().add(stylesheet);
+        loginScene.getStylesheets().add(stylesheet);
+        setScene(loginScene);
+        show();
     }
 
     private void init() {
         try {
             mainPane = new GridPane();
-            staffLabel = new Label("Staff: " + staff.getName());
+            staffLabel = new Label("Staff: ");
             staffLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-            mainPane.add(staffLabel, 1, 1, 2, 1);
+            mainPane.add(staffLabel, 1, 0, 2, 1);
             time = new Label("00:00");
             time.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
             ClockThread.setClockLabel(time);
-            mainPane.add(time, 6, 1);
-            //scene.getStylesheets().add(JavaFXJTill.class.getResource("login.css").toExternalForm());
-            List<io.github.davidg95.JTill.jtill.Button> buttons = dc.getAllButtons();
-            addButtons(buttons, mainPane);
+            time.setAlignment(Pos.CENTER_RIGHT);
+            mainPane.add(time, 6, 0, 2, 1);
+            List<Screen> screens = dc.getAllScreens();
+            buttonPanes = new ArrayList<>();
+            buttonPane = new StackPane();
+            screenPane = new FlowPane();
+            screenPane.setPrefWrapLength(750);
+            screenButtonGroup = new ToggleGroup();
+            addScreens(screens, screenPane);
+            mainPane.add(buttonPane, 0, 1, 5, 10);
+            mainPane.add(screenPane, 0, 11, 5, 2);
+            buttonPane.getChildren().clear();
+            buttonPane.getChildren().add(buttonPanes.get(0));
             itemsInSale = new ListView<>();
             itemsInSale.setMinSize(240, 300);
             itemsInSale.setMaxSize(240, 300);
@@ -141,8 +177,10 @@ public class MainStage extends Stage {
             });
             mainPane.add(barcode, 6, 10, 2, 1);
             GridPane numbers = createNumbersPane();
+            numbers.setPadding(new Insets(20, 0, 20, 0));
             mainPane.add(numbers, 6, 11, 2, 3);
             payment = new Button("Payment");
+            payment.setId("payment");
             payment.setMinSize(240, 100);
             payment.setMaxSize(240, 100);
             payment.setOnAction((ActionEvent event) -> {
@@ -150,9 +188,6 @@ public class MainStage extends Stage {
             });
             mainPane.add(payment, 6, 14, 2, 2);
             mainScene = new Scene(mainPane, 1024, 768);
-            mainScene.getStylesheets().add((MainStage.class.getResource("style.css").toExternalForm()));
-            setScene(mainScene);
-            show();
         } catch (IOException | SQLException ex) {
             showErrorAlert(ex);
         }
@@ -395,9 +430,44 @@ public class MainStage extends Stage {
         back.setOnAction((ActionEvent event) -> {
             setScene(mainScene);
         });
-        paymentPane.add(back, 6, 4);
+        paymentPane.add(hBack, 6, 4);
 
         paymentScene = new Scene(paymentPane, 1024, 768);
+    }
+
+    private void initLogin() {
+        loginPane = new GridPane();
+
+        exit = new Button("Exit JTill");
+        exit.setMinSize(100, 100);
+        exit.setMaxSize(100, 100);
+        HBox hExit = new HBox(0);
+        hExit.getChildren().add(exit);
+        exit.setOnAction((ActionEvent event) -> {
+            dc.close();
+            System.exit(0);
+        });
+        loginPane.add(hExit, 0, 2);
+
+        login = new Button("Login");
+        login.setMinSize(100, 100);
+        login.setMaxSize(100, 100);
+        HBox hLogin = new HBox(0);
+        hLogin.getChildren().add(login);
+        login.setOnAction((ActionEvent event) -> {
+            int val = NumberEntry.showNumberEntryDialog(this, "Enter Logon ID");
+            try {
+                Staff s = dc.tillLogin(val);
+                this.staff = s;
+                staffLabel.setText("Staff: " + s.getName());
+                setScene(mainScene);
+            } catch (IOException | LoginException | SQLException ex) {
+                showErrorAlert(ex);
+            }
+        });
+        loginPane.add(hLogin, 1, 2);
+
+        loginScene = new Scene(loginPane, 1024, 768);
     }
 
     private void addMoney(BigDecimal val) {
@@ -497,9 +567,50 @@ public class MainStage extends Stage {
         amountDue = sale.getTotal();
     }
 
-    private void addButtons(List<io.github.davidg95.JTill.jtill.Button> buttons, GridPane grid) {
-        int x = 1;
-        int y = 2;
+    private void addScreens(List<Screen> screens, FlowPane pane) {
+        final int WIDTH = 180;
+        final int HEIGHT = 50;
+
+        int x = 0;
+        int y = 0;
+
+        for (Screen s : screens) {
+            FlowPane grid = new FlowPane();
+            grid.setPrefWrapLength(750);
+            ToggleButton button = new ToggleButton(s.getName());
+            button.setToggleGroup(screenButtonGroup);
+            button.setId("screenButton");
+            button.setMaxSize(WIDTH, HEIGHT);
+            button.setMinSize(WIDTH, HEIGHT);
+            HBox hButton = new HBox(0);
+            hButton.getChildren().add(button);
+            pane.getChildren().add(hButton);
+            setScreenButtons(s, grid);
+            buttonPanes.add(grid);
+            button.setOnAction((ActionEvent event) -> {
+                buttonPane.getChildren().clear();
+                buttonPane.getChildren().add(grid);
+            });
+            x++;
+            if (x == 5) {
+                x = 1;
+                y++;
+            }
+        }
+    }
+
+    private void setScreenButtons(Screen s, FlowPane pane) {
+        try {
+            List<io.github.davidg95.JTill.jtill.Button> buttons = dc.getButtonsOnScreen(s);
+            addButtons(buttons, pane);
+        } catch (IOException | SQLException | ScreenNotFoundException ex) {
+            showErrorAlert(ex);
+        }
+    }
+
+    private void addButtons(List<io.github.davidg95.JTill.jtill.Button> buttons, FlowPane grid) {
+        int x = 0;
+        int y = 0;
         for (io.github.davidg95.JTill.jtill.Button b : buttons) {
             Button button = new Button(b.getName());
             button.setId("productButton");
@@ -508,11 +619,11 @@ public class MainStage extends Stage {
             HBox hbBtn = new HBox(10);
             hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
             hbBtn.getChildren().add(button);
-            grid.add(hbBtn, x, y);
+            grid.getChildren().add(hbBtn);
 
             x++;
-            if (x == 6) {
-                x = 1;
+            if (x == 5) {
+                x = 0;
                 y++;
             }
 

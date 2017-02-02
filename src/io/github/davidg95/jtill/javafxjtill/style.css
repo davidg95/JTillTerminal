@@ -14,10 +14,10 @@ and open the template in the editor.
 }
 
 .label {
-    -fx-font-size: 12px;
+/*    -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-text-fill: #333333;
-    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );*/
 }
 
 .button{
@@ -30,4 +30,28 @@ and open the template in the editor.
 
 .button:hover{
     -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}
+
+.togglebutton{
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+.togglebutton:hover{
+    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}
+
+#payment{
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(#0000AA, #0000FF);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+#payment:hover{
+    -fx-background-color: linear-gradient(#0000FF, #0000AA);
 }

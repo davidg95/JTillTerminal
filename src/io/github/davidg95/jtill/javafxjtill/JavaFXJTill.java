@@ -5,7 +5,6 @@
  */
 package io.github.davidg95.jtill.javafxjtill;
 
-import io.github.davidg95.jtill.javafxjtill.MainStage;
 import io.github.davidg95.JTill.jtill.*;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -41,85 +40,86 @@ public class JavaFXJTill extends Application {
     @Override
     public void start(Stage primaryStage) {
         sc = new ServerConnection("JavaFX");
-        primaryStage.setTitle("Login to JTill");
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
-
-        Text scenetitle = new Text("Welcome to JTill");
-        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-        grid.add(scenetitle, 0, 0, 2, 1);
-
-        Label userName = new Label("User Name:");
-        grid.add(userName, 0, 1);
-
-        TextField username = new TextField();
-        grid.add(username, 1, 1);
-
-        Label pw = new Label("Password:");
-        grid.add(pw, 0, 2);
-
-        PasswordField pwbox = new PasswordField();
-        grid.add(pwbox, 1, 2);
-
-        Button login = new Button("Sign in");
-        HBox hbBtn = new HBox(10);
-        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(login);
-        grid.add(hbBtn, 1, 4);
-
-        final Text action = new Text();
-        grid.add(action, 1, 6);
-        action.setId("action");
-
-        pwbox.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                login.fire();
-            }
-
-        });
-
-        login.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                String user = username.getText();
-                String pass = pwbox.getText();
-                try {
-                    Staff s = sc.login(user, pass);
-                    action.setFill(Color.FIREBRICK);
-                    action.setText(s.getName() + " has signed in");
-//                    Alert alert = new Alert(AlertType.CONFIRMATION);
-//                    alert.setTitle("Login Successful");
-//                    alert.setHeaderText(s.getName());
-//                    alert.setContentText("You have logged into JTill");
-//                    alert.showAndWait();
-                    MainStage stage = new MainStage(s, sc);
-                    stage.show();
-                    primaryStage.hide();
-                } catch (IOException | LoginException | SQLException ex) {
-                    action.setFill(Color.FIREBRICK);
-                    action.setText(ex.getMessage());
-                }
-            }
-        });
+//        primaryStage.setTitle("Login to JTill");
+//        GridPane grid = new GridPane();
+//        grid.setAlignment(Pos.CENTER);
+//        grid.setHgap(10);
+//        grid.setVgap(10);
+//        grid.setPadding(new Insets(25, 25, 25, 25));
+//
+//        Text scenetitle = new Text("Welcome to JTill");
+//        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+//        grid.add(scenetitle, 0, 0, 2, 1);
+//
+//        Label userName = new Label("User Name:");
+//        grid.add(userName, 0, 1);
+//
+//        TextField username = new TextField();
+//        grid.add(username, 1, 1);
+//
+//        Label pw = new Label("Password:");
+//        grid.add(pw, 0, 2);
+//
+//        PasswordField pwbox = new PasswordField();
+//        grid.add(pwbox, 1, 2);
+//
+//        Button login = new Button("Sign in");
+//        HBox hbBtn = new HBox(10);
+//        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+//        hbBtn.getChildren().add(login);
+//        grid.add(hbBtn, 1, 4);
+//
+//        final Text action = new Text();
+//        grid.add(action, 1, 6);
+//        action.setId("action");
+//
+//        pwbox.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                login.fire();
+//            }
+//
+//        });
+//
+//        login.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent e) {
+//                String user = username.getText();
+//                String pass = pwbox.getText();
+//                try {
+//                    Staff s = sc.login(user, pass);
+//                    action.setFill(Color.FIREBRICK);
+//                    action.setText(s.getName() + " has signed in");
+////                    Alert alert = new Alert(AlertType.CONFIRMATION);
+////                    alert.setTitle("Login Successful");
+////                    alert.setHeaderText(s.getName());
+////                    alert.setContentText("You have logged into JTill");
+////                    alert.showAndWait();
+//                    MainStage stage = new MainStage(s, sc);
+//                    stage.show();
+//                    primaryStage.hide();
+//                } catch (IOException | LoginException | SQLException ex) {
+//                    action.setFill(Color.FIREBRICK);
+//                    action.setText(ex.getMessage());
+//                }
+//            }
+//        });
 
         try {
             sc.connect("127.0.0.1", 600);
+            MainStage mainStage = new MainStage(sc);
+            mainStage.show();
         } catch (IOException ex) {
-            action.setFill(Color.FIREBRICK);
-            action.setText("Error connecting to JTill");
-            username.setDisable(true);
-            pwbox.setDisable(true);
-            login.setDisable(true);
+//            action.setFill(Color.FIREBRICK);
+//            action.setText("Error connecting to JTill");
+//            username.setDisable(true);
+//            pwbox.setDisable(true);
+//            login.setDisable(true);
         }
 
-        Scene scene = new Scene(grid, 300, 275);
-        primaryStage.setScene(scene);
-        //scene.getStylesheets().add(JavaFXJTill.class.getResource("login.css").toExternalForm());
-        primaryStage.show();
+//        Scene scene = new Scene(grid, 300, 275);
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
     }
 
     private void addButtons(List<io.github.davidg95.JTill.jtill.Button> buttons, GridPane grid) {
