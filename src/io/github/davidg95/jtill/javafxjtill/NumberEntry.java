@@ -203,6 +203,7 @@ public class NumberEntry extends Stage {
         grid.add(hEnter, 4, 4, 1, 2);
 
         enter.setOnAction((ActionEvent event) -> {
+            if(!enter.getText().equals(""))
             onEnter(number);
         });
 

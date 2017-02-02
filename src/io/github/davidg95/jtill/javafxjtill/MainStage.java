@@ -34,6 +34,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -66,7 +67,7 @@ public class MainStage extends Stage {
 
     //Login Scene Components
     private Scene loginScene;
-    private GridPane loginPane;
+    private BorderPane loginPane;
     private Button exit;
     private Button login;
 
@@ -139,14 +140,6 @@ public class MainStage extends Stage {
             items = FXCollections.observableArrayList();
             updateList();
             mainPane.add(itemsInSale, 6, 2, 2, 6);
-            logoff = new Button("Logoff");
-            logoff.setMaxSize(100, 100);
-            logoff.setMinSize(100, 100);
-            logoff.setOnAction((ActionEvent event) -> {
-                logoff();
-            });
-            logoff.setStyle("-fx-base: #0000FF;");
-            //pane.add(logoff, 7, 2, 1, 2);
             total = new Text("Total: £0.00");
             total.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
             mainPane.add(total, 6, 8, 2, 1);
@@ -187,6 +180,14 @@ public class MainStage extends Stage {
                 setScene(paymentScene);
             });
             mainPane.add(payment, 6, 14, 2, 2);
+            logoff = new Button("Logoff");
+            logoff.setMaxSize(240, 100);
+            logoff.setMinSize(240, 100);
+            logoff.setOnAction((ActionEvent event) -> {
+                logoff();
+            });
+            logoff.setStyle("-fx-base: #0000FF;");
+            mainPane.add(logoff, 4, 14, 2, 2);
             mainScene = new Scene(mainPane, 1024, 768);
         } catch (IOException | SQLException ex) {
             showErrorAlert(ex);
@@ -436,7 +437,17 @@ public class MainStage extends Stage {
     }
 
     private void initLogin() {
-        loginPane = new GridPane();
+        loginPane = new BorderPane();
+
+        FlowPane staffLayout = new FlowPane();
+        staffLayout.setPadding(new Insets(150, 152, 0, 152));
+        staffLayout.setHgap(40);
+        staffLayout.setVgap(40);
+        staffLayout.setPrefWrapLength(480);
+
+        FlowPane buttons = new FlowPane();
+        buttons.setPadding(new Insets(20));
+        buttons.setVgap(20);
 
         exit = new Button("Exit JTill");
         exit.setMinSize(100, 100);
@@ -447,7 +458,7 @@ public class MainStage extends Stage {
             dc.close();
             System.exit(0);
         });
-        loginPane.add(hExit, 0, 2);
+        buttons.getChildren().add(exit);
 
         login = new Button("Login");
         login.setMinSize(100, 100);
@@ -457,15 +468,30 @@ public class MainStage extends Stage {
         login.setOnAction((ActionEvent event) -> {
             int val = NumberEntry.showNumberEntryDialog(this, "Enter Logon ID");
             try {
-                Staff s = dc.tillLogin(val);
-                this.staff = s;
-                staffLabel.setText("Staff: " + s.getName());
-                setScene(mainScene);
-            } catch (IOException | LoginException | SQLException ex) {
+                Staff s = dc.getStaff(val);
+                Button button = new Button(s.getName());
+                button.setMinSize(150, 150);
+                button.setMaxSize(150, 150);
+                button.setOnAction((ActionEvent evt) -> {
+                    try {
+                        this.staff = s;
+                        dc.tillLogin(s.getId());
+                        staffLabel.setText("Staff: " + s.getName());
+                        setScene(mainScene);
+                    } catch (IOException | LoginException | SQLException ex) {
+                        showErrorAlert(ex);
+                    }
+                });
+                staffLayout.getChildren().add(button);
+            } catch (StaffNotFoundException | IOException | SQLException ex) {
                 showErrorAlert(ex);
             }
         });
-        loginPane.add(hLogin, 1, 2);
+        buttons.getChildren().add(login);
+
+        loginPane.setBottom(buttons);
+
+        loginPane.setCenter(staffLayout);
 
         loginScene = new Scene(loginPane, 1024, 768);
     }
@@ -506,8 +532,9 @@ public class MainStage extends Stage {
 
     private void logoff() {
         try {
-            dc.logout(staff.getId());
-            close();
+            dc.tillLogout(staff.getId());
+            staff = null;
+            setScene(loginScene);
         } catch (IOException | StaffNotFoundException ex) {
             showErrorAlert(ex);
         }
