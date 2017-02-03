@@ -203,8 +203,9 @@ public class NumberEntry extends Stage {
         grid.add(hEnter, 4, 4, 1, 2);
 
         enter.setOnAction((ActionEvent event) -> {
-            if(!enter.getText().equals(""))
-            onEnter(number);
+            if (!enter.getText().equals("")) {
+                onEnter(number);
+            }
         });
 
         Scene scene = new Scene(grid, 400, 450);
@@ -221,7 +222,9 @@ public class NumberEntry extends Stage {
     }
 
     private void onEnter(TextField number) {
-        value = Integer.parseInt(number.getText());
+        if (!number.getText().equals("")) {
+            value = Integer.parseInt(number.getText());
+        }
         hide();
     }
 }

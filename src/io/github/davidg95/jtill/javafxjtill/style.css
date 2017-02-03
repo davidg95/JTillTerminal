@@ -9,8 +9,8 @@ and open the template in the editor.
 */
 
 .root{
-    -fx-background-image: url("background.bmp");
-    -fx-background-size: cover;
+/*    -fx-background-image: url("background.bmp");
+    -fx-background-size: cover;*/
 }
 
 .label {
@@ -28,7 +28,11 @@ and open the template in the editor.
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 
-.button:hover{
+/*.button:hover{
+    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}*/
+
+.button:pressed{
     -fx-background-color: linear-gradient(#2A5058, #61a2b1);
 }
 

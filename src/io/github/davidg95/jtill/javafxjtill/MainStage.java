@@ -85,6 +85,7 @@ public class MainStage extends Stage {
     private Button quantity;
     private TextField barcode;
     private Button payment;
+    private Button lookup;
 
     //Payment Scene Components
     private Scene paymentScene;
@@ -135,11 +136,11 @@ public class MainStage extends Stage {
             buttonPane.getChildren().clear();
             buttonPane.getChildren().add(buttonPanes.get(0));
             itemsInSale = new ListView<>();
-            itemsInSale.setMinSize(240, 300);
-            itemsInSale.setMaxSize(240, 300);
+            itemsInSale.setMinSize(240, 250);
+            itemsInSale.setMaxSize(240, 250);
             items = FXCollections.observableArrayList();
             updateList();
-            mainPane.add(itemsInSale, 6, 2, 2, 6);
+            mainPane.add(itemsInSale, 6, 2, 2, 5);
             total = new Text("Total: £0.00");
             total.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
             mainPane.add(total, 6, 8, 2, 1);
@@ -181,13 +182,28 @@ public class MainStage extends Stage {
             });
             mainPane.add(payment, 6, 14, 2, 2);
             logoff = new Button("Logoff");
-            logoff.setMaxSize(240, 100);
-            logoff.setMinSize(240, 100);
+            logoff.setMaxSize(100, 100);
+            logoff.setMinSize(100, 100);
             logoff.setOnAction((ActionEvent event) -> {
                 logoff();
             });
             logoff.setStyle("-fx-base: #0000FF;");
-            mainPane.add(logoff, 4, 14, 2, 2);
+            lookup = new Button("Lookup");
+            lookup.setMaxSize(100, 100);
+            lookup.setMinSize(100, 100);
+            lookup.setOnAction((ActionEvent event) -> {
+                String terms = EntryDialog.show(this, "Product Lookup", "Enter search terms");
+                try {
+                    List<Product> products = dc.productLookup(terms);
+                    if (products.size() == 1) {
+                        addItemToSale(products.get(0));
+                    }
+                } catch (IOException | SQLException ex) {
+                    showErrorAlert(ex);
+                }
+            });
+            mainPane.add(logoff, 1, 14, 1, 2);
+            mainPane.add(lookup, 3, 14, 1, 2);
             mainScene = new Scene(mainPane, 1024, 768);
         } catch (IOException | SQLException ex) {
             showErrorAlert(ex);
@@ -337,8 +353,10 @@ public class MainStage extends Stage {
         grid.add(hEnter, 3, 4);
 
         enter.setOnAction((ActionEvent event) -> {
-            getProductByBarcode(barcode.getText());
-            barcode.setText("");
+            if (!barcode.getText().equals("")) {
+                getProductByBarcode(barcode.getText());
+                barcode.setText("");
+            }
         });
 
         return grid;
@@ -467,6 +485,9 @@ public class MainStage extends Stage {
         hLogin.getChildren().add(login);
         login.setOnAction((ActionEvent event) -> {
             int val = NumberEntry.showNumberEntryDialog(this, "Enter Logon ID");
+            if (val == 0) {
+                return;
+            }
             try {
                 Staff s = dc.getStaff(val);
                 Button button = new Button(s.getName());
@@ -493,14 +514,21 @@ public class MainStage extends Stage {
 
         loginPane.setCenter(staffLayout);
 
+//        try {
+//            Image image = dc.getFXImage();
+//            ImageView background = new ImageView(image);
+//            loginPane.getChildren().add(background);
+//        } catch (IOException ex) {
+//            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         loginScene = new Scene(loginPane, 1024, 768);
     }
 
     private void addMoney(BigDecimal val) {
         amountDue = amountDue.subtract(val);
-        total.setText("Total Due: £" + amountDue.toString());
+        total.setText("Total: £" + amountDue.toString());
         if (amountDue.compareTo(BigDecimal.ZERO) < 0) {
-            //showAlert("Change", "Change Due: £" + amountDue.toString());
+            MessageDialog.showMessage(this, "Change", "Change Due: £" + amountDue.abs().toString());
             completeCurrentSale();
         } else if (amountDue.compareTo(BigDecimal.ZERO) == 0) {
             completeCurrentSale();
@@ -527,12 +555,12 @@ public class MainStage extends Stage {
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setTitle(title);
         alert.setContentText(message);
-        alert.show();
+        alert.showAndWait();
     }
 
     private void logoff() {
         try {
-            dc.tillLogout(staff.getId());
+            dc.tillLogout(staff);
             staff = null;
             setScene(loginScene);
         } catch (IOException | StaffNotFoundException ex) {
