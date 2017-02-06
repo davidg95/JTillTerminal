@@ -83,6 +83,7 @@ public class MainStage extends Stage {
     private Text total;
     private Button logoff;
     private Button quantity;
+    private Button voidSelected;
     private TextField barcode;
     private Button payment;
     private Button lookup;
@@ -102,6 +103,7 @@ public class MainStage extends Stage {
     private Label paymentTotal;
     private ListView<PaymentItem> paymentsList;
     private ObservableList<PaymentItem> obPayments;
+    private Button discount;
 
     public MainStage(DataConnectInterface dc) {
         super();
@@ -168,6 +170,21 @@ public class MainStage extends Stage {
                     barcode.setText("");
                 }
                 quantity.setText("Quantity: " + itemQuantity);
+            });
+
+            voidSelected = new Button("Void Selected");
+            voidSelected.setMinSize(120, 50);
+            voidSelected.setMaxSize(120, 50);
+            HBox hVoid = new HBox(0);
+            hVoid.getChildren().add(voidSelected);
+            voidSelected.setOnAction((ActionEvent event) -> {
+                if (itemsInSale.getSelectionModel().getSelectedIndex() > -1) {
+                    if (YesNoDialog.showDialog(this, "Void Item", "Are you sure you want to void the selected item?") == YesNoDialog.Result.YES) {
+                        sale.voidItem(itemsInSale.getSelectionModel().getSelectedItem());
+                        items.remove(itemsInSale.getSelectionModel().getSelectedItem());
+                        setTotalLabel();
+                    }
+                }
             });
 
             barcode = new TextField();
@@ -246,6 +263,7 @@ public class MainStage extends Stage {
             mainPane.add(itemsInSale, 6, 2, 2, 5);
             mainPane.add(total, 6, 8, 2, 1);
             mainPane.add(hQuantity, 6, 9);
+            mainPane.add(hVoid, 7, 9);
             mainPane.add(barcode, 6, 10, 2, 1);
             mainPane.add(numbers, 6, 11, 2, 3);
             mainPane.add(hPayment, 6, 14, 2, 2);
@@ -263,6 +281,15 @@ public class MainStage extends Stage {
         final int bWidth = 80;
         final int bHeight = 50;
         GridPane grid = new GridPane();
+
+        Button clear = new Button("clr");
+        clear.setMinSize(bWidth, bHeight);
+        clear.setMaxSize(bWidth, bHeight);
+        HBox hClear = new HBox(0);
+        hClear.getChildren().add(clear);
+        clear.setOnAction((ActionEvent event) -> {
+            barcode.setText("");
+        });
 
         Button seven = new Button("7");
         HBox hSeven = new HBox(0);
@@ -387,6 +414,7 @@ public class MainStage extends Stage {
             }
         });
 
+        grid.add(hClear, 1, 0);
         grid.add(hSeven, 1, 1);
         grid.add(hEight, 2, 1);
         grid.add(hNine, 3, 1);
@@ -550,6 +578,15 @@ public class MainStage extends Stage {
             }
         });
 
+        discount = new Button("Discounts");
+        discount.setMinSize(150, 150);
+        discount.setMaxSize(150, 150);
+        HBox hDiscount = new HBox(0);
+        hDiscount.getChildren().add(discount);
+        discount.setOnAction((ActionEvent event) -> {
+
+        });
+
         paymentPane.add(hFive, 1, 1);
         paymentPane.add(hTen, 2, 1);
         paymentPane.add(hTwenty, 3, 1);
@@ -563,6 +600,7 @@ public class MainStage extends Stage {
         paymentPane.add(hTotal, 5, 4);
         paymentPane.add(hVoid, 7, 1);
         paymentPane.add(hVoidSale, 7, 2);
+        paymentPane.add(hDiscount, 7, 3);
 
         paymentScene = new Scene(paymentPane, 1024, 768);
     }
