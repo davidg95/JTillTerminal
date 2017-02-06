@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
 /**
@@ -32,6 +33,7 @@ public class EntryDialog extends Stage {
         setTitle(title);
         initOwner(parent);
         initModality(Modality.APPLICATION_MODAL);
+        initStyle(StageStyle.UNDECORATED);
     }
 
     public static String show(Window parent, String title, String message) {
@@ -66,6 +68,8 @@ public class EntryDialog extends Stage {
         pane.add(enter, 0, 2);
 
         Scene scene = new Scene(pane, 300, 60);
+        String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
+        scene.getStylesheets().add(stylesheet);
         setScene(scene);
     }
 

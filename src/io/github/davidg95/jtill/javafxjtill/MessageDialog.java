@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
 /**
@@ -64,6 +65,8 @@ public class MessageDialog extends Stage {
         pane.add(hButton, 0, 1);
 
         Scene scene = new Scene(pane, WIDTH, 200);
+        String stylesheet = MainStage.class.getResource("dialog.css").toExternalForm();
+        scene.getStylesheets().add(stylesheet);
         setScene(scene);
     }
 }
