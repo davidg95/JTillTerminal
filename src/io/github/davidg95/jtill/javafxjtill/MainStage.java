@@ -27,7 +27,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -57,18 +56,12 @@ import javafx.stage.StageStyle;
 public class MainStage extends Stage {
 
     private Staff staff;
+    private Sale sale;
+    private int itemQuantity;
+    private BigDecimal amountDue;
     private final DataConnectInterface dc;
 
-    private ListView<SaleItem> itemsInSale;
-    private ObservableList<SaleItem> items;
-
     private final String stylesheet;
-
-    private Sale sale;
-
-    private int itemQuantity;
-
-    private BigDecimal amountDue;
 
     //Login Scene Components
     private Scene loginScene;
@@ -77,6 +70,8 @@ public class MainStage extends Stage {
     private Button login;
 
     //Main Scene Components
+    private ListView<SaleItem> itemsInSale;
+    private ObservableList<SaleItem> items;
     private Scene mainScene;
     private GridPane mainPane;
     private Pane buttonPane;
@@ -128,14 +123,15 @@ public class MainStage extends Stage {
     private void init() {
         try {
             mainPane = new GridPane();
+
             staffLabel = new Label("Staff: ");
             staffLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-            mainPane.add(staffLabel, 0, 0, 2, 1);
+
             time = new Label("00:00");
             time.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
             ClockThread.setClockLabel(time);
             time.setAlignment(Pos.CENTER_RIGHT);
-            mainPane.add(time, 6, 0, 2, 1);
+
             List<Screen> screens = dc.getAllScreens();
             buttonPanes = new ArrayList<>();
             buttonPane = new StackPane();
@@ -143,23 +139,24 @@ public class MainStage extends Stage {
             screenPane.setPrefWrapLength(750);
             screenButtonGroup = new ToggleGroup();
             addScreens(screens, screenPane);
-            mainPane.add(buttonPane, 0, 1, 5, 10);
-            mainPane.add(screenPane, 0, 11, 5, 2);
             buttonPane.getChildren().clear();
             buttonPane.getChildren().add(buttonPanes.get(0));
+
             itemsInSale = new ListView<>();
             itemsInSale.setMinSize(240, 250);
             itemsInSale.setMaxSize(240, 250);
             items = FXCollections.observableArrayList();
             updateList();
-            mainPane.add(itemsInSale, 6, 2, 2, 5);
+
             total = new Text("Total: £0.00");
             total.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-            mainPane.add(total, 6, 8, 2, 1);
+
             quantity = new Button("Quantity: 1");
             quantity.setMinSize(120, 50);
             quantity.setMaxSize(120, 50);
             itemQuantity = 1;
+            HBox hQuantity = new HBox(0);
+            hQuantity.getChildren().add(quantity);
             quantity.setOnAction((ActionEvent event) -> {
                 if (barcode.getText().equals("")) {
                     int val = NumberEntry.showNumberEntryDialog(this, "Enter Quantity");
@@ -172,32 +169,29 @@ public class MainStage extends Stage {
                 }
                 quantity.setText("Quantity: " + itemQuantity);
             });
-            mainPane.add(quantity, 6, 9);
+
             barcode = new TextField();
             barcode.setMinSize(240, 50);
             barcode.setMaxSize(240, 50);
             barcode.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
             barcode.setOnAction((ActionEvent event) -> {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        getProductByBarcode(barcode.getText());
-                        barcode.setText("");
-                    }
+                Platform.runLater(() -> {
+                    getProductByBarcode(barcode.getText());
+                    barcode.setText("");
                 });
             });
-            mainPane.add(barcode, 6, 10, 2, 1);
+
             GridPane numbers = createNumbersPane();
-            //numbers.setPadding(new Insets(20, 0, 20, 0));
-            mainPane.add(numbers, 6, 11, 2, 3);
+
             payment = new Button("Payment");
             payment.setId("payment");
             payment.setMinSize(240, 100);
             payment.setMaxSize(240, 100);
+            HBox hPayment = new HBox(0);
+            hPayment.getChildren().add(payment);
             payment.setOnAction((ActionEvent event) -> {
                 setScene(paymentScene);
             });
-            mainPane.add(payment, 6, 14, 2, 2);
 
             logoff = new Button("Logoff");
             logoff.setId("logoff");
@@ -206,38 +200,32 @@ public class MainStage extends Stage {
             HBox hLogoff = new HBox(0);
             hLogoff.getChildren().add(logoff);
             logoff.setOnAction((ActionEvent event) -> {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        logoff();
-                    }
-                });
+                Platform.runLater(this::logoff);
             });
             logoff.setStyle("-fx-base: #0000FF;");
 
             lookup = new Button("Lookup");
+            lookup.setId("lookup");
             lookup.setMaxSize(100, 100);
             lookup.setMinSize(100, 100);
             HBox hLookup = new HBox(0);
             hLookup.getChildren().add(lookup);
             lookup.setOnAction((ActionEvent event) -> {
                 String terms = EntryDialog.show(this, "Product Lookup", "Enter search terms");
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            List<Product> products = dc.productLookup(terms);
-                            if (products.size() == 1) {
-                                addItemToSale(products.get(0));
-                            }
-                        } catch (IOException | SQLException ex) {
-                            showErrorAlert(ex);
+                Platform.runLater(() -> {
+                    try {
+                        List<Product> products = dc.productLookup(terms);
+                        if (products.size() == 1) {
+                            addItemToSale(products.get(0));
                         }
+                    } catch (IOException | SQLException ex) {
+                        showErrorAlert(ex);
                     }
                 });
             });
 
             halfPrice = new Button("Half Price");
+            halfPrice.setId("halfprice");
             halfPrice.setMinSize(100, 100);
             halfPrice.setMaxSize(100, 100);
             HBox hHalfPrice = new HBox(0);
@@ -251,6 +239,16 @@ public class MainStage extends Stage {
                 }
             });
 
+            mainPane.add(staffLabel, 0, 0, 2, 1);
+            mainPane.add(time, 6, 0, 2, 1);
+            mainPane.add(buttonPane, 0, 1, 5, 10);
+            mainPane.add(screenPane, 0, 11, 5, 2);
+            mainPane.add(itemsInSale, 6, 2, 2, 5);
+            mainPane.add(total, 6, 8, 2, 1);
+            mainPane.add(hQuantity, 6, 9);
+            mainPane.add(barcode, 6, 10, 2, 1);
+            mainPane.add(numbers, 6, 11, 2, 3);
+            mainPane.add(hPayment, 6, 14, 2, 2);
             mainPane.add(hHalfPrice, 2, 14);
             mainPane.add(hLogoff, 0, 14);
             mainPane.add(hLookup, 1, 14);
@@ -270,9 +268,7 @@ public class MainStage extends Stage {
         HBox hSeven = new HBox(0);
         seven.setMaxSize(bWidth, bHeight);
         seven.setMinSize(bWidth, bHeight);
-        //hSeven.setAlignment(Pos.TOP_LEFT);
         hSeven.getChildren().add(seven);
-        grid.add(hSeven, 1, 1);
 
         seven.setOnAction((ActionEvent event) -> {
             barcode.setText(barcode.getText() + "7");
@@ -282,9 +278,7 @@ public class MainStage extends Stage {
         HBox hEight = new HBox(0);
         eight.setMaxSize(bWidth, bHeight);
         eight.setMinSize(bWidth, bHeight);
-        //hSeven.setAlignment(Pos.TOP_CENTER);
         hEight.getChildren().add(eight);
-        grid.add(hEight, 2, 1);
 
         eight.setOnAction((ActionEvent event) -> {
             barcode.setText(barcode.getText() + "8");
@@ -294,9 +288,7 @@ public class MainStage extends Stage {
         HBox hNine = new HBox(0);
         nine.setMaxSize(bWidth, bHeight);
         nine.setMinSize(bWidth, bHeight);
-        //hSeven.setAlignment(Pos.TOP_RIGHT);
         hNine.getChildren().add(nine);
-        grid.add(hNine, 3, 1);
 
         nine.setOnAction((ActionEvent event) -> {
             barcode.setText(barcode.getText() + "9");
@@ -306,9 +298,7 @@ public class MainStage extends Stage {
         HBox hFour = new HBox(0);
         four.setMaxSize(bWidth, bHeight);
         four.setMinSize(bWidth, bHeight);
-        //hFour.setAlignment(Pos.CENTER_LEFT);
         hFour.getChildren().add(four);
-        grid.add(hFour, 1, 2);
 
         four.setOnAction((ActionEvent event) -> {
             barcode.setText(barcode.getText() + "4");
@@ -318,9 +308,7 @@ public class MainStage extends Stage {
         HBox hFive = new HBox(0);
         five.setMaxSize(bWidth, bHeight);
         five.setMinSize(bWidth, bHeight);
-        //hFive.setAlignment(Pos.CENTER);
         hFive.getChildren().add(five);
-        grid.add(hFive, 2, 2);
 
         five.setOnAction((ActionEvent event) -> {
             barcode.setText(barcode.getText() + "5");
@@ -330,9 +318,7 @@ public class MainStage extends Stage {
         HBox hSix = new HBox(0);
         six.setMaxSize(bWidth, bHeight);
         six.setMinSize(bWidth, bHeight);
-        //hSix.setAlignment(Pos.CENTER_RIGHT);
         hSix.getChildren().add(six);
-        grid.add(hSix, 3, 2);
 
         six.setOnAction((ActionEvent event) -> {
             barcode.setText(barcode.getText() + "6");
@@ -342,9 +328,7 @@ public class MainStage extends Stage {
         HBox hOne = new HBox(0);
         one.setMaxSize(bWidth, bHeight);
         one.setMinSize(bWidth, bHeight);
-        //hOne.setAlignment(Pos.BOTTOM_LEFT);
         hOne.getChildren().add(one);
-        grid.add(hOne, 1, 3);
 
         one.setOnAction((ActionEvent event) -> {
             barcode.setText(barcode.getText() + "1");
@@ -354,9 +338,7 @@ public class MainStage extends Stage {
         HBox hTwo = new HBox(0);
         two.setMaxSize(bWidth, bHeight);
         two.setMinSize(bWidth, bHeight);
-        //hTwo.setAlignment(Pos.BOTTOM_CENTER);
         hTwo.getChildren().add(two);
-        grid.add(hTwo, 2, 3);
 
         two.setOnAction((ActionEvent event) -> {
             barcode.setText(barcode.getText() + "2");
@@ -366,9 +348,7 @@ public class MainStage extends Stage {
         HBox hThree = new HBox(0);
         three.setMaxSize(bWidth, bHeight);
         three.setMinSize(bWidth, bHeight);
-        //hThree.setAlignment(Pos.BOTTOM_RIGHT);
         hThree.getChildren().add(three);
-        grid.add(hThree, 3, 3);
 
         three.setOnAction((ActionEvent event) -> {
             barcode.setText(barcode.getText() + "3");
@@ -379,7 +359,6 @@ public class MainStage extends Stage {
         zero.setMaxSize(bWidth, bHeight);
         zero.setMinSize(bWidth, bHeight);
         hZero.getChildren().add(zero);
-        grid.add(hZero, 1, 4);
 
         zero.setOnAction((ActionEvent event) -> {
             barcode.setText(barcode.getText() + "0");
@@ -390,7 +369,6 @@ public class MainStage extends Stage {
         dZero.setMaxSize(bWidth, bHeight);
         dZero.setMinSize(bWidth, bHeight);
         hDzero.getChildren().add(dZero);
-        grid.add(hDzero, 2, 4);
 
         dZero.setOnAction((ActionEvent event) -> {
             barcode.setText(barcode.getText() + "00");
@@ -401,7 +379,6 @@ public class MainStage extends Stage {
         enter.setMaxSize(bWidth, bHeight);
         enter.setMinSize(bWidth, bHeight);
         hEnter.getChildren().add(enter);
-        grid.add(hEnter, 3, 4);
 
         enter.setOnAction((ActionEvent event) -> {
             if (!barcode.getText().equals("")) {
@@ -409,6 +386,19 @@ public class MainStage extends Stage {
                 barcode.setText("");
             }
         });
+
+        grid.add(hSeven, 1, 1);
+        grid.add(hEight, 2, 1);
+        grid.add(hNine, 3, 1);
+        grid.add(hFour, 1, 2);
+        grid.add(hFive, 2, 2);
+        grid.add(hSix, 3, 2);
+        grid.add(hOne, 1, 3);
+        grid.add(hTwo, 2, 3);
+        grid.add(hThree, 3, 3);
+        grid.add(hZero, 1, 4);
+        grid.add(hDzero, 2, 4);
+        grid.add(hEnter, 3, 4);
 
         return grid;
     }
@@ -421,14 +411,10 @@ public class MainStage extends Stage {
         fivePounds.setMinSize(150, 150);
         HBox hFive = new HBox(0);
         hFive.getChildren().add(fivePounds);
-        paymentPane.add(hFive, 1, 1);
         fivePounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        addMoney(new BigDecimal("5"));
-                    }
+                Platform.runLater(() -> {
+                    addMoney(new BigDecimal("5"));
                 });
             }
         });
@@ -438,14 +424,10 @@ public class MainStage extends Stage {
         tenPounds.setMinSize(150, 150);
         HBox hTen = new HBox(0);
         hTen.getChildren().add(tenPounds);
-        paymentPane.add(hTen, 2, 1);
         tenPounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        addMoney(new BigDecimal("10"));
-                    }
+                Platform.runLater(() -> {
+                    addMoney(new BigDecimal("10"));
                 });
             }
         });
@@ -455,14 +437,10 @@ public class MainStage extends Stage {
         twentyPounds.setMinSize(150, 150);
         HBox hTwenty = new HBox(0);
         hTwenty.getChildren().add(twentyPounds);
-        paymentPane.add(hTwenty, 3, 1);
         twentyPounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        addMoney(new BigDecimal("20"));
-                    }
+                Platform.runLater(() -> {
+                    addMoney(new BigDecimal("20"));
                 });
             }
         });
@@ -472,16 +450,12 @@ public class MainStage extends Stage {
         customValue.setMinSize(150, 150);
         HBox hCustom = new HBox(0);
         hCustom.getChildren().add(customValue);
-        paymentPane.add(hCustom, 1, 2);
         customValue.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
                 int value = NumberEntry.showNumberEntryDialog(this, "Enter amount");
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        double d = (double) value;
-                        addMoney(new BigDecimal(Double.toString(d / 100)));
-                    }
+                Platform.runLater(() -> {
+                    double d = (double) value;
+                    addMoney(new BigDecimal(Double.toString(d / 100)));
                 });
             }
         });
@@ -491,14 +465,10 @@ public class MainStage extends Stage {
         exactValue.setMinSize(150, 150);
         HBox hExact = new HBox(0);
         hExact.getChildren().add(exactValue);
-        paymentPane.add(hExact, 2, 2);
         exactValue.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        addMoney(amountDue);
-                    }
+                Platform.runLater(() -> {
+                    addMoney(amountDue);
                 });
             }
         });
@@ -508,7 +478,6 @@ public class MainStage extends Stage {
         card.setMinSize(150, 150);
         HBox hCard = new HBox(0);
         hCard.getChildren().add(card);
-        paymentPane.add(hCard, 3, 2);
         card.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
 
@@ -521,16 +490,12 @@ public class MainStage extends Stage {
         addCustomer.setMinSize(150, 150);
         HBox hCustomer = new HBox(0);
         hCustomer.getChildren().add(addCustomer);
-        paymentPane.add(addCustomer, 1, 3);
         addCustomer.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        Customer c = CustomerSelectDialog.showDialog(MainStage.this, dc, "Search for Customer");
-                        if (c != null) {
-                            setCustomer(c);
-                        }
+                Platform.runLater(() -> {
+                    Customer c = CustomerSelectDialog.showDialog(MainStage.this, dc, "Search for Customer");
+                    if (c != null) {
+                        setCustomer(c);
                     }
                 });
             }
@@ -538,7 +503,6 @@ public class MainStage extends Stage {
 
         saleCustomer = new Label("No Customer");
         saleCustomer.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-        paymentPane.add(saleCustomer, 1, 4);
 
         Button back = new Button("Back");
         back.setMaxSize(150, 150);
@@ -548,13 +512,11 @@ public class MainStage extends Stage {
         back.setOnAction((ActionEvent event) -> {
             setScene(mainScene);
         });
-        paymentPane.add(hBack, 7, 4);
 
         paymentsList = new ListView<>();
         obPayments = FXCollections.observableArrayList();
         paymentsList.setItems(obPayments);
         paymentsList.setId("PAYMENT_LIST");
-        paymentPane.add(paymentsList, 5, 1, 2, 3);
 
         paymentTotal = new Label("Total: £" + sale.getTotal().toString());
         paymentTotal.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -562,7 +524,6 @@ public class MainStage extends Stage {
         paymentTotal.setMaxSize(150, 150);
         HBox hTotal = new HBox(0);
         hTotal.getChildren().add(paymentTotal);
-        paymentPane.add(hTotal, 5, 4);
 
         Button voidItem = new Button("Void");
         voidItem.setMinSize(150, 150);
@@ -577,7 +538,6 @@ public class MainStage extends Stage {
                 addMoney(pi.getValue().negate());
             }
         });
-        paymentPane.add(hVoid, 7, 1);
 
         Button voidSale = new Button("Void Sale");
         voidSale.setMinSize(150, 150);
@@ -589,6 +549,19 @@ public class MainStage extends Stage {
                 newSale();
             }
         });
+
+        paymentPane.add(hFive, 1, 1);
+        paymentPane.add(hTen, 2, 1);
+        paymentPane.add(hTwenty, 3, 1);
+        paymentPane.add(hCustom, 1, 2);
+        paymentPane.add(hExact, 2, 2);
+        paymentPane.add(hCard, 3, 2);
+        paymentPane.add(hCustomer, 1, 3);
+        paymentPane.add(saleCustomer, 1, 4);
+        paymentPane.add(hBack, 7, 4);
+        paymentPane.add(paymentsList, 5, 1, 2, 3);
+        paymentPane.add(hTotal, 5, 4);
+        paymentPane.add(hVoid, 7, 1);
         paymentPane.add(hVoidSale, 7, 2);
 
         paymentScene = new Scene(paymentPane, 1024, 768);
@@ -613,12 +586,9 @@ public class MainStage extends Stage {
         HBox hExit = new HBox(0);
         hExit.getChildren().add(exit);
         exit.setOnAction((ActionEvent event) -> {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    dc.close();
-                    System.exit(0);
-                }
+            Platform.runLater(() -> {
+                dc.close();
+                System.exit(0);
             });
         });
         buttons.getChildren().add(exit);
@@ -633,28 +603,25 @@ public class MainStage extends Stage {
             if (val == 0) {
                 return;
             }
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Staff s = dc.getStaff(val);
-                        Button button = new Button(s.getName());
-                        button.setMinSize(150, 150);
-                        button.setMaxSize(150, 150);
-                        button.setOnAction((ActionEvent evt) -> {
-                            try {
-                                MainStage.this.staff = s;
-                                dc.tillLogin(s.getId());
-                                staffLabel.setText("Staff: " + s.getName());
-                                setScene(mainScene);
-                            } catch (IOException | LoginException | SQLException ex) {
-                                MessageDialog.showMessage(MainStage.this, "Log on", ex.getMessage());
-                            }
-                        });
-                        staffLayout.getChildren().add(button);
-                    } catch (StaffNotFoundException | IOException | SQLException ex) {
-                        MessageDialog.showMessage(MainStage.this, "Log on", ex.getMessage());
-                    }
+            Platform.runLater(() -> {
+                try {
+                    Staff s = dc.getStaff(val);
+                    Button button = new Button(s.getName());
+                    button.setMinSize(150, 150);
+                    button.setMaxSize(150, 150);
+                    button.setOnAction((ActionEvent evt) -> {
+                        try {
+                            MainStage.this.staff = s;
+                            dc.tillLogin(s.getId());
+                            staffLabel.setText("Staff: " + s.getName());
+                            setScene(mainScene);
+                        } catch (IOException | LoginException | SQLException ex) {
+                            MessageDialog.showMessage(MainStage.this, "Log on", ex.getMessage());
+                        }
+                    });
+                    staffLayout.getChildren().add(button);
+                } catch (StaffNotFoundException | IOException | SQLException ex) {
+                    MessageDialog.showMessage(MainStage.this, "Log on", ex.getMessage());
                 }
             });
         });
@@ -846,17 +813,11 @@ public class MainStage extends Stage {
                 y++;
             }
 
-            button.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    Product p = b.getProduct().clone();
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            onProductButton(p);
-                        }
-                    });
-                }
+            button.setOnAction((ActionEvent e) -> {
+                Product p = b.getProduct().clone();
+                Platform.runLater(() -> {
+                    onProductButton(p);
+                });
             });
         }
     }
