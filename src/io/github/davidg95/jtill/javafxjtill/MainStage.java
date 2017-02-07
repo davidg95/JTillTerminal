@@ -104,6 +104,7 @@ public class MainStage extends Stage {
     private ListView<PaymentItem> paymentsList;
     private ObservableList<PaymentItem> obPayments;
     private Button discount;
+    private Button chargeAccount;
 
     public MainStage(DataConnectInterface dc) {
         super();
@@ -526,9 +527,20 @@ public class MainStage extends Stage {
                     Customer c = CustomerSelectDialog.showDialog(MainStage.this, dc, "Search for Customer");
                     if (c != null) {
                         setCustomer(c);
+                        chargeAccount.setDisable(false);
                     }
                 });
             }
+        });
+        
+        chargeAccount = new Button("Charge Account");
+        chargeAccount.setMinSize(150, 150);
+        chargeAccount.setMaxSize(150, 150);
+        chargeAccount.setDisable(true);
+        HBox hCharge = new HBox(0);
+        hCharge.getChildren().add(chargeAccount);
+        chargeAccount.setOnAction((ActionEvent event) ->{
+            
         });
 
         saleCustomer = new Label("No Customer");
@@ -596,6 +608,7 @@ public class MainStage extends Stage {
         paymentPane.add(hExact, 2, 2);
         paymentPane.add(hCard, 3, 2);
         paymentPane.add(hCustomer, 1, 3);
+        paymentPane.add(hCharge, 2, 3);
         paymentPane.add(saleCustomer, 1, 4);
         paymentPane.add(hBack, 7, 4);
         paymentPane.add(paymentsList, 5, 1, 2, 3);
@@ -739,6 +752,7 @@ public class MainStage extends Stage {
         itemQuantity = 1;
         quantity.setText("Quantity: 1");
         saleCustomer.setText("No Customer");
+        chargeAccount.setDisable(true);
         setScene(mainScene);
     }
 
