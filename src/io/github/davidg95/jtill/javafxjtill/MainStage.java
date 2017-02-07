@@ -117,6 +117,8 @@ public class MainStage extends Stage {
         mainScene.getStylesheets().add(stylesheet);
         paymentScene.getStylesheets().add(stylesheet);
         loginScene.getStylesheets().add(stylesheet);
+        setAlwaysOnTop(true);
+        setMaximized(true);
         setScene(loginScene);
         initStyle(StageStyle.UNDECORATED);
         show();
