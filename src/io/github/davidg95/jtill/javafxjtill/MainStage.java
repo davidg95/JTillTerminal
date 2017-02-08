@@ -7,6 +7,8 @@ package io.github.davidg95.jtill.javafxjtill;
 
 import io.github.davidg95.JTill.jtill.Customer;
 import io.github.davidg95.JTill.jtill.DataConnectInterface;
+import io.github.davidg95.JTill.jtill.Discount;
+import io.github.davidg95.JTill.jtill.DiscountNotFoundException;
 import io.github.davidg95.JTill.jtill.LoginException;
 import io.github.davidg95.JTill.jtill.Product;
 import io.github.davidg95.JTill.jtill.ProductNotFoundException;
@@ -23,6 +25,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -110,6 +114,12 @@ public class MainStage extends Stage {
         super();
         this.dc = dc;
         this.sale = new Sale();
+        try {
+            Discount defaultDiscount = dc.getDiscount(1);
+            sale.setDiscount(defaultDiscount);
+        } catch (IOException | SQLException | DiscountNotFoundException ex) {
+            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+        }
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
         init();
@@ -118,8 +128,6 @@ public class MainStage extends Stage {
         mainScene.getStylesheets().add(stylesheet);
         paymentScene.getStylesheets().add(stylesheet);
         loginScene.getStylesheets().add(stylesheet);
-        setAlwaysOnTop(true);
-        setMaximized(true);
         setScene(loginScene);
         initStyle(StageStyle.UNDECORATED);
         show();
@@ -532,15 +540,18 @@ public class MainStage extends Stage {
                 });
             }
         });
-        
+
         chargeAccount = new Button("Charge Account");
         chargeAccount.setMinSize(150, 150);
         chargeAccount.setMaxSize(150, 150);
         chargeAccount.setDisable(true);
         HBox hCharge = new HBox(0);
         hCharge.getChildren().add(chargeAccount);
-        chargeAccount.setOnAction((ActionEvent event) ->{
-            
+        chargeAccount.setOnAction((ActionEvent event) -> {
+            sale.setChargeAccount(true);
+            Platform.runLater(() -> {
+                addMoney(amountDue);
+            });
         });
 
         saleCustomer = new Label("No Customer");
@@ -598,7 +609,11 @@ public class MainStage extends Stage {
         HBox hDiscount = new HBox(0);
         hDiscount.getChildren().add(discount);
         discount.setOnAction((ActionEvent event) -> {
-
+            Discount d = DiscountSelectDialog.showDialog(this, dc);
+            if (d != null) {
+                sale.setDiscount(d);
+                setTotalLabel();
+            }
         });
 
         paymentPane.add(hFive, 1, 1);
@@ -743,6 +758,13 @@ public class MainStage extends Stage {
 
     private void newSale() {
         sale = new Sale();
+        Discount defaultDiscount = null;
+        try {
+            defaultDiscount = dc.getDiscount(1);
+        } catch (IOException | SQLException | DiscountNotFoundException ex) {
+            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        sale.setDiscount(defaultDiscount);
         items = FXCollections.observableArrayList();
         obPayments = FXCollections.observableArrayList();
         paymentsList.setItems(obPayments);

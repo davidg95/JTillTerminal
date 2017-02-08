@@ -35,7 +35,7 @@ public class CustomerSelectDialog extends Stage {
     private static Stage dialog;
     private static Customer customer;
 
-    private DataConnectInterface dc;
+    private final DataConnectInterface dc;
 
     private ListView<Customer> customerList;
     private ObservableList<Customer> obCustomers;
@@ -62,11 +62,8 @@ public class CustomerSelectDialog extends Stage {
         customerList.setItems(obCustomers);
         customerList.setMinSize(300, 300);
         customerList.setMaxSize(300, 300);
-        customerList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Customer>() {
-            @Override
-            public void changed(ObservableValue<? extends Customer> observable, Customer oldValue, Customer newValue) {
-                customer = newValue;
-            }
+        customerList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Customer> observable, Customer oldValue, Customer newValue) -> {
+            customer = newValue;
         });
         pane.add(customerList, 0, 0, 3, 3);
 
