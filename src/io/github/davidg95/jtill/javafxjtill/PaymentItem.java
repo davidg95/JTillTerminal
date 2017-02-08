@@ -15,15 +15,19 @@ import java.text.DecimalFormat;
  */
 public class PaymentItem implements Serializable, Cloneable {
 
-    private final String type;
+    private final PaymentType type;
     private final BigDecimal value;
 
-    public PaymentItem(String type, BigDecimal value) {
+    public enum PaymentType {
+        CASH, CARD, CHEQUE, ACCOUNT,
+    }
+
+    public PaymentItem(PaymentType type, BigDecimal value) {
         this.type = type;
         this.value = value;
     }
 
-    public String getType() {
+    public PaymentType getType() {
         return type;
     }
 
@@ -49,6 +53,6 @@ public class PaymentItem implements Serializable, Cloneable {
         } else {
             df = new DecimalFormat("0.00");
         }
-        return this.type + " - £" + df.format(value);
+        return this.type.toString() + " - £" + df.format(value);
     }
 }

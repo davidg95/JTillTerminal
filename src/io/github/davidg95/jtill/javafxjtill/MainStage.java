@@ -106,6 +106,7 @@ public class MainStage extends Stage {
     private Button customValue;
     private Button exactValue;
     private Button card;
+    private Button cheque;
     private Button addCustomer;
     private Label saleCustomer;
     private Label saleDiscount;
@@ -115,6 +116,8 @@ public class MainStage extends Stage {
     private Button discount;
     private Button chargeAccount;
     private Button settings;
+    private Button voidItem;
+    private Button voidSale;
 
     public MainStage(DataConnectInterface dc) {
         super();
@@ -484,7 +487,7 @@ public class MainStage extends Stage {
         fivePounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
                 Platform.runLater(() -> {
-                    addMoney(new BigDecimal("5.00"));
+                    addMoney(PaymentItem.PaymentType.CASH, new BigDecimal("5.00"));
                 });
             }
         });
@@ -497,7 +500,7 @@ public class MainStage extends Stage {
         tenPounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
                 Platform.runLater(() -> {
-                    addMoney(new BigDecimal("10.00"));
+                    addMoney(PaymentItem.PaymentType.CASH, new BigDecimal("10.00"));
                 });
             }
         });
@@ -510,7 +513,7 @@ public class MainStage extends Stage {
         twentyPounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
                 Platform.runLater(() -> {
-                    addMoney(new BigDecimal("20.00"));
+                    addMoney(PaymentItem.PaymentType.CASH, new BigDecimal("20.00"));
                 });
             }
         });
@@ -525,7 +528,7 @@ public class MainStage extends Stage {
                 int value = NumberEntry.showNumberEntryDialog(this, "Enter amount");
                 Platform.runLater(() -> {
                     double d = (double) value;
-                    addMoney(new BigDecimal(Double.toString(d / 100)));
+                    addMoney(PaymentItem.PaymentType.CASH, new BigDecimal(Double.toString(d / 100)));
                 });
             }
         });
@@ -538,7 +541,7 @@ public class MainStage extends Stage {
         exactValue.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
                 Platform.runLater(() -> {
-                    addMoney(amountDue);
+                    addMoney(PaymentItem.PaymentType.CASH, amountDue);
                 });
             }
         });
@@ -550,7 +553,9 @@ public class MainStage extends Stage {
         hCard.getChildren().add(card);
         card.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
-
+                int val = NumberEntry.showNumberEntryDialog(this, "Enter Card Value");
+                double d = (double) val;
+                addMoney(PaymentItem.PaymentType.CARD, new BigDecimal(Double.toString(d / 100)));
             }
         });
         card.setDisable(true);
@@ -588,7 +593,20 @@ public class MainStage extends Stage {
         chargeAccount.setOnAction((ActionEvent event) -> {
             sale.setChargeAccount(true);
             Platform.runLater(() -> {
-                addMoney(amountDue);
+                addMoney(PaymentItem.PaymentType.ACCOUNT, amountDue);
+            });
+        });
+
+        cheque = new Button("Cheque");
+        cheque.setMinSize(150, 150);
+        cheque.setMaxSize(150, 150);
+        HBox hCheque = new HBox(0);
+        hCheque.getChildren().add(cheque);
+        cheque.setOnAction((ActionEvent event) -> {
+            int val = NumberEntry.showNumberEntryDialog(this, "Enter Cheque Value");
+            double d = (double) val;
+            Platform.runLater(() -> {
+                addMoney(PaymentItem.PaymentType.CHEQUE, new BigDecimal(Double.toString(d / 100)));
             });
         });
 
@@ -619,7 +637,7 @@ public class MainStage extends Stage {
         HBox hTotal = new HBox(0);
         hTotal.getChildren().add(paymentTotal);
 
-        Button voidItem = new Button("Void");
+        voidItem = new Button("Void");
         voidItem.setMinSize(150, 150);
         voidItem.setMaxSize(150, 150);
         HBox hVoid = new HBox(0);
@@ -629,11 +647,11 @@ public class MainStage extends Stage {
                 PaymentItem pi = paymentsList.getSelectionModel().getSelectedItem().clone();
                 obPayments.remove(paymentsList.getSelectionModel().getSelectedIndex());
                 paymentsList.refresh();
-                addMoney(pi.getValue().negate());
+                addMoney(pi.getType(), pi.getValue().negate());
             }
         });
 
-        Button voidSale = new Button("Void Sale");
+        voidSale = new Button("Void Sale");
         voidSale.setMinSize(150, 150);
         voidSale.setMaxSize(150, 150);
         HBox hVoidSale = new HBox(0);
@@ -680,6 +698,7 @@ public class MainStage extends Stage {
         paymentPane.add(hCard, 3, 2);
         paymentPane.add(hCustomer, 1, 3);
         paymentPane.add(hCharge, 2, 3);
+        paymentPane.add(hCheque, 3, 3);
         paymentPane.add(saleCustomer, 1, 4);
         paymentPane.add(saleDiscount, 1, 5);
         paymentPane.add(hBack, 7, 4);
@@ -788,10 +807,10 @@ public class MainStage extends Stage {
         sale.setCustomer(c);
     }
 
-    private void addMoney(BigDecimal val) {
+    private void addMoney(PaymentItem.PaymentType type, BigDecimal val) {
         amountDue = amountDue.subtract(val);
         if (val.compareTo(BigDecimal.ZERO) > 0) {
-            obPayments.add(new PaymentItem("CASH", val));
+            obPayments.add(new PaymentItem(type, val));
         }
         total.setText("Total: £" + amountDue);
         paymentTotal.setText("Total: £" + amountDue);
@@ -853,6 +872,7 @@ public class MainStage extends Stage {
         quantity.setText("Quantity: 1");
         saleCustomer.setText("No Customer");
         addCustomer.setText("Add Customer");
+        saleDiscount.setText("Discount: " + sale.getDiscount().getName());
         chargeAccount.setDisable(true);
         setScene(mainScene);
     }
