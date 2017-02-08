@@ -21,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
@@ -60,6 +61,10 @@ public class ProductSelectDialog extends Stage {
 
     private void init() {
         GridPane pane = new GridPane();
+        Button searchBarcode = new Button("Barcode");
+        Button searchTerms = new Button("Search Terms");
+        Button close = new Button("Close");
+        
         obProducts = FXCollections.observableArrayList();
 
         productTable = new TableView();
@@ -84,12 +89,22 @@ public class ProductSelectDialog extends Stage {
             @Override
             public void changed(ObservableValue<? extends Product> observable, Product oldValue, Product newValue) {
                 product = newValue;
+                close.setText("Select");
             }
         });
 
-        pane.add(productTable, 0, 0, 3, 3);
+        productTable.setRowFactory(tv -> {
+            TableRow<Product> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    hide();
+                }
+            });
+            return row;
+        });
 
-        Button searchBarcode = new Button("Barcode");
+        pane.add(productTable, 0, 0, 3, 3);
+        
         searchBarcode.setMinSize(100, 100);
         searchBarcode.setMaxSize(100, 100);
         HBox hSearchBarcode = new HBox(0);
@@ -106,8 +121,7 @@ public class ProductSelectDialog extends Stage {
             }
         });
         pane.add(hSearchBarcode, 0, 3);
-
-        Button searchTerms = new Button("Search Terms");
+        
         searchTerms.setMinSize(100, 100);
         searchTerms.setMaxSize(100, 100);
         HBox hSearchTerms = new HBox(0);
@@ -122,8 +136,7 @@ public class ProductSelectDialog extends Stage {
             }
         });
         pane.add(hSearchTerms, 1, 3);
-
-        Button close = new Button("Close");
+        
         close.setMinSize(100, 100);
         close.setMaxSize(100, 100);
         HBox hClose = new HBox(0);
@@ -134,6 +147,8 @@ public class ProductSelectDialog extends Stage {
         pane.add(hClose, 2, 3);
 
         Scene scene = new Scene(pane, 300, 400);
+        String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
+        scene.getStylesheets().add(stylesheet);
         setScene(scene);
     }
 

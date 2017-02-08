@@ -11,6 +11,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -33,7 +35,7 @@ public class EntryDialog extends Stage {
         setTitle(title);
         initOwner(parent);
         initModality(Modality.APPLICATION_MODAL);
-        initStyle(StageStyle.UNDECORATED);
+        //initStyle(StageStyle.UNDECORATED);
     }
 
     public static String show(Window parent, String title, String message) {
@@ -46,28 +48,27 @@ public class EntryDialog extends Stage {
     private void init() {
         GridPane pane = new GridPane();
 
-        Text txtMessage = new Text(message);
-        //pane.add(txtMessage, 0, 0);
-
         TextField input = new TextField();
-        input.setMaxSize(300, 30);
-        input.setMinSize(300, 30);
+        input.setMaxSize(400, 50);
+        input.setMinSize(400, 50);
+        input.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         input.setOnAction((ActionEvent event) -> {
             onEnter(input.getText());
         });
-        pane.add(input, 0, 1);
 
         Button enter = new Button("Enter");
         HBox hEnter = new HBox(10);
-        enter.setMaxSize(300, 50);
-        enter.setMinSize(300, 50);
+        enter.setMaxSize(400, 70);
+        enter.setMinSize(400, 70);
         hEnter.getChildren().add(enter);
         enter.setOnAction((ActionEvent event) -> {
             onEnter(input.getText());
         });
+        
+        pane.add(input, 0, 1);
         pane.add(enter, 0, 2);
 
-        Scene scene = new Scene(pane, 300, 60);
+        Scene scene = new Scene(pane, 400, 120);
         String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
         scene.getStylesheets().add(stylesheet);
         setScene(scene);

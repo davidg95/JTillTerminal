@@ -21,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
@@ -60,9 +61,12 @@ public class CustomerSelectDialog extends Stage {
 
     private void init() {
         GridPane pane = new GridPane();
-        
+        Button searchID = new Button("Search ID");
+        Button searchTerms = new Button("Search Terms");
+        Button close = new Button("Close");
+
         obCustomers = FXCollections.observableArrayList();
-        
+
         customerTable = new TableView();
         customerTable.setItems(obCustomers);
         customerTable.setEditable(false);
@@ -81,12 +85,22 @@ public class CustomerSelectDialog extends Stage {
             @Override
             public void changed(ObservableValue<? extends Customer> observable, Customer oldValue, Customer newValue) {
                 customer = newValue;
+                close.setText("Select");
             }
         });
 
-        pane.add(customerTable, 0, 0, 3, 3);
+        customerTable.setRowFactory(tv -> {
+            TableRow<Customer> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    hide();
+                }
+            });
+            return row;
+        });
 
-        Button searchID = new Button("Search ID");
+        pane.add(customerTable, 0, 0, 3, 3);
+        
         searchID.setMinSize(100, 100);
         searchID.setMaxSize(100, 100);
         HBox hSearch = new HBox(0);
@@ -103,8 +117,7 @@ public class CustomerSelectDialog extends Stage {
             }
         });
         pane.add(searchID, 0, 3);
-
-        Button searchTerms = new Button("Search Terms");
+        
         searchTerms.setMinSize(100, 100);
         searchTerms.setMaxSize(100, 100);
         HBox hSearchTerms = new HBox(0);
@@ -119,8 +132,7 @@ public class CustomerSelectDialog extends Stage {
             }
         });
         pane.add(searchTerms, 1, 3);
-
-        Button close = new Button("Close");
+        
         close.setMinSize(100, 100);
         close.setMaxSize(100, 100);
         HBox hClose = new HBox(0);

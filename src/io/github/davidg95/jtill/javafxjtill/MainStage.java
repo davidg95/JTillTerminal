@@ -561,10 +561,17 @@ public class MainStage extends Stage {
         addCustomer.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
                 Platform.runLater(() -> {
+                    if (sale.getCustomer() != null) {
+                        setCustomer(null);
+                        chargeAccount.setDisable(true);
+                        addCustomer.setText("Add Customer");
+                        return;
+                    }
                     Customer c = CustomerSelectDialog.showDialog(MainStage.this, dc, "Search for Customer");
                     if (c != null) {
                         setCustomer(c);
                         chargeAccount.setDisable(false);
+                        addCustomer.setText("Remove Customer");
                     }
                 });
             }
@@ -739,7 +746,11 @@ public class MainStage extends Stage {
     }
 
     private void setCustomer(Customer c) {
-        saleCustomer.setText(c.getName());
+        if (c != null) {
+            saleCustomer.setText(c.getName());
+        } else {
+            saleCustomer.setText("No Customer");
+        }
         sale.setCustomer(c);
     }
 
@@ -803,6 +814,7 @@ public class MainStage extends Stage {
         itemQuantity = 1;
         quantity.setText("Quantity: 1");
         saleCustomer.setText("No Customer");
+        addCustomer.setText("Add Customer");
         chargeAccount.setDisable(true);
         setScene(mainScene);
     }

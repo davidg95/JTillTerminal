@@ -18,8 +18,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
@@ -61,8 +61,12 @@ public class DiscountSelectDialog extends Stage {
     private void init() {
         try {
             GridPane pane = new GridPane();
+            Button searchID = new Button("Search ID");
+            Button searchTerms = new Button("Search Terms");
+            Button close = new Button("Close");
+
             obDiscounts = FXCollections.observableArrayList();
-            
+
             discountsTable = new TableView();
             discountsTable.setEditable(false);
             discountsTable.setItems(obDiscounts);
@@ -85,15 +89,25 @@ public class DiscountSelectDialog extends Stage {
                 @Override
                 public void changed(ObservableValue<? extends Discount> observable, Discount oldValue, Discount newValue) {
                     discount = newValue;
+                    close.setText("Select");
                 }
+            });
+
+            discountsTable.setRowFactory(tv -> {
+                TableRow<Discount> row = new TableRow<>();
+                row.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                        hide();
+                    }
+                });
+                return row;
             });
 
             List<Discount> d = dc.getAllDiscounts();
             updateList(d);
 
             pane.add(discountsTable, 0, 0, 3, 3);
-
-            Button searchID = new Button("Search ID");
+            
             searchID.setMinSize(100, 100);
             searchID.setMaxSize(100, 100);
             HBox hSearchID = new HBox(0);
@@ -110,8 +124,7 @@ public class DiscountSelectDialog extends Stage {
                 MessageDialog.showMessage(this, "Discounts", "No match");
             });
             pane.add(hSearchID, 0, 3);
-
-            Button searchTerms = new Button("Search Terms");
+            
             searchTerms.setMinSize(100, 100);
             searchTerms.setMaxSize(100, 100);
             HBox hSearchTerms = new HBox(0);
@@ -131,8 +144,7 @@ public class DiscountSelectDialog extends Stage {
                 updateList(newList);
             });
             pane.add(hSearchTerms, 1, 3);
-
-            Button close = new Button("Close");
+            
             close.setMinSize(100, 100);
             close.setMaxSize(100, 100);
             HBox hClose = new HBox(0);
@@ -143,6 +155,8 @@ public class DiscountSelectDialog extends Stage {
             pane.add(hClose, 2, 3);
 
             Scene scene = new Scene(pane, 300, 400);
+            String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
+            scene.getStylesheets().add(stylesheet);
             setScene(scene);
         } catch (IOException | SQLException ex) {
             MessageDialog.showMessage(this, "Error", ex.getMessage());
