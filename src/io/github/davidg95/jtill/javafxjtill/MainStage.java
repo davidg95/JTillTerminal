@@ -113,6 +113,7 @@ public class MainStage extends Stage {
     private ObservableList<PaymentItem> obPayments;
     private Button discount;
     private Button chargeAccount;
+    private Button settings;
 
     public MainStage(DataConnectInterface dc) {
         super();
@@ -652,6 +653,19 @@ public class MainStage extends Stage {
             }
         });
 
+        settings = new Button("Settings");
+        settings.setMinSize(150, 150);
+        settings.setMaxSize(150, 150);
+        HBox hSettings = new HBox(0);
+        hSettings.getChildren().add(settings);
+        settings.setOnAction((ActionEvent event) -> {
+            if (staff.getPosition() == Staff.Position.MANAGER || staff.getPosition() == Staff.Position.AREA_MANAGER) {
+
+            } else {
+                MessageDialog.showMessage(this, "Settings", "You are not allowed to view this screen");
+            }
+        });
+
         paymentPane.add(hFive, 1, 1);
         paymentPane.add(hTen, 2, 1);
         paymentPane.add(hTwenty, 3, 1);
@@ -667,6 +681,7 @@ public class MainStage extends Stage {
         paymentPane.add(hVoid, 7, 1);
         paymentPane.add(hVoidSale, 7, 2);
         paymentPane.add(hDiscount, 7, 3);
+        paymentPane.add(hSettings, 8, 1);
 
         paymentScene = new Scene(paymentPane, 1024, 768);
     }
@@ -717,6 +732,12 @@ public class MainStage extends Stage {
                         try {
                             MainStage.this.staff = s;
                             dc.tillLogin(s.getId());
+                            Sale rs = dc.resumeSale(s);
+                            if (rs != null) {
+                                MainStage.this.sale = rs;
+                                obTable.setAll(rs.getSaleItems());
+                                setTotalLabel();
+                            }
                             staffLabel.setText("Staff: " + s.getName());
                             setScene(mainScene);
                         } catch (IOException | LoginException | SQLException ex) {
@@ -789,7 +810,11 @@ public class MainStage extends Stage {
     private void logoff() {
         try {
             dc.tillLogout(staff);
+            if (!sale.getSaleItems().isEmpty()) {
+                dc.suspendSale(sale, staff);
+            }
             staff = null;
+            newSale();
             setScene(loginScene);
         } catch (IOException | StaffNotFoundException ex) {
             showErrorAlert(ex);
