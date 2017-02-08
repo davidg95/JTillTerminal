@@ -108,6 +108,7 @@ public class MainStage extends Stage {
     private Button card;
     private Button addCustomer;
     private Label saleCustomer;
+    private Label saleDiscount;
     private Label paymentTotal;
     private ListView<PaymentItem> paymentsList;
     private ObservableList<PaymentItem> obPayments;
@@ -594,6 +595,9 @@ public class MainStage extends Stage {
         saleCustomer = new Label("No Customer");
         saleCustomer.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
+        saleDiscount = new Label("Discount: " + sale.getDiscount().getName());
+        saleDiscount.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
         Button back = new Button("Back");
         back.setMaxSize(150, 150);
         back.setMinSize(150, 150);
@@ -650,6 +654,8 @@ public class MainStage extends Stage {
             if (d != null) {
                 sale.setDiscount(d);
                 setTotalLabel();
+                saleDiscount.setText("Discount: " + d.getName());
+                itemsTable.refresh();
             }
         });
 
@@ -675,6 +681,7 @@ public class MainStage extends Stage {
         paymentPane.add(hCustomer, 1, 3);
         paymentPane.add(hCharge, 2, 3);
         paymentPane.add(saleCustomer, 1, 4);
+        paymentPane.add(saleDiscount, 1, 5);
         paymentPane.add(hBack, 7, 4);
         paymentPane.add(paymentsList, 5, 1, 2, 3);
         paymentPane.add(hTotal, 5, 4);
@@ -737,6 +744,8 @@ public class MainStage extends Stage {
                                 MainStage.this.sale = rs;
                                 obTable.setAll(rs.getSaleItems());
                                 setTotalLabel();
+                                saleDiscount.setText("Discount: " + sale.getDiscount().getName());
+                                setCustomer(rs.getCustomer());
                             }
                             staffLabel.setText("Staff: " + s.getName());
                             setScene(mainScene);
@@ -769,8 +778,12 @@ public class MainStage extends Stage {
     private void setCustomer(Customer c) {
         if (c != null) {
             saleCustomer.setText(c.getName());
+            addCustomer.setText("Remove Customer");
+            chargeAccount.setDisable(false);
         } else {
             saleCustomer.setText("No Customer");
+            addCustomer.setText("Add Customer");
+            chargeAccount.setDisable(true);
         }
         sale.setCustomer(c);
     }
