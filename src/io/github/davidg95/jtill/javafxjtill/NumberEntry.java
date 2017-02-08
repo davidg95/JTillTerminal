@@ -87,7 +87,10 @@ public class NumberEntry extends Stage {
         grid.add(hSeven, 1, 2);
 
         seven.setOnAction((ActionEvent event) -> {
-            number.deleteText(number.getSelection().getStart(), number.getSelection().getEnd() + 1);
+            if(init){
+                number.clear();
+                init = false;
+            }
             number.setText(number.getText() + "7");
         });
 
@@ -100,7 +103,10 @@ public class NumberEntry extends Stage {
         grid.add(hEight, 2, 2);
 
         eight.setOnAction((ActionEvent event) -> {
-            number.deleteText(number.getSelection().getStart(), number.getSelection().getEnd() + 1);
+            if(init){
+                number.clear();
+                init = false;
+            }
             number.setText(number.getText() + "8");
         });
 
@@ -113,7 +119,10 @@ public class NumberEntry extends Stage {
         grid.add(hNine, 3, 2);
 
         nine.setOnAction((ActionEvent event) -> {
-            number.deleteText(number.getSelection().getStart(), number.getSelection().getEnd() + 1);
+            if(init){
+                number.clear();
+                init = false;
+            }
             number.setText(number.getText() + "9");
         });
 
@@ -126,7 +135,10 @@ public class NumberEntry extends Stage {
         grid.add(hFour, 1, 3);
 
         four.setOnAction((ActionEvent event) -> {
-            number.deleteText(number.getSelection().getStart(), number.getSelection().getEnd() + 1);
+            if(init){
+                number.clear();
+                init = false;
+            }
             number.setText(number.getText() + "4");
         });
 
@@ -139,7 +151,10 @@ public class NumberEntry extends Stage {
         grid.add(hFive, 2, 3);
 
         five.setOnAction((ActionEvent event) -> {
-            number.deleteText(number.getSelection().getStart(), number.getSelection().getEnd() + 1);
+            if(init){
+                number.clear();
+                init = false;
+            }
             number.setText(number.getText() + "5");
         });
 
@@ -152,7 +167,10 @@ public class NumberEntry extends Stage {
         grid.add(hSix, 3, 3);
 
         six.setOnAction((ActionEvent event) -> {
-            number.deleteText(number.getSelection().getStart(), number.getSelection().getEnd() + 1);
+            if(init){
+                number.clear();
+                init = false;
+            }
             number.setText(number.getText() + "6");
         });
 
@@ -165,7 +183,10 @@ public class NumberEntry extends Stage {
         grid.add(hOne, 1, 4);
 
         one.setOnAction((ActionEvent event) -> {
-            number.deleteText(number.getSelection().getStart(), number.getSelection().getEnd() + 1);
+            if(init){
+                number.clear();
+                init = false;
+            }
             number.setText(number.getText() + "1");
         });
 
@@ -178,7 +199,10 @@ public class NumberEntry extends Stage {
         grid.add(hTwo, 2, 4);
 
         two.setOnAction((ActionEvent event) -> {
-            number.deleteText(number.getSelection().getStart(), number.getSelection().getEnd() + 1);
+            if(init){
+                number.clear();
+                init = false;
+            }
             number.setText(number.getText() + "2");
         });
 
@@ -191,7 +215,10 @@ public class NumberEntry extends Stage {
         grid.add(hThree, 3, 4);
 
         three.setOnAction((ActionEvent event) -> {
-            number.deleteText(number.getSelection().getStart(), number.getSelection().getEnd() + 1);
+            if(init){
+                number.clear();
+                init = false;
+            }
             number.setText(number.getText() + "3");
         });
 
@@ -203,7 +230,10 @@ public class NumberEntry extends Stage {
         grid.add(hZero, 1, 5, 2, 1);
 
         zero.setOnAction((ActionEvent event) -> {
-            number.deleteText(number.getSelection().getStart(), number.getSelection().getEnd() + 1);
+            if(init){
+                number.clear();
+                init = false;
+            }
             number.setText(number.getText() + "0");
         });
 
@@ -215,7 +245,10 @@ public class NumberEntry extends Stage {
         grid.add(hDzero, 3, 5);
 
         dZero.setOnAction((ActionEvent event) -> {
-            number.deleteText(number.getSelection().getStart(), number.getSelection().getEnd() + 1);
+            if(init){
+                number.clear();
+                init = false;
+            }
             number.setText(number.getText() + "00");
         });
 
