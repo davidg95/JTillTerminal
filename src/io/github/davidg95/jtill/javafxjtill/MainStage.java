@@ -39,6 +39,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -180,6 +181,22 @@ public class MainStage extends Stage {
             obTable = FXCollections.observableArrayList();
             itemsTable.setItems(obTable);
 
+            itemsTable.setRowFactory(tv -> {
+                TableRow<SaleItem> row = new TableRow<>();
+                row.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                        SaleItem rowData = row.getItem();
+                        int q = NumberEntry.showNumberEntryDialog(this, "Set quantity", rowData.getQuantity());
+                        rowData.setQuantity(q);
+                        setTotalLabel();
+                        itemsTable.refresh();
+                        sale.updateTotal();
+                        setTotalLabel();
+                    }
+                });
+                return row;
+            });
+
             updateList();
 
             total = new Text("Total: £0.00");
@@ -193,7 +210,7 @@ public class MainStage extends Stage {
             hQuantity.getChildren().add(quantity);
             quantity.setOnAction((ActionEvent event) -> {
                 if (barcode.getText().equals("")) {
-                    int val = NumberEntry.showNumberEntryDialog(this, "Enter Quantity");
+                    int val = NumberEntry.showNumberEntryDialog(this, "Enter Quantity", itemQuantity);
                     if (val != 0) {
                         itemQuantity = val;
                     }
@@ -820,7 +837,7 @@ public class MainStage extends Stage {
         boolean inSale = sale.addItem(p, itemQuantity);
         if (!inSale) {
             obTable.add(sale.getLastAdded());
-            itemsTable.scrollTo(obTable.size() -1);
+            itemsTable.scrollTo(obTable.size() - 1);
         } else {
             itemsTable.refresh();
         }

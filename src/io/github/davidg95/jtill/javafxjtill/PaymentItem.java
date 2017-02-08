@@ -5,7 +5,6 @@
  */
 package io.github.davidg95.jtill.javafxjtill;
 
-import io.github.davidg95.JTill.jtill.ConnectionData;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
