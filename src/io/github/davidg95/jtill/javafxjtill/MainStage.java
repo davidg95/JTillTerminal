@@ -38,9 +38,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -74,8 +77,8 @@ public class MainStage extends Stage {
     private Button login;
 
     //Main Scene Components
-    private ListView<SaleItem> itemsInSale;
-    private ObservableList<SaleItem> items;
+    private TableView itemsTable;
+    private ObservableList<SaleItem> obTable;
     private Scene mainScene;
     private GridPane mainPane;
     private Pane buttonPane;
@@ -155,10 +158,28 @@ public class MainStage extends Stage {
             buttonPane.getChildren().clear();
             buttonPane.getChildren().add(buttonPanes.get(0));
 
-            itemsInSale = new ListView<>();
-            itemsInSale.setMinSize(240, 250);
-            itemsInSale.setMaxSize(240, 250);
-            items = FXCollections.observableArrayList();
+            itemsTable = new TableView();
+            itemsTable.setEditable(false);
+            itemsTable.setMinSize(240, 250);
+            itemsTable.setMaxSize(240, 250);
+            TableColumn qty = new TableColumn("Qty.");
+            TableColumn itm = new TableColumn("Item");
+            TableColumn cst = new TableColumn("£");
+            qty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+            itm.setCellValueFactory(new PropertyValueFactory<>("product"));
+            cst.setCellValueFactory(new PropertyValueFactory<>("price"));
+            qty.setMaxWidth(40);
+            qty.setMinWidth(40);
+            itm.setMaxWidth(150);
+            itm.setMinWidth(150);
+            cst.setMaxWidth(50);
+            cst.setMinWidth(50);
+            itemsTable.getColumns().addAll(qty, itm, cst);
+            HBox hTable = new HBox();
+            hTable.getChildren().add(itemsTable);
+            obTable = FXCollections.observableArrayList();
+            itemsTable.setItems(obTable);
+
             updateList();
 
             total = new Text("Total: £0.00");
@@ -189,9 +210,9 @@ public class MainStage extends Stage {
             HBox hVoid = new HBox(0);
             hVoid.getChildren().add(voidSelected);
             voidSelected.setOnAction((ActionEvent event) -> {
-                if (itemsInSale.getSelectionModel().getSelectedIndex() > -1) {
-                    sale.voidItem(itemsInSale.getSelectionModel().getSelectedItem());
-                    items.remove(itemsInSale.getSelectionModel().getSelectedItem());
+                if (itemsTable.getSelectionModel().getSelectedIndex() > -1) {
+                    sale.voidItem((SaleItem) itemsTable.getSelectionModel().getSelectedItem());
+                    obTable.remove((SaleItem) itemsTable.getSelectionModel().getSelectedItem());
                     setTotalLabel();
                 }
             });
@@ -250,11 +271,11 @@ public class MainStage extends Stage {
             HBox hHalfPrice = new HBox(0);
             hHalfPrice.getChildren().add(halfPrice);
             halfPrice.setOnAction((ActionEvent event) -> {
-                if (itemsInSale.getSelectionModel().getSelectedIndex() > -1) {
-                    SaleItem item = itemsInSale.getSelectionModel().getSelectedItem();
+                if (itemsTable.getSelectionModel().getSelectedIndex() > -1) {
+                    SaleItem item = (SaleItem) itemsTable.getSelectionModel().getSelectedItem();
                     sale.halfPriceItem(item);
                     setTotalLabel();
-                    itemsInSale.refresh();
+                    itemsTable.refresh();
                 }
             });
 
@@ -262,7 +283,7 @@ public class MainStage extends Stage {
             mainPane.add(time, 6, 0, 2, 1);
             mainPane.add(buttonPane, 0, 1, 5, 10);
             mainPane.add(screenPane, 0, 11, 5, 2);
-            mainPane.add(itemsInSale, 6, 2, 2, 5);
+            mainPane.add(itemsTable, 6, 2, 2, 5);
             mainPane.add(total, 6, 8, 2, 1);
             mainPane.add(hQuantity, 6, 9);
             mainPane.add(hVoid, 7, 9);
@@ -756,7 +777,7 @@ public class MainStage extends Stage {
             Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
         }
         sale.setDiscount(defaultDiscount);
-        items = FXCollections.observableArrayList();
+        obTable = FXCollections.observableArrayList();
         obPayments = FXCollections.observableArrayList();
         paymentsList.setItems(obPayments);
         updateList();
@@ -770,7 +791,7 @@ public class MainStage extends Stage {
     }
 
     private void updateList() {
-        itemsInSale.setItems(items);
+        itemsTable.setItems(obTable);
     }
 
     private void getProductByBarcode(String barcode) {
@@ -798,10 +819,10 @@ public class MainStage extends Stage {
         }
         boolean inSale = sale.addItem(p, itemQuantity);
         if (!inSale) {
-            items.add(sale.getLastAdded());
-            itemsInSale.scrollTo(items.size() - 1);
+            obTable.add(sale.getLastAdded());
+            itemsTable.scrollTo(obTable.size() -1);
         } else {
-            itemsInSale.refresh();
+            itemsTable.refresh();
         }
         setTotalLabel();
         itemQuantity = 1;
