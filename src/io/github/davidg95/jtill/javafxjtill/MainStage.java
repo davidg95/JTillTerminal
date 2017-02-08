@@ -96,6 +96,7 @@ public class MainStage extends Stage {
     private Button payment;
     private Button lookup;
     private Button halfPrice;
+    private Button assisstance;
 
     //Payment Scene Components
     private Scene paymentScene;
@@ -131,13 +132,15 @@ public class MainStage extends Stage {
         }
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
+        //Created the scenes
         init();
         initPayment();
         initLogin();
+        //Set the stylesheets
         mainScene.getStylesheets().add(stylesheet);
         paymentScene.getStylesheets().add(stylesheet);
         loginScene.getStylesheets().add(stylesheet);
-        setScene(loginScene);
+        setScene(loginScene); //Show the login scene first
         initStyle(StageStyle.UNDECORATED);
         show();
     }
@@ -301,6 +304,22 @@ public class MainStage extends Stage {
                 }
             });
 
+            assisstance = new Button("Assisstance");
+            assisstance.setId("assisstance");
+            assisstance.setMinSize(100, 100);
+            assisstance.setMaxSize(100, 100);
+            HBox hAssisstance = new HBox(0);
+            hAssisstance.getChildren().add(assisstance);
+            assisstance.setOnAction((ActionEvent event) -> {
+                String message = EntryDialog.show(this, "Assisstance", "Enter message");
+                try {
+                    dc.assisstance(message);
+                    MessageDialog.showMessage(this, "Assisstance", "Message sent");
+                } catch (IOException ex) {
+                    MessageDialog.showMessage(this, "Assisstance", ex.getMessage());
+                }
+            });
+
             mainPane.add(staffLabel, 0, 0, 2, 1);
             mainPane.add(time, 6, 0, 2, 1);
             mainPane.add(buttonPane, 0, 1, 5, 10);
@@ -315,6 +334,7 @@ public class MainStage extends Stage {
             mainPane.add(hHalfPrice, 2, 14);
             mainPane.add(hLogoff, 0, 14);
             mainPane.add(hLookup, 1, 14);
+            mainPane.add(hAssisstance, 3, 14);
 
             mainScene = new Scene(mainPane, 1024, 768);
         } catch (IOException | SQLException ex) {
@@ -603,11 +623,13 @@ public class MainStage extends Stage {
         HBox hCheque = new HBox(0);
         hCheque.getChildren().add(cheque);
         cheque.setOnAction((ActionEvent event) -> {
-            int val = NumberEntry.showNumberEntryDialog(this, "Enter Cheque Value");
-            double d = (double) val;
-            Platform.runLater(() -> {
-                addMoney(PaymentItem.PaymentType.CHEQUE, new BigDecimal(Double.toString(d / 100)));
-            });
+            if (!sale.getSaleItems().isEmpty()) {
+                int val = NumberEntry.showNumberEntryDialog(this, "Enter Cheque Value");
+                double d = (double) val;
+                Platform.runLater(() -> {
+                    addMoney(PaymentItem.PaymentType.CHEQUE, new BigDecimal(Double.toString(d / 100)));
+                });
+            }
         });
 
         saleCustomer = new Label("No Customer");

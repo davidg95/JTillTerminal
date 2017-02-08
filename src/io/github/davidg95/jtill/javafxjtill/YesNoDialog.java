@@ -26,7 +26,7 @@ public class YesNoDialog extends Stage {
     private static Stage dialog;
     private static Result result;
 
-    private String message;
+    private final String message;
 
     public enum Result {
         YES, NO,
@@ -51,13 +51,13 @@ public class YesNoDialog extends Stage {
         GridPane pane = new GridPane();
         Label label = new Label(message);
         label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-        label.setMinSize(400, 40);
-        label.setMaxSize(400, 40);
+        label.setMinSize(600, 50);
+        label.setMaxSize(600, 50);
         pane.add(label, 0, 0, 2, 1);
 
         Button yes = new Button("Yes");
-        yes.setMinSize(200, 50);
-        yes.setMaxSize(200, 50);
+        yes.setMinSize(300, 100);
+        yes.setMaxSize(300, 100);
         HBox hYes = new HBox(0);
         hYes.getChildren().add(yes);
         yes.setOnAction((ActionEvent event) -> {
@@ -67,8 +67,8 @@ public class YesNoDialog extends Stage {
         pane.add(hYes, 0, 1);
 
         Button no = new Button("No");
-        no.setMinSize(200, 50);
-        no.setMaxSize(200, 50);
+        no.setMinSize(300, 100);
+        no.setMaxSize(300, 100);
         HBox hNo = new HBox(0);
         hNo.getChildren().add(no);
         no.setOnAction((ActionEvent event) -> {
@@ -77,7 +77,7 @@ public class YesNoDialog extends Stage {
         });
         pane.add(hNo, 1, 1);
 
-        Scene scene = new Scene(pane, 400, 100);
+        Scene scene = new Scene(pane, 600, 150);
         String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
         scene.getStylesheets().add(stylesheet);
         setScene(scene);
