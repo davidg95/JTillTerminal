@@ -20,6 +20,9 @@ import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -37,7 +40,7 @@ public class ProductSelectDialog extends Stage {
 
     private final DataConnectInterface dc;
 
-    private ListView<Product> productList;
+    private TableView productTable;
     private ObservableList<Product> obProducts;
 
     public ProductSelectDialog(Window parent, DataConnectInterface dc) {
@@ -57,15 +60,34 @@ public class ProductSelectDialog extends Stage {
 
     private void init() {
         GridPane pane = new GridPane();
-        productList = new ListView<>();
         obProducts = FXCollections.observableArrayList();
-        productList.setItems(obProducts);
-        productList.setMinSize(300, 300);
-        productList.setMaxSize(300, 300);
-        productList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
-            product = newValue;
+
+        productTable = new TableView();
+        productTable.setEditable(false);
+        productTable.setItems(obProducts);
+        productTable.setMinSize(300, 300);
+        productTable.setMaxSize(300, 300);
+        TableColumn colID = new TableColumn("ID");
+        TableColumn colName = new TableColumn("Name");
+        TableColumn colPrice = new TableColumn("Price");
+        colID.setCellValueFactory(new PropertyValueFactory<>("productCode"));
+        colName.setCellValueFactory(new PropertyValueFactory<>("shortName"));
+        colPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
+        colID.setMinWidth(30);
+        colID.setMaxWidth(30);
+        colName.setMinWidth(200);
+        colName.setMaxWidth(200);
+        colPrice.setMinWidth(70);
+        colPrice.setMaxWidth(70);
+        productTable.getColumns().addAll(colID, colName, colPrice);
+        productTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
+            @Override
+            public void changed(ObservableValue<? extends Product> observable, Product oldValue, Product newValue) {
+                product = newValue;
+            }
         });
-        pane.add(productList, 0, 0, 3, 3);
+
+        pane.add(productTable, 0, 0, 3, 3);
 
         Button searchBarcode = new Button("Barcode");
         searchBarcode.setMinSize(100, 100);

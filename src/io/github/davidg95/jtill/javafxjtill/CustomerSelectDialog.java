@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +20,9 @@ import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -36,7 +40,7 @@ public class CustomerSelectDialog extends Stage {
 
     private final DataConnectInterface dc;
 
-    private ListView<Customer> customerList;
+    private TableView customerTable;
     private ObservableList<Customer> obCustomers;
 
     public CustomerSelectDialog(Window parent, DataConnectInterface dc, String title) {
@@ -56,15 +60,31 @@ public class CustomerSelectDialog extends Stage {
 
     private void init() {
         GridPane pane = new GridPane();
-        customerList = new ListView<>();
+        
         obCustomers = FXCollections.observableArrayList();
-        customerList.setItems(obCustomers);
-        customerList.setMinSize(300, 300);
-        customerList.setMaxSize(300, 300);
-        customerList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Customer> observable, Customer oldValue, Customer newValue) -> {
-            customer = newValue;
+        
+        customerTable = new TableView();
+        customerTable.setItems(obCustomers);
+        customerTable.setEditable(false);
+        customerTable.setMinSize(300, 300);
+        customerTable.setMaxSize(300, 300);
+        TableColumn cusID = new TableColumn("ID");
+        TableColumn cusName = new TableColumn("Name");
+        cusID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        cusName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        cusID.setMinWidth(50);
+        cusID.setMaxWidth(50);
+        cusName.setMinWidth(250);
+        cusName.setMaxWidth(250);
+        customerTable.getColumns().addAll(cusID, cusName);
+        customerTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Customer>() {
+            @Override
+            public void changed(ObservableValue<? extends Customer> observable, Customer oldValue, Customer newValue) {
+                customer = newValue;
+            }
         });
-        pane.add(customerList, 0, 0, 3, 3);
+
+        pane.add(customerTable, 0, 0, 3, 3);
 
         Button searchID = new Button("Search ID");
         searchID.setMinSize(100, 100);

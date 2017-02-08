@@ -7,13 +7,10 @@ package io.github.davidg95.jtill.javafxjtill;
 
 import io.github.davidg95.JTill.jtill.DataConnectInterface;
 import io.github.davidg95.JTill.jtill.Discount;
-import io.github.davidg95.JTill.jtill.DiscountNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -22,6 +19,9 @@ import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -39,7 +39,7 @@ public class DiscountSelectDialog extends Stage {
 
     private final DataConnectInterface dc;
 
-    private ListView<Discount> discountList;
+    private TableView discountsTable;
     private ObservableList<Discount> obDiscounts;
 
     public DiscountSelectDialog(Window parent, DataConnectInterface dc) {
@@ -61,17 +61,37 @@ public class DiscountSelectDialog extends Stage {
     private void init() {
         try {
             GridPane pane = new GridPane();
-            discountList = new ListView<>();
             obDiscounts = FXCollections.observableArrayList();
+            
+            discountsTable = new TableView();
+            discountsTable.setEditable(false);
+            discountsTable.setItems(obDiscounts);
+            discountsTable.setMinSize(300, 300);
+            discountsTable.setMaxSize(300, 300);
+            TableColumn colID = new TableColumn("ID");
+            TableColumn colName = new TableColumn("Name");
+            TableColumn colValue = new TableColumn("Value");
+            colID.setCellValueFactory(new PropertyValueFactory<>("id"));
+            colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            colValue.setCellValueFactory(new PropertyValueFactory<>("percentage"));
+            colID.setMinWidth(30);
+            colID.setMaxWidth(30);
+            colName.setMinWidth(200);
+            colName.setMaxWidth(200);
+            colValue.setMinWidth(70);
+            colValue.setMaxWidth(70);
+            discountsTable.getColumns().addAll(colID, colName, colValue);
+            discountsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Discount>() {
+                @Override
+                public void changed(ObservableValue<? extends Discount> observable, Discount oldValue, Discount newValue) {
+                    discount = newValue;
+                }
+            });
+
             List<Discount> d = dc.getAllDiscounts();
             updateList(d);
-            discountList.setItems(obDiscounts);
-            discountList.setMinSize(300, 300);
-            discountList.setMaxSize(300, 300);
-            discountList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Discount> observable, Discount oldValue, Discount newValue) -> {
-                discount = newValue;
-            });
-            pane.add(discountList, 0, 0, 3, 3);
+
+            pane.add(discountsTable, 0, 0, 3, 3);
 
             Button searchID = new Button("Search ID");
             searchID.setMinSize(100, 100);
@@ -121,7 +141,7 @@ public class DiscountSelectDialog extends Stage {
                 hide();
             });
             pane.add(hClose, 2, 3);
-            
+
             Scene scene = new Scene(pane, 300, 400);
             setScene(scene);
         } catch (IOException | SQLException ex) {
