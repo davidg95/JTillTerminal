@@ -190,11 +190,9 @@ public class MainStage extends Stage {
             hVoid.getChildren().add(voidSelected);
             voidSelected.setOnAction((ActionEvent event) -> {
                 if (itemsInSale.getSelectionModel().getSelectedIndex() > -1) {
-                    if (YesNoDialog.showDialog(this, "Void Item", "Are you sure you want to void the selected item?") == YesNoDialog.Result.YES) {
-                        sale.voidItem(itemsInSale.getSelectionModel().getSelectedItem());
-                        items.remove(itemsInSale.getSelectionModel().getSelectedItem());
-                        setTotalLabel();
-                    }
+                    sale.voidItem(itemsInSale.getSelectionModel().getSelectedItem());
+                    items.remove(itemsInSale.getSelectionModel().getSelectedItem());
+                    setTotalLabel();
                 }
             });
 
@@ -239,17 +237,10 @@ public class MainStage extends Stage {
             HBox hLookup = new HBox(0);
             hLookup.getChildren().add(lookup);
             lookup.setOnAction((ActionEvent event) -> {
-                String terms = EntryDialog.show(this, "Product Lookup", "Enter search terms");
-                Platform.runLater(() -> {
-                    try {
-                        List<Product> products = dc.productLookup(terms);
-                        if (products.size() == 1) {
-                            addItemToSale(products.get(0));
-                        }
-                    } catch (IOException | SQLException ex) {
-                        showErrorAlert(ex);
-                    }
-                });
+                Product p = ProductSelectDialog.showDialog(this, dc);
+                if (p != null) {
+                    addItemToSale(p);
+                }
             });
 
             halfPrice = new Button("Half Price");
@@ -453,7 +444,7 @@ public class MainStage extends Stage {
         fivePounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
                 Platform.runLater(() -> {
-                    addMoney(new BigDecimal("5"));
+                    addMoney(new BigDecimal("5.00"));
                 });
             }
         });
@@ -466,7 +457,7 @@ public class MainStage extends Stage {
         tenPounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
                 Platform.runLater(() -> {
-                    addMoney(new BigDecimal("10"));
+                    addMoney(new BigDecimal("10.00"));
                 });
             }
         });
@@ -479,7 +470,7 @@ public class MainStage extends Stage {
         twentyPounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
                 Platform.runLater(() -> {
-                    addMoney(new BigDecimal("20"));
+                    addMoney(new BigDecimal("20.00"));
                 });
             }
         });
