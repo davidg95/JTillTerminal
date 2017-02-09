@@ -21,9 +21,10 @@ import io.github.davidg95.JTill.jtill.TillButton;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -116,11 +117,12 @@ public class MainStage extends Stage {
     private Button settings;
     private Button voidItem;
     private Button voidSale;
+    private Button cashUp;
 
     public MainStage(DataConnectInterface dc) {
         super();
         this.dc = dc;
-        this.sale = new Sale();
+        this.sale = new Sale(JavaFXJTill.NAME);
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
         //Created the scenes
@@ -708,6 +710,19 @@ public class MainStage extends Stage {
             }
         });
 
+        cashUp = new Button("Cash Up");
+        cashUp.setMinSize(150, 150);
+        cashUp.setMaxSize(150, 150);
+        HBox hCashUp = new HBox(0);
+        hCashUp.getChildren().add(cashUp);
+        cashUp.setOnAction((ActionEvent event) -> {
+            if (staff.getPosition() == Staff.Position.MANAGER || staff.getPosition() == Staff.Position.AREA_MANAGER) {
+                CashUpDialog.showDialog(this);
+            } else {
+                MessageDialog.showMessage(this, "Cash Up", "You are not allowed to view this screen");
+            }
+        });
+
         paymentPane.add(hFive, 1, 1);
         paymentPane.add(hTen, 2, 1);
         paymentPane.add(hTwenty, 3, 1);
@@ -725,6 +740,7 @@ public class MainStage extends Stage {
         paymentPane.add(hVoidSale, 7, 2);
         paymentPane.add(hDiscount, 7, 3);
         paymentPane.add(hSettings, 8, 1);
+        paymentPane.add(hCashUp, 8, 2);
 
         paymentScene = new Scene(paymentPane, 1024, 768);
     }
@@ -840,7 +856,7 @@ public class MainStage extends Stage {
 
     private void completeCurrentSale() {
         try {
-            sale.setTime(new Date().getTime());
+            sale.setTime(new Time(System.currentTimeMillis()));
             dc.addSale(sale);
             newSale();
         } catch (IOException | SQLException ex) {
@@ -870,7 +886,7 @@ public class MainStage extends Stage {
     }
 
     private void newSale() {
-        sale = new Sale();
+        sale = new Sale(JavaFXJTill.NAME);
         obTable = FXCollections.observableArrayList();
         obPayments = FXCollections.observableArrayList();
         paymentsList.setItems(obPayments);
