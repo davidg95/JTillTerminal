@@ -28,16 +28,16 @@ public class JavaFXJTill extends Application {
     public static String NAME;
     public static String HOST;
     public static int PORT = 600;
+    
+    boolean retry;
 
     @Override
     public void start(Stage primaryStage) {
         loadProperties();
-        boolean connect = true;
-        while (connect) {
+        retry = true;
+        tryConnect();
+        while (retry) {
             tryConnect();
-            if (YesNoDialog.showDialog(null, "Connect", "Do you want to attempt to connect?") == YesNoDialog.NO) {
-                connect = false;
-            }
         }
     }
 
@@ -47,7 +47,11 @@ public class JavaFXJTill extends Application {
             sc.connect(HOST, PORT);
             MainStage mainStage = new MainStage(sc);
             mainStage.show();
+            retry = false;
         } catch (IOException ex) {
+            if (YesNoDialog.showDialog(null, "Connection Failed", "Do you want to attempt to connect?") == YesNoDialog.NO) {
+                System.exit(0);
+            }
             SetupDialog.showDialog(null);
             saveProperties();
         }
