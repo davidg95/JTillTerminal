@@ -110,7 +110,6 @@ public class MainStage extends Stage {
     private Button cheque;
     private Button addCustomer;
     private Label saleCustomer;
-    private Label saleDiscount;
     private Label paymentTotal;
     private ListView<PaymentItem> paymentsList;
     private ObservableList<PaymentItem> obPayments;
@@ -124,12 +123,6 @@ public class MainStage extends Stage {
         super();
         this.dc = dc;
         this.sale = new Sale();
-        try {
-            Discount defaultDiscount = dc.getDiscount(1);
-            sale.setDiscount(defaultDiscount);
-        } catch (IOException | SQLException | DiscountNotFoundException ex) {
-            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-        }
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
         //Created the scenes
@@ -165,7 +158,9 @@ public class MainStage extends Stage {
             screenButtonGroup = new ToggleGroup();
             addScreens(screens, screenPane);
             buttonPane.getChildren().clear();
-            buttonPane.getChildren().add(buttonPanes.get(0));
+            if (!buttonPanes.isEmpty()) {
+                buttonPane.getChildren().add(buttonPanes.get(0));
+            }
 
             itemsTable = new TableView();
             itemsTable.setEditable(false);
@@ -175,7 +170,7 @@ public class MainStage extends Stage {
             TableColumn itm = new TableColumn("Item");
             TableColumn cst = new TableColumn("£");
             qty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-            itm.setCellValueFactory(new PropertyValueFactory<>("product"));
+            itm.setCellValueFactory(new PropertyValueFactory<>("item"));
             cst.setCellValueFactory(new PropertyValueFactory<>("price"));
             qty.setMaxWidth(40);
             qty.setMinWidth(40);
@@ -298,9 +293,13 @@ public class MainStage extends Stage {
             halfPrice.setOnAction((ActionEvent event) -> {
                 if (itemsTable.getSelectionModel().getSelectedIndex() > -1) {
                     SaleItem item = (SaleItem) itemsTable.getSelectionModel().getSelectedItem();
-                    sale.halfPriceItem(item);
-                    setTotalLabel();
-                    itemsTable.refresh();
+                    if (!(item.getItem() instanceof Discount)) {
+                        sale.halfPriceItem(item);
+                        setTotalLabel();
+                        itemsTable.refresh();
+                    } else {
+                        MessageDialog.showMessage(this, "Hald Price", "Item not discountable");
+                    }
                 }
             });
 
@@ -635,9 +634,6 @@ public class MainStage extends Stage {
         saleCustomer = new Label("No Customer");
         saleCustomer.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        saleDiscount = new Label("Discount: " + sale.getDiscount().getName());
-        saleDiscount.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-
         Button back = new Button("Back");
         back.setMaxSize(150, 150);
         back.setMinSize(150, 150);
@@ -692,9 +688,10 @@ public class MainStage extends Stage {
         discount.setOnAction((ActionEvent event) -> {
             Discount d = DiscountSelectDialog.showDialog(this, dc);
             if (d != null) {
-                sale.setDiscount(d);
+                d.setPrice(sale.getTotal().multiply(new BigDecimal(Double.toString(d.getPercentage() / 100)).negate()));
+                sale.addItem(d, 1);
+//                sale.setDiscount(d);
                 setTotalLabel();
-                saleDiscount.setText("Discount: " + d.getName());
                 itemsTable.refresh();
             }
         });
@@ -722,7 +719,6 @@ public class MainStage extends Stage {
         paymentPane.add(hCharge, 2, 3);
         paymentPane.add(hCheque, 3, 3);
         paymentPane.add(saleCustomer, 1, 4);
-        paymentPane.add(saleDiscount, 1, 5);
         paymentPane.add(hBack, 7, 4);
         paymentPane.add(paymentsList, 5, 1, 2, 3);
         paymentPane.add(hTotal, 5, 4);
@@ -785,7 +781,6 @@ public class MainStage extends Stage {
                                 MainStage.this.sale = rs;
                                 obTable.setAll(rs.getSaleItems());
                                 setTotalLabel();
-                                saleDiscount.setText("Discount: " + sale.getDiscount().getName());
                                 setCustomer(rs.getCustomer());
                             }
                             staffLabel.setText("Staff: " + s.getName());
@@ -877,13 +872,6 @@ public class MainStage extends Stage {
 
     private void newSale() {
         sale = new Sale();
-        Discount defaultDiscount = null;
-        try {
-            defaultDiscount = dc.getDiscount(1);
-        } catch (IOException | SQLException | DiscountNotFoundException ex) {
-            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        sale.setDiscount(defaultDiscount);
         obTable = FXCollections.observableArrayList();
         obPayments = FXCollections.observableArrayList();
         paymentsList.setItems(obPayments);
@@ -894,7 +882,6 @@ public class MainStage extends Stage {
         quantity.setText("Quantity: 1");
         saleCustomer.setText("No Customer");
         addCustomer.setText("Add Customer");
-        saleDiscount.setText("Discount: " + sale.getDiscount().getName());
         chargeAccount.setDisable(true);
         setScene(mainScene);
     }
