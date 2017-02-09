@@ -24,13 +24,12 @@ import javafx.stage.Window;
 public class YesNoDialog extends Stage {
 
     private static Stage dialog;
-    private static Result result;
+    private static int result;
+
+    public static final int YES = 1;
+    public static final int NO = 0;
 
     private final String message;
-
-    public enum Result {
-        YES, NO,
-    }
 
     public YesNoDialog(Window parent, String title, String message) {
         this.message = message;
@@ -40,9 +39,9 @@ public class YesNoDialog extends Stage {
         initModality(Modality.APPLICATION_MODAL);
     }
 
-    public static Result showDialog(Window parent, String title, String message) {
+    public static int showDialog(Window parent, String title, String message) {
         dialog = new YesNoDialog(parent, title, message);
-        result = Result.NO;
+        result = NO;
         dialog.showAndWait();
         return result;
     }
@@ -61,7 +60,7 @@ public class YesNoDialog extends Stage {
         HBox hYes = new HBox(0);
         hYes.getChildren().add(yes);
         yes.setOnAction((ActionEvent event) -> {
-            result = Result.YES;
+            result = YES;
             hide();
         });
         pane.add(hYes, 0, 1);
@@ -72,7 +71,7 @@ public class YesNoDialog extends Stage {
         HBox hNo = new HBox(0);
         hNo.getChildren().add(no);
         no.setOnAction((ActionEvent event) -> {
-            result = Result.NO;
+            result = NO;
             hide();
         });
         pane.add(hNo, 1, 1);

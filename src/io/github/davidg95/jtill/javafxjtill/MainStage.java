@@ -8,7 +8,6 @@ package io.github.davidg95.jtill.javafxjtill;
 import io.github.davidg95.JTill.jtill.Customer;
 import io.github.davidg95.JTill.jtill.DataConnectInterface;
 import io.github.davidg95.JTill.jtill.Discount;
-import io.github.davidg95.JTill.jtill.DiscountNotFoundException;
 import io.github.davidg95.JTill.jtill.LoginException;
 import io.github.davidg95.JTill.jtill.Product;
 import io.github.davidg95.JTill.jtill.ProductNotFoundException;
@@ -674,7 +673,7 @@ public class MainStage extends Stage {
         HBox hVoidSale = new HBox(0);
         hVoidSale.getChildren().add(voidSale);
         voidSale.setOnAction((ActionEvent event) -> {
-            if (YesNoDialog.showDialog(this, "Void Sale", "Are you sure you want to void the sale?") == YesNoDialog.Result.YES) {
+            if (YesNoDialog.showDialog(this, "Void Sale", "Are you sure you want to void the sale?") == YesNoDialog.YES) {
                 newSale();
             }
         });
@@ -702,7 +701,8 @@ public class MainStage extends Stage {
         hSettings.getChildren().add(settings);
         settings.setOnAction((ActionEvent event) -> {
             if (staff.getPosition() == Staff.Position.MANAGER || staff.getPosition() == Staff.Position.AREA_MANAGER) {
-
+                SetupDialog.showDialog(MainStage.this);
+                MessageDialog.showMessage(this, "Settings", "Changes will apply after restart");
             } else {
                 MessageDialog.showMessage(this, "Settings", "You are not allowed to view this screen");
             }
