@@ -18,6 +18,7 @@ import io.github.davidg95.JTill.jtill.Screen;
 import io.github.davidg95.JTill.jtill.ScreenNotFoundException;
 import io.github.davidg95.JTill.jtill.Staff;
 import io.github.davidg95.JTill.jtill.StaffNotFoundException;
+import io.github.davidg95.JTill.jtill.TillButton;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -25,8 +26,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -323,17 +322,17 @@ public class MainStage extends Stage {
             mainPane.add(time, 6, 0, 2, 1);
             mainPane.add(buttonPane, 0, 1, 5, 10);
             mainPane.add(screenPane, 0, 11, 5, 2);
-            mainPane.add(itemsTable, 6, 2, 2, 5);
-            mainPane.add(total, 6, 8, 2, 1);
-            mainPane.add(hQuantity, 6, 9);
-            mainPane.add(hVoid, 7, 9);
-            mainPane.add(barcode, 6, 10, 2, 1);
-            mainPane.add(numbers, 6, 11, 2, 3);
-            mainPane.add(hPayment, 6, 14, 2, 2);
-            mainPane.add(hHalfPrice, 2, 14);
-            mainPane.add(hLogoff, 0, 14);
-            mainPane.add(hLookup, 1, 14);
-            mainPane.add(hAssisstance, 3, 14);
+            mainPane.add(itemsTable, 6, 1, 2, 5);
+            mainPane.add(total, 6, 6, 2, 1);
+            mainPane.add(hQuantity, 6, 7);
+            mainPane.add(hVoid, 7, 7);
+            mainPane.add(barcode, 6, 8, 2, 1);
+            mainPane.add(numbers, 6, 9, 2, 3);
+            mainPane.add(hPayment, 6, 19, 2, 2);
+            mainPane.add(hHalfPrice, 2, 19);
+            mainPane.add(hLogoff, 0, 19);
+            mainPane.add(hLookup, 1, 19);
+            mainPane.add(hAssisstance, 3, 19);
 
             mainScene = new Scene(mainPane, 1024, 768);
         } catch (IOException | SQLException ex) {
@@ -971,24 +970,38 @@ public class MainStage extends Stage {
 
     private void setScreenButtons(Screen s, FlowPane pane) {
         try {
-            List<io.github.davidg95.JTill.jtill.Button> buttons = dc.getButtonsOnScreen(s);
+            List<TillButton> buttons = dc.getButtonsOnScreen(s);
             addButtons(buttons, pane);
         } catch (IOException | SQLException | ScreenNotFoundException ex) {
             showErrorAlert(ex);
         }
     }
 
-    private void addButtons(List<io.github.davidg95.JTill.jtill.Button> buttons, FlowPane grid) {
+    private void addButtons(List<TillButton> buttons, FlowPane grid) {
         int x = 0;
         int y = 0;
-        for (io.github.davidg95.JTill.jtill.Button b : buttons) {
-            Button button = new Button(b.getName());
-            button.setId("productButton");
-            button.setMaxSize(150, 50);
-            button.setMinSize(150, 50);
-            HBox hbBtn = new HBox(10);
-            hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-            hbBtn.getChildren().add(button);
+        for (TillButton b : buttons) {
+            HBox hbBtn;
+            if (b.getName().equals("[SPACE]")) {
+                hbBtn = new HBox(10);
+                hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+                hbBtn.setMinSize(150, 50);
+                hbBtn.setMaxSize(150, 50);
+            } else {
+                Button button = new Button(b.getName());
+                button.setId("productButton");
+                button.setMaxSize(150, 50);
+                button.setMinSize(150, 50);
+                hbBtn = new HBox(10);
+                hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+                hbBtn.getChildren().add(button);
+                button.setOnAction((ActionEvent e) -> {
+                    Product p = b.getProduct().clone();
+                    Platform.runLater(() -> {
+                        onProductButton(p);
+                    });
+                });
+            }
             grid.getChildren().add(hbBtn);
 
             x++;
@@ -996,13 +1009,6 @@ public class MainStage extends Stage {
                 x = 0;
                 y++;
             }
-
-            button.setOnAction((ActionEvent e) -> {
-                Product p = b.getProduct().clone();
-                Platform.runLater(() -> {
-                    onProductButton(p);
-                });
-            });
         }
     }
 

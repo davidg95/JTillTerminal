@@ -112,10 +112,10 @@ public class JavaFXJTill extends Application {
 //        primaryStage.show();
     }
 
-    private void addButtons(List<io.github.davidg95.JTill.jtill.Button> buttons, GridPane grid) {
+    private void addButtons(List<io.github.davidg95.JTill.jtill.TillButton> buttons, GridPane grid) {
         int x = 1;
         int y = 2;
-        for (io.github.davidg95.JTill.jtill.Button b : buttons) {
+        for (io.github.davidg95.JTill.jtill.TillButton b : buttons) {
             Button button = new Button(b.getName());
             button.setMaxSize(100, 40);
             button.setMinSize(100, 40);
