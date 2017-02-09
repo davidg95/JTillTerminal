@@ -74,8 +74,8 @@ public class ProductSelectDialog extends Stage {
         TableColumn colID = new TableColumn("ID");
         TableColumn colName = new TableColumn("Name");
         TableColumn colPrice = new TableColumn("Price");
-        colID.setCellValueFactory(new PropertyValueFactory<>("productCode"));
-        colName.setCellValueFactory(new PropertyValueFactory<>("shortName"));
+        colID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         colID.setMinWidth(30);
         colID.setMaxWidth(30);
