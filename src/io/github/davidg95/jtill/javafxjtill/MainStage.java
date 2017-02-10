@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -717,7 +716,7 @@ public class MainStage extends Stage {
         hCashUp.getChildren().add(cashUp);
         cashUp.setOnAction((ActionEvent event) -> {
             if (staff.getPosition() == Staff.Position.MANAGER || staff.getPosition() == Staff.Position.AREA_MANAGER) {
-                CashUpDialog.showDialog(this);
+                CashUpDialog.showDialog(this, dc);
             } else {
                 MessageDialog.showMessage(this, "Cash Up", "You are not allowed to view this screen");
             }

@@ -5,16 +5,26 @@
  */
 package io.github.davidg95.jtill.javafxjtill;
 
+import io.github.davidg95.JTill.jtill.DataConnectInterface;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -27,17 +37,27 @@ public class CashUpDialog extends Stage {
 
     private static Stage dialog;
 
-    private BigDecimal valueCounted;
+    private final DataConnectInterface dc;
 
-    public CashUpDialog(Window parent) {
+    private Label cashLabel;
+    private TextField cashValue;
+    private Button declare;
+    private Label takingsLabel;
+    private TextField takingsField;
+    private Label differenceLabel;
+    private TextField differenceField;
+    private Button close;
+
+    public CashUpDialog(Window parent, DataConnectInterface dc) {
+        this.dc = dc;
         init();
         setTitle("Cash Up");
         initOwner(parent);
         initModality(Modality.APPLICATION_MODAL);
     }
 
-    public static void showDialog(Window parent) {
-        dialog = new CashUpDialog(parent);
+    public static void showDialog(Window parent, DataConnectInterface dc) {
+        dialog = new CashUpDialog(parent, dc);
         dialog.showAndWait();
     }
 
@@ -110,20 +130,86 @@ public class CashUpDialog extends Stage {
 //        pane.add(textTwop, 2, 11);
 //        pane.add(onep, 1, 12);
 //        pane.add(textOnep, 2, 12);
-        valueCounted = new BigDecimal("0");
-        Label counted = new Label("Enter value of cash:");
-        TextField textValue = new TextField();
-        textValue.setOnMousePressed((MouseEvent event) -> {
-            double val = (double) NumberEntry.showNumberEntryDialog(CashUpDialog.this, "Enter Cash Value");
-            textValue.setText((val / 100) + "");
-            valueCounted = new BigDecimal(Double.toString(val / 100));
+        cashLabel = new Label("Enter value of cash:");
+        cashLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        cashValue = new TextField("0");
+        cashValue.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        cashValue.setOnMousePressed((MouseEvent event) -> {
+            double d = ((double) NumberEntry.showNumberEntryDialog(this, "Enter cash counted", (int) (Double.parseDouble(cashValue.getText()) * 100))) / 100;
+            DecimalFormat df;
+            if (d >= 1) {
+                df = new DecimalFormat("#.00");
+            } else {
+                df = new DecimalFormat("0.00");
+            }
+            cashValue.setText(df.format(d) + "");
         });
 
-        pane.add(counted, 1, 1);
-        pane.add(textValue, 2, 1);
+        takingsLabel = new Label("Takings:");
+        takingsLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        Scene scene = new Scene(pane, 400, 600);
+        takingsField = new TextField();
+        takingsField.setEditable(false);
+        takingsField.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
+        differenceLabel = new Label("Difference:");
+        differenceLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        differenceField = new TextField();
+        differenceField.setEditable(false);
+        differenceField.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        declare = new Button("Declare");
+        declare.setMinSize(100, 60);
+        declare.setMaxSize(100, 60);
+        HBox hDeclare = new HBox(0);
+        hDeclare.getChildren().add(declare);
+        declare.setOnAction((ActionEvent event) -> {
+            try {
+                cashValue.setDisable(true);
+                BigDecimal takings = dc.getTillTakings(JavaFXJTill.NAME);
+                BigDecimal valueCounted = new BigDecimal(cashValue.getText());
+                BigDecimal difference = valueCounted.subtract(takings);
+                DecimalFormat df;
+                if (takings.compareTo(BigDecimal.ONE) >= 1) {
+                    df = new DecimalFormat("#.00");
+                } else {
+                    df = new DecimalFormat("0.00");
+                }
+                takingsField.setText(df.format(takings.doubleValue()));
+                if (difference.compareTo(BigDecimal.ONE) >= 1) {
+                    df = new DecimalFormat("#.00");
+                } else {
+                    df = new DecimalFormat("0.00");
+                }
+                differenceField.setText(df.format(difference.doubleValue()));
+            } catch (IOException | SQLException ex) {
+                MessageDialog.showMessage(this, "Cash Up", "Server error");
+            }
+        });
+
+        close = new Button("Close");
+        close.setMinSize(100, 60);
+        close.setMaxSize(100, 60);
+        HBox hClose = new HBox(0);
+        hClose.getChildren().add(close);
+        close.setOnAction((ActionEvent event) -> {
+            hide();
+        });
+
+        pane.add(cashLabel, 1, 1);
+        pane.add(cashValue, 2, 1);
+        pane.add(hDeclare, 2, 2);
+        pane.add(takingsLabel, 1, 3);
+        pane.add(takingsField, 2, 3);
+        pane.add(differenceLabel, 1, 4);
+        pane.add(differenceField, 2, 4);
+        pane.add(hClose, 3, 5);
+
+        Scene scene = new Scene(pane);
+        String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
+        scene.getStylesheets().add(stylesheet);
         setScene(scene);
 
     }
