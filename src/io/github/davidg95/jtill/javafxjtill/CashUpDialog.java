@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -145,6 +143,9 @@ public class CashUpDialog extends Stage {
             }
             cashValue.setText(df.format(d) + "");
         });
+        cashValue.setOnAction((ActionEvent event) -> {
+            declare.fire();
+        });
 
         takingsLabel = new Label("Takings:");
         takingsLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -184,6 +185,13 @@ public class CashUpDialog extends Stage {
                     df = new DecimalFormat("0.00");
                 }
                 differenceField.setText(df.format(difference.doubleValue()));
+                if (YesNoDialog.showDialog(this, "Cash up", "Do you want the report emailed?") == YesNoDialog.YES) {
+                    String message = "Cashup for terminal " + JavaFXJTill.NAME
+                            + "\nValue counted: £" + valueCounted.toString()
+                            + "\nActual takings: £" + takings.toString()
+                            + "\nDifference: £" + difference.toString();
+                    dc.sendEmail(message);
+                }
             } catch (IOException | SQLException ex) {
                 MessageDialog.showMessage(this, "Cash Up", "Server error");
             }
