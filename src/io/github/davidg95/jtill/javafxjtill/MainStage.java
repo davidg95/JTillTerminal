@@ -798,6 +798,7 @@ public class MainStage extends Stage {
                                 setCustomer(rs.getCustomer());
                             }
                             staffLabel.setText("Staff: " + s.getName());
+                            sale.setStaff(staff);
                             setScene(mainScene);
                         } catch (IOException | LoginException | SQLException ex) {
                             MessageDialog.showMessage(MainStage.this, "Log on", ex.getMessage());
