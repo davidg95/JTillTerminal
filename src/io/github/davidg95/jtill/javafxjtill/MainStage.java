@@ -121,7 +121,7 @@ public class MainStage extends Stage {
     public MainStage(DataConnectInterface dc) {
         super();
         this.dc = dc;
-        this.sale = new Sale(JavaFXJTill.NAME);
+        this.sale = new Sale(JavaFXJTill.NAME, staff);
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
         //Created the scenes
@@ -857,6 +857,14 @@ public class MainStage extends Stage {
         try {
             sale.setTime(new Time(System.currentTimeMillis()));
             dc.addSale(sale);
+            if (YesNoDialog.showDialog(this, "Email Receipt", "Email Customer Receipt?") == YesNoDialog.YES) {
+                if (sale.getCustomer() != null) {
+                    dc.emailReceipt(sale.getCustomer().getEmail(), sale);
+                } else {
+                    String email = EntryDialog.show(this, "Email Receipt", "Enter email");
+                    dc.emailReceipt(email, sale);
+                }
+            }
             newSale();
         } catch (IOException | SQLException ex) {
             showErrorAlert(ex);
@@ -885,7 +893,7 @@ public class MainStage extends Stage {
     }
 
     private void newSale() {
-        sale = new Sale(JavaFXJTill.NAME);
+        sale = new Sale(JavaFXJTill.NAME, staff);
         obTable = FXCollections.observableArrayList();
         obPayments = FXCollections.observableArrayList();
         paymentsList.setItems(obPayments);

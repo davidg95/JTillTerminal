@@ -134,7 +134,12 @@ public class CashUpDialog extends Stage {
         cashValue = new TextField("0");
         cashValue.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         cashValue.setOnMousePressed((MouseEvent event) -> {
-            double d = ((double) NumberEntry.showNumberEntryDialog(this, "Enter cash counted", (int) (Double.parseDouble(cashValue.getText()) * 100))) / 100;
+            double d;
+            if (cashValue.getText().equals("")) {
+                d = ((double) NumberEntry.showNumberEntryDialog(this, "Enter cash counted")) / 100;
+            } else {
+                d = ((double) NumberEntry.showNumberEntryDialog(this, "Enter cash counted", (int) (Double.parseDouble(cashValue.getText()) * 100))) / 100;
+            }
             DecimalFormat df;
             if (d >= 1) {
                 df = new DecimalFormat("#.00");
