@@ -175,8 +175,11 @@ public class CashUpDialog extends Stage {
             try {
                 cashValue.setDisable(true);
                 BigDecimal takings = dc.getTillTakings(JavaFXJTill.NAME);
+                takings = takings.setScale(2);
                 BigDecimal valueCounted = new BigDecimal(cashValue.getText());
+                valueCounted = valueCounted.setScale(2);
                 BigDecimal difference = valueCounted.subtract(takings);
+                difference = difference.setScale(2);
                 DecimalFormat df;
                 if (takings.compareTo(BigDecimal.ONE) >= 1) {
                     df = new DecimalFormat("#.00");

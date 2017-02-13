@@ -28,7 +28,7 @@ public class JavaFXJTill extends Application {
     public static String NAME;
     public static String HOST;
     public static int PORT = 600;
-    
+
     boolean retry;
 
     @Override
@@ -44,8 +44,10 @@ public class JavaFXJTill extends Application {
     private void tryConnect() {
         try {
             sc = new ServerConnection(NAME);
-            sc.connect(HOST, PORT);
             MainStage mainStage = new MainStage(sc);
+            sc.setGUI(mainStage);
+            sc.connect(HOST, PORT);
+            mainStage.initalise();
             mainStage.show();
             retry = false;
         } catch (IOException ex) {

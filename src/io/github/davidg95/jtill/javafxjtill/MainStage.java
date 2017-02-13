@@ -8,6 +8,7 @@ package io.github.davidg95.jtill.javafxjtill;
 import io.github.davidg95.JTill.jtill.Customer;
 import io.github.davidg95.JTill.jtill.DataConnectInterface;
 import io.github.davidg95.JTill.jtill.Discount;
+import io.github.davidg95.JTill.jtill.GUIInterface;
 import io.github.davidg95.JTill.jtill.LoginException;
 import io.github.davidg95.JTill.jtill.Product;
 import io.github.davidg95.JTill.jtill.ProductNotFoundException;
@@ -17,6 +18,7 @@ import io.github.davidg95.JTill.jtill.Screen;
 import io.github.davidg95.JTill.jtill.ScreenNotFoundException;
 import io.github.davidg95.JTill.jtill.Staff;
 import io.github.davidg95.JTill.jtill.StaffNotFoundException;
+import io.github.davidg95.JTill.jtill.Till;
 import io.github.davidg95.JTill.jtill.TillButton;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -59,7 +61,7 @@ import javafx.stage.StageStyle;
  *
  * @author David
  */
-public class MainStage extends Stage {
+public class MainStage extends Stage implements GUIInterface {
 
     private Staff staff;
     private Sale sale;
@@ -68,6 +70,8 @@ public class MainStage extends Stage {
     private final DataConnectInterface dc;
 
     private final String stylesheet;
+
+    private ModalMessage modalMessage;
 
     //Login Scene Components
     private Scene loginScene;
@@ -124,6 +128,9 @@ public class MainStage extends Stage {
         this.sale = new Sale(JavaFXJTill.NAME, staff);
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
+    }
+
+    public void initalise() {
         //Created the scenes
         init();
         initPayment();
@@ -1038,5 +1045,37 @@ public class MainStage extends Stage {
 
     private void onProductButton(Product p) {
         addItemToSale(p);
+    }
+
+    @Override
+    public void log(Object o) {
+    }
+
+    @Override
+    public void setClientLabel(String text) {
+    }
+
+    @Override
+    public void showMessage(String title, String message) {
+        MessageDialog.showMessage(this, title, message);
+    }
+
+    @Override
+    public boolean showYesNoMessage(String title, String message) {
+        return YesNoDialog.showDialog(this, title, message) == YesNoDialog.YES;
+    }
+
+    @Override
+    public void showModalMessage(String title, String message) {
+        modalMessage = ModalMessage.showDialog(null, title, message);
+    }
+
+    @Override
+    public void hideModalMessage() {
+        modalMessage.hide();
+    }
+
+    @Override
+    public void addTill(Till t) {
     }
 }
