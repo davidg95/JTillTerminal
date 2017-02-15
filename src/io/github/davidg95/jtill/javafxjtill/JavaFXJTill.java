@@ -23,42 +23,32 @@ import javafx.stage.Stage;
  */
 public class JavaFXJTill extends Application {
 
-    private ServerConnection sc;
+    private static ServerConnection sc;
     private static Properties properties;
     public static String NAME;
     public static String HOST;
-    public static int PORT = 600;
-
-    boolean retry;
+    public static int PORT = 52341;
+    private static MainStage mainStage;
 
     @Override
     public void start(Stage primaryStage) {
-        loadProperties();
-        retry = true;
-        tryConnect();
-        while (retry) {
-            tryConnect();
-        }
+        sc = new ServerConnection(NAME);
+        mainStage = new MainStage(sc);
+        mainStage.initalise();
     }
 
-    private void tryConnect() {
-        try {
-            sc = new ServerConnection(NAME);
-            MainStage mainStage = new MainStage(sc);
-            sc.setGUI(mainStage);
-            sc.connect(HOST, PORT);
-            mainStage.initalise();
-            mainStage.show();
-            retry = false;
-        } catch (IOException ex) {
-            if (YesNoDialog.showDialog(null, "Connection Failed", "Do you want to attempt to connect?") == YesNoDialog.NO) {
-                System.exit(0);
-            }
-            SetupDialog.showDialog(null);
-            saveProperties();
-        }
-    }
-
+//    private static void tryConnect() {
+//        try {
+//            sc.setGUI(mainStage);
+//            sc.connect(HOST, PORT);
+//        } catch (IOException ex) {
+//            if (YesNoDialog.showDialog(null, "Connection Failed", "Do you want to attempt to connect?") == YesNoDialog.NO) {
+//                System.exit(0);
+//            }
+//            SetupDialog.showDialog(null);
+//            saveProperties();
+//        }
+//    }
     /**
      * @param args the command line arguments
      */
@@ -66,7 +56,7 @@ public class JavaFXJTill extends Application {
         launch(args);
     }
 
-    public void loadProperties() {
+    public static void loadProperties() {
         properties = new Properties();
         InputStream in;
 
@@ -87,7 +77,7 @@ public class JavaFXJTill extends Application {
         }
     }
 
-    public void saveProperties() {
+    public static void saveProperties() {
         properties = new Properties();
         OutputStream out;
 

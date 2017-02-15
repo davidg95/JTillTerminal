@@ -16,17 +16,21 @@ import io.github.davidg95.JTill.jtill.Sale;
 import io.github.davidg95.JTill.jtill.SaleItem;
 import io.github.davidg95.JTill.jtill.Screen;
 import io.github.davidg95.JTill.jtill.ScreenNotFoundException;
+import io.github.davidg95.JTill.jtill.ServerConnection;
 import io.github.davidg95.JTill.jtill.Staff;
 import io.github.davidg95.JTill.jtill.StaffNotFoundException;
 import io.github.davidg95.JTill.jtill.Till;
 import io.github.davidg95.JTill.jtill.TillButton;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.ConnectException;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -142,209 +146,237 @@ public class MainStage extends Stage implements GUIInterface {
         setScene(loginScene); //Show the login scene first
         initStyle(StageStyle.UNDECORATED);
         show();
+        Platform.runLater(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            boolean tryCon = true;
+            while (tryCon) {
+                try {
+                    tryConnect();
+                    tryCon = false;
+                } catch (IOException ex) {
+                    if (YesNoDialog.showDialog(this, "Try Again?", "Do you want to try connect again?") == YesNoDialog.NO) {
+                        tryCon = false;
+                    }
+                }
+            }
+        });
+    }
+
+    private void tryConnect() throws IOException {
+        JavaFXJTill.loadProperties();
+        dc.setGUI(MainStage.this);
+        ServerConnection sc = (ServerConnection) dc;
+        sc.connect(JavaFXJTill.HOST, JavaFXJTill.PORT, JavaFXJTill.NAME);
+    }
+
+    public void getServerData() {
+        try {
+            List<Screen> screens = dc.getAllScreens();
+            addScreens(screens, screenPane);
+        } catch (IOException | SQLException ex) {
+            MessageDialog.showMessage(this, "Error", ex.getMessage());
+        }
     }
 
     private void init() {
-        try {
-            mainPane = new GridPane();
+        mainPane = new GridPane();
 
-            staffLabel = new Label("Staff: ");
-            staffLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        staffLabel = new Label("Staff: ");
+        staffLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-            time = new Label("00:00");
-            time.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-            ClockThread.setClockLabel(time);
-            time.setAlignment(Pos.CENTER_RIGHT);
+        time = new Label("00:00");
+        time.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        ClockThread.setClockLabel(time);
+        time.setAlignment(Pos.CENTER_RIGHT);
 
-            List<Screen> screens = dc.getAllScreens();
-            buttonPanes = new ArrayList<>();
-            buttonPane = new StackPane();
-            screenPane = new FlowPane();
-            screenPane.setPrefWrapLength(750);
-            screenButtonGroup = new ToggleGroup();
-            addScreens(screens, screenPane);
-            buttonPane.getChildren().clear();
-            if (!buttonPanes.isEmpty()) {
-                buttonPane.getChildren().add(buttonPanes.get(0));
-            }
+        buttonPanes = new ArrayList<>();
+        buttonPane = new StackPane();
+        screenPane = new FlowPane();
+        screenPane.setPrefWrapLength(750);
+        screenButtonGroup = new ToggleGroup();
+        buttonPane.getChildren().clear();
+        if (!buttonPanes.isEmpty()) {
+            buttonPane.getChildren().add(buttonPanes.get(0));
+        }
 
-            itemsTable = new TableView();
-            itemsTable.setEditable(false);
-            itemsTable.setMinSize(240, 250);
-            itemsTable.setMaxSize(240, 250);
-            TableColumn qty = new TableColumn("Qty.");
-            TableColumn itm = new TableColumn("Item");
-            TableColumn cst = new TableColumn("£");
-            qty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-            itm.setCellValueFactory(new PropertyValueFactory<>("item"));
-            cst.setCellValueFactory(new PropertyValueFactory<>("price"));
-            qty.setMaxWidth(40);
-            qty.setMinWidth(40);
-            itm.setMaxWidth(150);
-            itm.setMinWidth(150);
-            cst.setMaxWidth(50);
-            cst.setMinWidth(50);
-            itemsTable.getColumns().addAll(qty, itm, cst);
-            HBox hTable = new HBox();
-            hTable.getChildren().add(itemsTable);
-            obTable = FXCollections.observableArrayList();
-            itemsTable.setItems(obTable);
+        itemsTable = new TableView();
+        itemsTable.setEditable(false);
+        itemsTable.setMinSize(240, 250);
+        itemsTable.setMaxSize(240, 250);
+        TableColumn qty = new TableColumn("Qty.");
+        TableColumn itm = new TableColumn("Item");
+        TableColumn cst = new TableColumn("£");
+        qty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        itm.setCellValueFactory(new PropertyValueFactory<>("item"));
+        cst.setCellValueFactory(new PropertyValueFactory<>("price"));
+        qty.setMaxWidth(40);
+        qty.setMinWidth(40);
+        itm.setMaxWidth(150);
+        itm.setMinWidth(150);
+        cst.setMaxWidth(50);
+        cst.setMinWidth(50);
+        itemsTable.getColumns().addAll(qty, itm, cst);
+        HBox hTable = new HBox();
+        hTable.getChildren().add(itemsTable);
+        obTable = FXCollections.observableArrayList();
+        itemsTable.setItems(obTable);
 
-            itemsTable.setRowFactory(tv -> {
-                TableRow<SaleItem> row = new TableRow<>();
-                row.setOnMouseClicked(event -> {
-                    if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                        SaleItem rowData = row.getItem();
-                        int q = NumberEntry.showNumberEntryDialog(this, "Set quantity", rowData.getQuantity());
-                        rowData.setQuantity(q);
-                        setTotalLabel();
-                        itemsTable.refresh();
-                        sale.updateTotal();
-                        setTotalLabel();
-                    }
-                });
-                return row;
-            });
-
-            updateList();
-
-            total = new Text("Total: £0.00");
-            total.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-
-            quantity = new Button("Quantity: 1");
-            quantity.setMinSize(120, 50);
-            quantity.setMaxSize(120, 50);
-            itemQuantity = 1;
-            HBox hQuantity = new HBox(0);
-            hQuantity.getChildren().add(quantity);
-            quantity.setOnAction((ActionEvent event) -> {
-                if (barcode.getText().equals("")) {
-                    int val = NumberEntry.showNumberEntryDialog(this, "Enter Quantity", itemQuantity);
-                    if (val != 0) {
-                        itemQuantity = val;
-                    }
-                } else {
-                    itemQuantity = Integer.parseInt(barcode.getText());
-                    barcode.setText("");
-                }
-                quantity.setText("Quantity: " + itemQuantity);
-            });
-
-            voidSelected = new Button("Void Selected");
-            voidSelected.setMinSize(120, 50);
-            voidSelected.setMaxSize(120, 50);
-            HBox hVoid = new HBox(0);
-            hVoid.getChildren().add(voidSelected);
-            voidSelected.setOnAction((ActionEvent event) -> {
-                if (itemsTable.getSelectionModel().getSelectedIndex() > -1) {
-                    sale.voidItem((SaleItem) itemsTable.getSelectionModel().getSelectedItem());
-                    obTable.remove((SaleItem) itemsTable.getSelectionModel().getSelectedItem());
+        itemsTable.setRowFactory(tv -> {
+            TableRow<SaleItem> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    SaleItem rowData = row.getItem();
+                    int q = NumberEntry.showNumberEntryDialog(this, "Set quantity", rowData.getQuantity());
+                    rowData.setQuantity(q);
+                    setTotalLabel();
+                    itemsTable.refresh();
+                    sale.updateTotal();
                     setTotalLabel();
                 }
             });
+            return row;
+        });
 
-            barcode = new TextField();
-            barcode.setMinSize(240, 50);
-            barcode.setMaxSize(240, 50);
-            barcode.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
-            barcode.setOnAction((ActionEvent event) -> {
-                Platform.runLater(() -> {
-                    getProductByBarcode(barcode.getText());
-                    barcode.setText("");
-                });
-            });
+        updateList();
 
-            GridPane numbers = createNumbersPane();
+        total = new Text("Total: £0.00");
+        total.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-            payment = new Button("Payment");
-            payment.setId("payment");
-            payment.setMinSize(240, 100);
-            payment.setMaxSize(240, 100);
-            HBox hPayment = new HBox(0);
-            hPayment.getChildren().add(payment);
-            payment.setOnAction((ActionEvent event) -> {
-                setScene(paymentScene);
-            });
-
-            logoff = new Button("Logoff");
-            logoff.setId("logoff");
-            logoff.setMaxSize(100, 100);
-            logoff.setMinSize(100, 100);
-            HBox hLogoff = new HBox(0);
-            hLogoff.getChildren().add(logoff);
-            logoff.setOnAction((ActionEvent event) -> {
-                Platform.runLater(this::logoff);
-            });
-            logoff.setStyle("-fx-base: #0000FF;");
-
-            lookup = new Button("Lookup");
-            lookup.setId("lookup");
-            lookup.setMaxSize(100, 100);
-            lookup.setMinSize(100, 100);
-            HBox hLookup = new HBox(0);
-            hLookup.getChildren().add(lookup);
-            lookup.setOnAction((ActionEvent event) -> {
-                Product p = ProductSelectDialog.showDialog(this, dc);
-                if (p != null) {
-                    addItemToSale(p);
+        quantity = new Button("Quantity: 1");
+        quantity.setMinSize(120, 50);
+        quantity.setMaxSize(120, 50);
+        itemQuantity = 1;
+        HBox hQuantity = new HBox(0);
+        hQuantity.getChildren().add(quantity);
+        quantity.setOnAction((ActionEvent event) -> {
+            if (barcode.getText().equals("")) {
+                int val = NumberEntry.showNumberEntryDialog(this, "Enter Quantity", itemQuantity);
+                if (val != 0) {
+                    itemQuantity = val;
                 }
-            });
+            } else {
+                itemQuantity = Integer.parseInt(barcode.getText());
+                barcode.setText("");
+            }
+            quantity.setText("Quantity: " + itemQuantity);
+        });
 
-            halfPrice = new Button("Half Price");
-            halfPrice.setId("halfprice");
-            halfPrice.setMinSize(100, 100);
-            halfPrice.setMaxSize(100, 100);
-            HBox hHalfPrice = new HBox(0);
-            hHalfPrice.getChildren().add(halfPrice);
-            halfPrice.setOnAction((ActionEvent event) -> {
-                if (itemsTable.getSelectionModel().getSelectedIndex() > -1) {
-                    SaleItem item = (SaleItem) itemsTable.getSelectionModel().getSelectedItem();
-                    if (!(item.getItem() instanceof Discount)) {
-                        sale.halfPriceItem(item);
-                        setTotalLabel();
-                        itemsTable.refresh();
-                    } else {
-                        MessageDialog.showMessage(this, "Hald Price", "Item not discountable");
-                    }
+        voidSelected = new Button("Void Selected");
+        voidSelected.setMinSize(120, 50);
+        voidSelected.setMaxSize(120, 50);
+        HBox hVoid = new HBox(0);
+        hVoid.getChildren().add(voidSelected);
+        voidSelected.setOnAction((ActionEvent event) -> {
+            if (itemsTable.getSelectionModel().getSelectedIndex() > -1) {
+                sale.voidItem((SaleItem) itemsTable.getSelectionModel().getSelectedItem());
+                obTable.remove((SaleItem) itemsTable.getSelectionModel().getSelectedItem());
+                setTotalLabel();
+            }
+        });
+
+        barcode = new TextField();
+        barcode.setMinSize(240, 50);
+        barcode.setMaxSize(240, 50);
+        barcode.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
+        barcode.setOnAction((ActionEvent event) -> {
+            Platform.runLater(() -> {
+                getProductByBarcode(barcode.getText());
+                barcode.setText("");
+            });
+        });
+
+        GridPane numbers = createNumbersPane();
+
+        payment = new Button("Payment");
+        payment.setId("payment");
+        payment.setMinSize(240, 100);
+        payment.setMaxSize(240, 100);
+        HBox hPayment = new HBox(0);
+        hPayment.getChildren().add(payment);
+        payment.setOnAction((ActionEvent event) -> {
+            setScene(paymentScene);
+        });
+
+        logoff = new Button("Logoff");
+        logoff.setId("logoff");
+        logoff.setMaxSize(100, 100);
+        logoff.setMinSize(100, 100);
+        HBox hLogoff = new HBox(0);
+        hLogoff.getChildren().add(logoff);
+        logoff.setOnAction((ActionEvent event) -> {
+            Platform.runLater(this::logoff);
+        });
+        logoff.setStyle("-fx-base: #0000FF;");
+
+        lookup = new Button("Lookup");
+        lookup.setId("lookup");
+        lookup.setMaxSize(100, 100);
+        lookup.setMinSize(100, 100);
+        HBox hLookup = new HBox(0);
+        hLookup.getChildren().add(lookup);
+        lookup.setOnAction((ActionEvent event) -> {
+            Product p = ProductSelectDialog.showDialog(this, dc);
+            if (p != null) {
+                addItemToSale(p);
+            }
+        });
+
+        halfPrice = new Button("Half Price");
+        halfPrice.setId("halfprice");
+        halfPrice.setMinSize(100, 100);
+        halfPrice.setMaxSize(100, 100);
+        HBox hHalfPrice = new HBox(0);
+        hHalfPrice.getChildren().add(halfPrice);
+        halfPrice.setOnAction((ActionEvent event) -> {
+            if (itemsTable.getSelectionModel().getSelectedIndex() > -1) {
+                SaleItem item = (SaleItem) itemsTable.getSelectionModel().getSelectedItem();
+                if (!(item.getItem() instanceof Discount)) {
+                    sale.halfPriceItem(item);
+                    setTotalLabel();
+                    itemsTable.refresh();
+                } else {
+                    MessageDialog.showMessage(this, "Hald Price", "Item not discountable");
                 }
-            });
+            }
+        });
 
-            assisstance = new Button("Assisstance");
-            assisstance.setId("assisstance");
-            assisstance.setMinSize(100, 100);
-            assisstance.setMaxSize(100, 100);
-            HBox hAssisstance = new HBox(0);
-            hAssisstance.getChildren().add(assisstance);
-            assisstance.setOnAction((ActionEvent event) -> {
-                String message = EntryDialog.show(this, "Assisstance", "Enter message");
-                try {
-                    dc.assisstance(message);
-                    MessageDialog.showMessage(this, "Assisstance", "Message sent");
-                } catch (IOException ex) {
-                    MessageDialog.showMessage(this, "Assisstance", ex.getMessage());
-                }
-            });
+        assisstance = new Button("Assisstance");
+        assisstance.setId("assisstance");
+        assisstance.setMinSize(100, 100);
+        assisstance.setMaxSize(100, 100);
+        HBox hAssisstance = new HBox(0);
+        hAssisstance.getChildren().add(assisstance);
+        assisstance.setOnAction((ActionEvent event) -> {
+            String message = EntryDialog.show(this, "Assisstance", "Enter message");
+            try {
+                dc.assisstance(message);
+                MessageDialog.showMessage(this, "Assisstance", "Message sent");
+            } catch (IOException ex) {
+                MessageDialog.showMessage(this, "Assisstance", ex.getMessage());
+            }
+        });
 
-            mainPane.add(staffLabel, 0, 0, 2, 1);
-            mainPane.add(time, 6, 0, 2, 1);
-            mainPane.add(buttonPane, 0, 1, 5, 10);
-            mainPane.add(screenPane, 0, 11, 5, 2);
-            mainPane.add(itemsTable, 6, 1, 2, 5);
-            mainPane.add(total, 6, 6, 2, 1);
-            mainPane.add(hQuantity, 6, 7);
-            mainPane.add(hVoid, 7, 7);
-            mainPane.add(barcode, 6, 8, 2, 1);
-            mainPane.add(numbers, 6, 9, 2, 3);
-            mainPane.add(hPayment, 6, 19, 2, 2);
-            mainPane.add(hHalfPrice, 2, 19);
-            mainPane.add(hLogoff, 0, 19);
-            mainPane.add(hLookup, 1, 19);
-            mainPane.add(hAssisstance, 3, 19);
+        mainPane.add(staffLabel, 0, 0, 2, 1);
+        mainPane.add(time, 6, 0, 2, 1);
+        mainPane.add(buttonPane, 0, 1, 5, 10);
+        mainPane.add(screenPane, 0, 11, 5, 2);
+        mainPane.add(itemsTable, 6, 1, 2, 5);
+        mainPane.add(total, 6, 6, 2, 1);
+        mainPane.add(hQuantity, 6, 7);
+        mainPane.add(hVoid, 7, 7);
+        mainPane.add(barcode, 6, 8, 2, 1);
+        mainPane.add(numbers, 6, 9, 2, 3);
+        mainPane.add(hPayment, 6, 19, 2, 2);
+        mainPane.add(hHalfPrice, 2, 19);
+        mainPane.add(hLogoff, 0, 19);
+        mainPane.add(hLookup, 1, 19);
+        mainPane.add(hAssisstance, 3, 19);
 
-            mainScene = new Scene(mainPane, 1024, 768);
-        } catch (IOException | SQLException ex) {
-            showErrorAlert(ex);
-        }
+        mainScene = new Scene(mainPane, 1024, 768);
     }
 
     private GridPane createNumbersPane() {
@@ -771,13 +803,16 @@ public class MainStage extends Stage implements GUIInterface {
         hExit.getChildren().add(exit);
         exit.setOnAction((ActionEvent event) -> {
             Platform.runLater(() -> {
-                dc.close();
+                if (dc.isConnected()) {
+                    dc.close();
+                }
                 System.exit(0);
             });
         });
         buttons.getChildren().add(exit);
 
         login = new Button("Login");
+        login.setDisable(true);
         login.setMinSize(100, 100);
         login.setMaxSize(100, 100);
         HBox hLogin = new HBox(0);
@@ -1077,5 +1112,16 @@ public class MainStage extends Stage implements GUIInterface {
 
     @Override
     public void addTill(Till t) {
+    }
+
+    @Override
+    public void allow() {
+        login.setDisable(false);
+        this.getServerData();
+    }
+
+    @Override
+    public void disallow() {
+        showMessage("Not Allowed", "The server has not allowed this terminal to join");
     }
 }

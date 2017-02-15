@@ -25,6 +25,8 @@ public class ModalMessage extends Stage {
     public ModalMessage(Window parent, String message, String title) {
         this.message = message;
         init();
+        initOwner(parent);
+        initModality(Modality.WINDOW_MODAL);
         setTitle(title);
     }
 
