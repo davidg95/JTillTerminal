@@ -23,7 +23,6 @@ import io.github.davidg95.JTill.jtill.Till;
 import io.github.davidg95.JTill.jtill.TillButton;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.ConnectException;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.text.DecimalFormat;
@@ -948,7 +947,20 @@ public class MainStage extends Stage implements GUIInterface {
         saleCustomer.setText("No Customer");
         addCustomer.setText("Add Customer");
         chargeAccount.setDisable(true);
-        setScene(mainScene);
+        try {
+            if (dc.getSettings("AUTO_LOGOUT").equals("TRUE")) {
+                try {
+                    dc.tillLogout(staff);
+                } catch (StaffNotFoundException ex) {
+                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                setScene(loginScene);
+            } else {
+                setScene(mainScene);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void updateList() {
