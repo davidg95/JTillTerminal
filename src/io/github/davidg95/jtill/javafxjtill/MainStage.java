@@ -907,7 +907,22 @@ public class MainStage extends Stage implements GUIInterface {
                     dc.emailReceipt(email, sale);
                 }
             }
-            newSale();
+            try {
+                if (dc.getSettings("AUTO_LOGOUT").equals("TRUE")) {
+                    try {
+                        dc.tillLogout(staff);
+                    } catch (StaffNotFoundException ex) {
+                        Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    newSale();
+                    setScene(loginScene);
+                } else {
+                    newSale();
+                    setScene(mainScene);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (IOException | SQLException ex) {
             showErrorAlert(ex);
         }
@@ -947,20 +962,6 @@ public class MainStage extends Stage implements GUIInterface {
         saleCustomer.setText("No Customer");
         addCustomer.setText("Add Customer");
         chargeAccount.setDisable(true);
-        try {
-            if (dc.getSettings("AUTO_LOGOUT").equals("TRUE")) {
-                try {
-                    dc.tillLogout(staff);
-                } catch (StaffNotFoundException ex) {
-                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                setScene(loginScene);
-            } else {
-                setScene(mainScene);
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     private void updateList() {
