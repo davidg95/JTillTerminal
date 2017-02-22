@@ -32,23 +32,11 @@ public class JavaFXJTill extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        sc = new ServerConnection(NAME);
+        sc = new ServerConnection();
         mainStage = new MainStage(sc);
         mainStage.initalise();
     }
-
-//    private static void tryConnect() {
-//        try {
-//            sc.setGUI(mainStage);
-//            sc.connect(HOST, PORT);
-//        } catch (IOException ex) {
-//            if (YesNoDialog.showDialog(null, "Connection Failed", "Do you want to attempt to connect?") == YesNoDialog.NO) {
-//                System.exit(0);
-//            }
-//            SetupDialog.showDialog(null);
-//            saveProperties();
-//        }
-//    }
+    
     /**
      * @param args the command line arguments
      */

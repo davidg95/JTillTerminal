@@ -40,6 +40,11 @@ public class MessageDialog extends Stage {
         dialog = new MessageDialog(parent, title, message);
         dialog.showAndWait();
     }
+    
+    public static void showMessageNoWait(Window parent, String title, String message) {
+        dialog = new MessageDialog(parent, title, message);
+        dialog.show();
+    }
 
     private void init() {
         final int WIDTH = 700;

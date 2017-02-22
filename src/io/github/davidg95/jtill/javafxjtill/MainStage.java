@@ -898,13 +898,13 @@ public class MainStage extends Stage implements GUIInterface {
     private void completeCurrentSale() {
         try {
             sale.setTime(new Time(System.currentTimeMillis()));
-            dc.addSale(sale);
+            Sale s = dc.addSale(sale);
             if (YesNoDialog.showDialog(this, "Email Receipt", "Email Customer Receipt?") == YesNoDialog.YES) {
                 if (sale.getCustomer() != null) {
-                    dc.emailReceipt(sale.getCustomer().getEmail(), sale);
+                    dc.emailReceipt(sale.getCustomer().getEmail(), s);
                 } else {
                     String email = EntryDialog.show(this, "Email Receipt", "Enter email");
-                    dc.emailReceipt(email, sale);
+                    dc.emailReceipt(email, s);
                 }
             }
             try {
