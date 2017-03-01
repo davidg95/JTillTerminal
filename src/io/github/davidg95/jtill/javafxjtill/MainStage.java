@@ -5,21 +5,7 @@
  */
 package io.github.davidg95.jtill.javafxjtill;
 
-import io.github.davidg95.JTill.jtill.Customer;
-import io.github.davidg95.JTill.jtill.Discount;
-import io.github.davidg95.JTill.jtill.GUIInterface;
-import io.github.davidg95.JTill.jtill.LoginException;
-import io.github.davidg95.JTill.jtill.Product;
-import io.github.davidg95.JTill.jtill.ProductNotFoundException;
-import io.github.davidg95.JTill.jtill.Sale;
-import io.github.davidg95.JTill.jtill.SaleItem;
-import io.github.davidg95.JTill.jtill.Screen;
-import io.github.davidg95.JTill.jtill.ScreenNotFoundException;
-import io.github.davidg95.JTill.jtill.ServerConnection;
-import io.github.davidg95.JTill.jtill.Staff;
-import io.github.davidg95.JTill.jtill.StaffNotFoundException;
-import io.github.davidg95.JTill.jtill.Till;
-import io.github.davidg95.JTill.jtill.TillButton;
+import io.github.davidg95.JTill.jtill.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -844,7 +830,7 @@ public class MainStage extends Stage implements GUIInterface {
                                 setCustomer(rs.getCustomer());
                             }
                             staffLabel.setText("Staff: " + s.getName());
-                            sale.setStaff(staff);
+                            newSale();
                             setScene(mainScene);
                         } catch (IOException | LoginException | SQLException ex) {
                             MessageDialog.showMessage(MainStage.this, "Log on", ex.getMessage());
