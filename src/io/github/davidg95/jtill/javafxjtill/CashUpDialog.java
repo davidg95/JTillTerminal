@@ -5,7 +5,6 @@
  */
 package io.github.davidg95.jtill.javafxjtill;
 
-import io.github.davidg95.JTill.jtill.DataConnectInterface;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -26,6 +25,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import io.github.davidg95.JTill.jtill.DataConnect;
 
 /**
  *
@@ -35,7 +35,7 @@ public class CashUpDialog extends Stage {
 
     private static Stage dialog;
 
-    private final DataConnectInterface dc;
+    private final DataConnect dc;
 
     private Label cashLabel;
     private TextField cashValue;
@@ -46,7 +46,7 @@ public class CashUpDialog extends Stage {
     private TextField differenceField;
     private Button close;
 
-    public CashUpDialog(Window parent, DataConnectInterface dc) {
+    public CashUpDialog(Window parent, DataConnect dc) {
         this.dc = dc;
         init();
         setTitle("Cash Up");
@@ -54,7 +54,7 @@ public class CashUpDialog extends Stage {
         initModality(Modality.APPLICATION_MODAL);
     }
 
-    public static void showDialog(Window parent, DataConnectInterface dc) {
+    public static void showDialog(Window parent, DataConnect dc) {
         dialog = new CashUpDialog(parent, dc);
         dialog.showAndWait();
     }

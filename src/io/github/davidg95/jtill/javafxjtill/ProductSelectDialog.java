@@ -5,7 +5,6 @@
  */
 package io.github.davidg95.jtill.javafxjtill;
 
-import io.github.davidg95.JTill.jtill.DataConnectInterface;
 import io.github.davidg95.JTill.jtill.Product;
 import io.github.davidg95.JTill.jtill.ProductNotFoundException;
 import java.io.IOException;
@@ -28,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import io.github.davidg95.JTill.jtill.DataConnect;
 
 /**
  *
@@ -38,12 +38,12 @@ public class ProductSelectDialog extends Stage {
     private static Stage dialog;
     private static Product product;
 
-    private final DataConnectInterface dc;
+    private final DataConnect dc;
 
     private TableView productTable;
     private ObservableList<Product> obProducts;
 
-    public ProductSelectDialog(Window parent, DataConnectInterface dc) {
+    public ProductSelectDialog(Window parent, DataConnect dc) {
         this.dc = dc;
         init();
         setTitle("Select Product");
@@ -51,7 +51,7 @@ public class ProductSelectDialog extends Stage {
         initModality(Modality.APPLICATION_MODAL);
     }
 
-    public static Product showDialog(Window parent, DataConnectInterface dc) {
+    public static Product showDialog(Window parent, DataConnect dc) {
         dialog = new ProductSelectDialog(parent, dc);
         product = null;
         dialog.showAndWait();

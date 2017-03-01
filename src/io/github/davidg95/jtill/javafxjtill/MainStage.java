@@ -6,7 +6,6 @@
 package io.github.davidg95.jtill.javafxjtill;
 
 import io.github.davidg95.JTill.jtill.Customer;
-import io.github.davidg95.JTill.jtill.DataConnectInterface;
 import io.github.davidg95.JTill.jtill.Discount;
 import io.github.davidg95.JTill.jtill.GUIInterface;
 import io.github.davidg95.JTill.jtill.LoginException;
@@ -59,6 +58,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import io.github.davidg95.JTill.jtill.DataConnect;
 
 /**
  *
@@ -70,7 +70,7 @@ public class MainStage extends Stage implements GUIInterface {
     private Sale sale;
     private int itemQuantity;
     private BigDecimal amountDue;
-    private final DataConnectInterface dc;
+    private final DataConnect dc;
 
     private final String stylesheet;
 
@@ -125,7 +125,7 @@ public class MainStage extends Stage implements GUIInterface {
     private Button voidSale;
     private Button cashUp;
 
-    public MainStage(DataConnectInterface dc) {
+    public MainStage(DataConnect dc) {
         super();
         this.dc = dc;
         this.sale = new Sale(JavaFXJTill.NAME, staff);
@@ -901,7 +901,7 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void completeCurrentSale() {
         try {
-            sale.setTime(new Time(System.currentTimeMillis()));
+            sale.setDate(new Time(System.currentTimeMillis()));
             Sale s = dc.addSale(sale);
             if (YesNoDialog.showDialog(this, "Email Receipt", "Email Customer Receipt?") == YesNoDialog.YES) {
                 if (sale.getCustomer() != null) {

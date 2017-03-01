@@ -7,7 +7,6 @@ package io.github.davidg95.jtill.javafxjtill;
 
 import io.github.davidg95.JTill.jtill.Customer;
 import io.github.davidg95.JTill.jtill.CustomerNotFoundException;
-import io.github.davidg95.JTill.jtill.DataConnectInterface;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import io.github.davidg95.JTill.jtill.DataConnect;
 
 /**
  *
@@ -39,12 +39,12 @@ public class CustomerSelectDialog extends Stage {
     private static Stage dialog;
     private static Customer customer;
 
-    private final DataConnectInterface dc;
+    private final DataConnect dc;
 
     private TableView customerTable;
     private ObservableList<Customer> obCustomers;
 
-    public CustomerSelectDialog(Window parent, DataConnectInterface dc, String title) {
+    public CustomerSelectDialog(Window parent, DataConnect dc, String title) {
         this.dc = dc;
         init();
         setTitle(title);
@@ -52,7 +52,7 @@ public class CustomerSelectDialog extends Stage {
         initModality(Modality.APPLICATION_MODAL);
     }
 
-    public static Customer showDialog(Window parent, DataConnectInterface dc, String title) {
+    public static Customer showDialog(Window parent, DataConnect dc, String title) {
         dialog = new CustomerSelectDialog(parent, dc, title);
         customer = null;
         dialog.showAndWait();

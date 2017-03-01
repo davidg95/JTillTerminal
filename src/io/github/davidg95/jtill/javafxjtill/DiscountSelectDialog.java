@@ -5,7 +5,6 @@
  */
 package io.github.davidg95.jtill.javafxjtill;
 
-import io.github.davidg95.JTill.jtill.DataConnectInterface;
 import io.github.davidg95.JTill.jtill.Discount;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -27,6 +26,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import io.github.davidg95.JTill.jtill.DataConnect;
 
 /**
  *
@@ -37,12 +37,12 @@ public class DiscountSelectDialog extends Stage {
     private static Stage dialog;
     private static Discount discount;
 
-    private final DataConnectInterface dc;
+    private final DataConnect dc;
 
     private TableView discountsTable;
     private ObservableList<Discount> obDiscounts;
 
-    public DiscountSelectDialog(Window parent, DataConnectInterface dc) {
+    public DiscountSelectDialog(Window parent, DataConnect dc) {
         this.dc = dc;
         init();
         setTitle("Select Discount");
@@ -51,7 +51,7 @@ public class DiscountSelectDialog extends Stage {
 
     }
 
-    public static Discount showDialog(Window parent, DataConnectInterface dc) {
+    public static Discount showDialog(Window parent, DataConnect dc) {
         dialog = new DiscountSelectDialog(parent, dc);
         discount = null;
         dialog.showAndWait();
