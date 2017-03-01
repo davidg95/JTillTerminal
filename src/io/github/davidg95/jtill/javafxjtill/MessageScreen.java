@@ -53,6 +53,7 @@ public class MessageScreen extends Stage {
      * Shows the window with the current message.
      */
     public static void showWindow() {
+        SCREEN.hide();
         SCREEN.show();
     }
 

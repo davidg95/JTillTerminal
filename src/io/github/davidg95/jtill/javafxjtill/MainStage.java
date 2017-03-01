@@ -743,7 +743,7 @@ public class MainStage extends Stage implements GUIInterface {
         HBox hSettings = new HBox(0);
         hSettings.getChildren().add(settings);
         settings.setOnAction((ActionEvent event) -> {
-            if (staff.getPosition() == Staff.Position.MANAGER || staff.getPosition() == Staff.Position.AREA_MANAGER) {
+            if (staff.getPosition() >= 3) {
                 SetupDialog.showDialog(MainStage.this);
                 MessageDialog.showMessage(this, "Settings", "Changes will apply after restart");
             } else {
@@ -757,7 +757,7 @@ public class MainStage extends Stage implements GUIInterface {
         HBox hCashUp = new HBox(0);
         hCashUp.getChildren().add(cashUp);
         cashUp.setOnAction((ActionEvent event) -> {
-            if (staff.getPosition() == Staff.Position.MANAGER || staff.getPosition() == Staff.Position.AREA_MANAGER) {
+            if (staff.getPosition() >= 3) {
                 CashUpDialog.showDialog(this, dc);
             } else {
                 MessageDialog.showMessage(this, "Cash Up", "You are not allowed to view this screen");
