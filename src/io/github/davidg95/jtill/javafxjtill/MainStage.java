@@ -145,6 +145,8 @@ public class MainStage extends Stage implements GUIInterface {
         setScene(loginScene); //Show the login scene first
         initStyle(StageStyle.UNDECORATED);
         show();
+        MessageScreen.changeMessage("Initialising");
+        MessageScreen.showWindow();
         Platform.runLater(() -> {
             try {
                 Thread.sleep(2000);
@@ -155,8 +157,10 @@ public class MainStage extends Stage implements GUIInterface {
             while (tryCon) {
                 try {
                     tryConnect();
+                    MessageScreen.hideWindow();
                     tryCon = false;
                 } catch (IOException ex) {
+                    MessageScreen.hideWindow();
                     if (YesNoDialog.showDialog(this, "Try Again?", "Do you want to try connect again?") == YesNoDialog.NO) {
                         tryCon = false;
                     }
@@ -1114,16 +1118,6 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     @Override
-    public void showModalMessage(String title, String message) {
-        modalMessage = ModalMessage.showDialog(null, title, message);
-    }
-
-    @Override
-    public void hideModalMessage() {
-        modalMessage.hide();
-    }
-
-    @Override
     public void addTill(Till t) {
     }
 
@@ -1136,5 +1130,16 @@ public class MainStage extends Stage implements GUIInterface {
     @Override
     public void disallow() {
         showMessage("Not Allowed", "The server has not allowed this terminal to join");
+    }
+
+    @Override
+    public void showModalMessage(String title, String message) {
+        MessageScreen.changeMessage(message);
+        MessageScreen.showWindow();
+    }
+
+    @Override
+    public void hideModalMessage() {
+        MessageScreen.hideWindow();
     }
 }
