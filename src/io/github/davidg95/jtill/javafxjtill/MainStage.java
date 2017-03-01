@@ -59,6 +59,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import io.github.davidg95.JTill.jtill.DataConnect;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -69,6 +70,7 @@ public class MainStage extends Stage implements GUIInterface {
 
     private Staff staff;
     private Sale sale;
+    private int age;
     private int itemQuantity;
     private BigDecimal amountDue;
     private final DataConnect dc;
@@ -965,6 +967,7 @@ public class MainStage extends Stage implements GUIInterface {
         saleCustomer.setText("No Customer");
         addCustomer.setText("Add Customer");
         chargeAccount.setDisable(true);
+        age = 0;
     }
 
     private void updateList() {
@@ -982,10 +985,23 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void addItemToSale(Product p) {
         if (p.getCategory().isTimeRestrict()) {
-            if (!p.getCategory().isSellTime(new Time(System.currentTimeMillis()))) {
+            Calendar c = Calendar.getInstance();
+            long now = c.getTimeInMillis();
+            c.set(Calendar.HOUR_OF_DAY, 1);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
+            long passed = now - c.getTimeInMillis();
+            if (!p.getCategory().isSellTime(new Time(passed))) {
                 MessageDialog.showMessage(this, "Time Restriction", "This item cannot be sold now");
                 return;
             }
+        }
+        if (p.getCategory().getMinAge() > age) {
+            if (YesNoDialog.showDialog(this, "Age Restriction", "Is customer over " + p.getCategory().getMinAge() + "?") == YesNoDialog.NO) {
+                return;
+            }
+            age = p.getCategory().getMinAge();
         }
         if (p.isOpen()) {
             int value;
