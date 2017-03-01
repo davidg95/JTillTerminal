@@ -59,6 +59,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import io.github.davidg95.JTill.jtill.DataConnect;
+import java.util.Date;
 
 /**
  *
@@ -73,8 +74,6 @@ public class MainStage extends Stage implements GUIInterface {
     private final DataConnect dc;
 
     private final String stylesheet;
-
-    private ModalMessage modalMessage;
 
     //Login Scene Components
     private Scene loginScene;
@@ -901,7 +900,7 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void completeCurrentSale() {
         try {
-            sale.setDate(new Time(System.currentTimeMillis()));
+            sale.setDate(new Date());
             Sale s = dc.addSale(sale);
             if (YesNoDialog.showDialog(this, "Email Receipt", "Email Customer Receipt?") == YesNoDialog.YES) {
                 if (sale.getCustomer() != null) {
@@ -982,6 +981,12 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     private void addItemToSale(Product p) {
+        if (p.getCategory().isTimeRestrict()) {
+            if (!p.getCategory().isSellTime(new Time(System.currentTimeMillis()))) {
+                MessageDialog.showMessage(this, "Time Restriction", "This item cannot be sold now");
+                return;
+            }
+        }
         if (p.isOpen()) {
             int value;
             if (barcode.getText().equals("")) {
