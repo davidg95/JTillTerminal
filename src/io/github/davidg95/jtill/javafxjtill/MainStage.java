@@ -718,7 +718,6 @@ public class MainStage extends Stage implements GUIInterface {
             if (d != null) {
                 d.setPrice(sale.getTotal().multiply(new BigDecimal(Double.toString(d.getPercentage() / 100)).negate()));
                 sale.addItem(d, 1);
-//                sale.setDiscount(d);
                 setTotalLabel();
                 itemsTable.refresh();
             }
@@ -794,7 +793,11 @@ public class MainStage extends Stage implements GUIInterface {
         exit.setOnAction((ActionEvent event) -> {
             Platform.runLater(() -> {
                 if (dc.isConnected()) {
-                    dc.close();
+                    try {
+                        dc.close();
+                    } catch (IOException ex) {
+
+                    }
                 }
                 System.exit(0);
             });
@@ -832,13 +835,17 @@ public class MainStage extends Stage implements GUIInterface {
                             staffLabel.setText("Staff: " + s.getName());
                             newSale();
                             setScene(mainScene);
-                        } catch (IOException | LoginException | SQLException ex) {
+                        } catch (LoginException | SQLException ex) {
                             MessageDialog.showMessage(MainStage.this, "Log on", ex.getMessage());
+                        } catch (IOException ex) {
+                            MessageDialog.showMessage(MainStage.this, "Error", "Server offline");
                         }
                     });
                     staffLayout.getChildren().add(button);
-                } catch (StaffNotFoundException | IOException | SQLException ex) {
+                } catch (StaffNotFoundException | SQLException ex) {
                     MessageDialog.showMessage(MainStage.this, "Log on", ex.getMessage());
+                } catch (IOException ex) {
+                    MessageDialog.showMessage(MainStage.this, "Error", "Server offline");
                 }
             });
         });
@@ -932,12 +939,12 @@ public class MainStage extends Stage implements GUIInterface {
             if (!sale.getSaleItems().isEmpty()) {
                 dc.suspendSale(sale, staff);
             }
-            staff = null;
-            newSale();
-            setScene(loginScene);
         } catch (IOException | StaffNotFoundException ex) {
-            showErrorAlert(ex);
+
         }
+        staff = null;
+        newSale();
+        setScene(loginScene);
     }
 
     private void newSale() {
