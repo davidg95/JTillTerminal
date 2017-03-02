@@ -47,6 +47,7 @@ import javafx.stage.StageStyle;
 import io.github.davidg95.JTill.jtill.DataConnect;
 import java.util.Calendar;
 import java.util.Date;
+import javax.mail.MessagingException;
 
 /**
  *
@@ -68,6 +69,7 @@ public class MainStage extends Stage implements GUIInterface {
     private BorderPane loginPane;
     private Button exit;
     private Button login;
+    private FlowPane staffLayout;
 
     //Main Scene Components
     private TableView itemsTable;
@@ -111,6 +113,7 @@ public class MainStage extends Stage implements GUIInterface {
     private Button voidItem;
     private Button voidSale;
     private Button cashUp;
+    private Button clearLogins;
 
     public MainStage(DataConnect dc) {
         super();
@@ -745,8 +748,23 @@ public class MainStage extends Stage implements GUIInterface {
         cashUp.setOnAction((ActionEvent event) -> {
             if (staff.getPosition() >= 3) {
                 CashUpDialog.showDialog(this, dc);
+                clearLoginScreen();
             } else {
                 MessageDialog.showMessage(this, "Cash Up", "You are not allowed to view this screen");
+            }
+        });
+
+        clearLogins = new Button("Clear Login Screen");
+        clearLogins.setMinSize(150, 150);
+        clearLogins.setMaxSize(150, 150);
+        HBox hClearLogins = new HBox(0);
+        hClearLogins.getChildren().add(clearLogins);
+        clearLogins.setOnAction((ActionEvent event) -> {
+            if (staff.getPosition() >= 2) {
+                clearLoginScreen();
+                MessageDialog.showMessage(this, "Login Screen", "Staff cleared from login screen");
+            } else{
+                MessageDialog.showMessage(this, "Login Screen", "You are not allowed to do this");
             }
         });
 
@@ -768,6 +786,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentPane.add(hDiscount, 7, 3);
         paymentPane.add(hSettings, 8, 1);
         paymentPane.add(hCashUp, 8, 2);
+        paymentPane.add(hClearLogins, 8, 3);
 
         paymentScene = new Scene(paymentPane, 1024, 768);
     }
@@ -775,7 +794,7 @@ public class MainStage extends Stage implements GUIInterface {
     private void initLogin() {
         loginPane = new BorderPane();
 
-        FlowPane staffLayout = new FlowPane();
+        staffLayout = new FlowPane();
         staffLayout.setPadding(new Insets(150, 152, 0, 152));
         staffLayout.setHgap(40);
         staffLayout.setVgap(40);
@@ -865,6 +884,10 @@ public class MainStage extends Stage implements GUIInterface {
         loginScene = new Scene(loginPane, 1024, 768);
     }
 
+    private void clearLoginScreen() {
+        staffLayout.getChildren().clear();
+    }
+
     private void setCustomer(Customer c) {
         if (c != null) {
             saleCustomer.setText(c.getName());
@@ -921,7 +944,7 @@ public class MainStage extends Stage implements GUIInterface {
             } catch (IOException ex) {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (IOException | SQLException ex) {
+        } catch (MessagingException | IOException | SQLException ex) {
             showErrorAlert(ex);
         }
     }
