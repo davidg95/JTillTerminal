@@ -47,6 +47,10 @@ import javafx.stage.StageStyle;
 import io.github.davidg95.JTill.jtill.DataConnect;
 import java.util.Calendar;
 import java.util.Date;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.RowConstraints;
 import javax.mail.MessagingException;
 
 /**
@@ -198,8 +202,8 @@ public class MainStage extends Stage implements GUIInterface {
 
         itemsTable = new TableView();
         itemsTable.setEditable(false);
-        itemsTable.setMinSize(240, 250);
-        itemsTable.setMaxSize(240, 250);
+        itemsTable.setMinSize(0, 0);
+        itemsTable.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         TableColumn qty = new TableColumn("Qty.");
         TableColumn itm = new TableColumn("Item");
         TableColumn cst = new TableColumn("£");
@@ -240,8 +244,8 @@ public class MainStage extends Stage implements GUIInterface {
         total.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         quantity = new Button("Quantity: 1");
-        quantity.setMinSize(120, 50);
-        quantity.setMaxSize(120, 50);
+        quantity.setMinSize(0, 0);
+        quantity.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         itemQuantity = 1;
         HBox hQuantity = new HBox(0);
         hQuantity.getChildren().add(quantity);
@@ -259,8 +263,8 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         voidSelected = new Button("Void Selected");
-        voidSelected.setMinSize(120, 50);
-        voidSelected.setMaxSize(120, 50);
+        voidSelected.setMinSize(0, 0);
+        voidSelected.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         HBox hVoid = new HBox(0);
         hVoid.getChildren().add(voidSelected);
         voidSelected.setOnAction((ActionEvent event) -> {
@@ -272,8 +276,8 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         barcode = new TextField();
-        barcode.setMinSize(240, 50);
-        barcode.setMaxSize(240, 50);
+        barcode.setMinSize(0, 0);
+        barcode.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         barcode.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
         barcode.setOnAction((ActionEvent event) -> {
             Platform.runLater(() -> {
@@ -286,8 +290,8 @@ public class MainStage extends Stage implements GUIInterface {
 
         payment = new Button("Payment");
         payment.setId("payment");
-        payment.setMinSize(240, 100);
-        payment.setMaxSize(240, 100);
+        payment.setMinSize(0, 0);
+        payment.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         HBox hPayment = new HBox(0);
         hPayment.getChildren().add(payment);
         payment.setOnAction((ActionEvent event) -> {
@@ -296,8 +300,8 @@ public class MainStage extends Stage implements GUIInterface {
 
         logoff = new Button("Logoff");
         logoff.setId("logoff");
-        logoff.setMaxSize(100, 100);
-        logoff.setMinSize(100, 100);
+        logoff.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        logoff.setMinSize(0, 0);
         HBox hLogoff = new HBox(0);
         hLogoff.getChildren().add(logoff);
         logoff.setOnAction((ActionEvent event) -> {
@@ -307,8 +311,8 @@ public class MainStage extends Stage implements GUIInterface {
 
         lookup = new Button("Lookup");
         lookup.setId("lookup");
-        lookup.setMaxSize(100, 100);
-        lookup.setMinSize(100, 100);
+        lookup.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        lookup.setMinSize(0, 0);
         HBox hLookup = new HBox(0);
         hLookup.getChildren().add(lookup);
         lookup.setOnAction((ActionEvent event) -> {
@@ -320,8 +324,8 @@ public class MainStage extends Stage implements GUIInterface {
 
         halfPrice = new Button("Half Price");
         halfPrice.setId("halfprice");
-        halfPrice.setMinSize(100, 100);
-        halfPrice.setMaxSize(100, 100);
+        halfPrice.setMinSize(0, 0);
+        halfPrice.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         HBox hHalfPrice = new HBox(0);
         hHalfPrice.getChildren().add(halfPrice);
         halfPrice.setOnAction((ActionEvent event) -> {
@@ -339,8 +343,8 @@ public class MainStage extends Stage implements GUIInterface {
 
         assisstance = new Button("Assisstance");
         assisstance.setId("assisstance");
-        assisstance.setMinSize(100, 100);
-        assisstance.setMaxSize(100, 100);
+        assisstance.setMinSize(0, 0);
+        assisstance.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         HBox hAssisstance = new HBox(0);
         hAssisstance.getChildren().add(assisstance);
         assisstance.setOnAction((ActionEvent event) -> {
@@ -354,32 +358,45 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         mainPane.add(staffLabel, 0, 0, 2, 1);
-        mainPane.add(time, 6, 0, 2, 1);
-        mainPane.add(buttonPane, 0, 1, 5, 10);
-        mainPane.add(screenPane, 0, 11, 5, 2);
-        mainPane.add(itemsTable, 6, 1, 2, 5);
-        mainPane.add(total, 6, 6, 2, 1);
-        mainPane.add(hQuantity, 6, 7);
-        mainPane.add(hVoid, 7, 7);
-        mainPane.add(barcode, 6, 8, 2, 1);
-        mainPane.add(numbers, 6, 9, 2, 3);
-        mainPane.add(hPayment, 6, 19, 2, 2);
-        mainPane.add(hHalfPrice, 2, 19);
-        mainPane.add(hLogoff, 0, 19);
-        mainPane.add(hLookup, 1, 19);
-        mainPane.add(hAssisstance, 3, 19);
+        mainPane.add(time, 8, 0, 2, 1);
+        mainPane.add(buttonPane, 0, 1, 8, 11);
+        mainPane.add(screenPane, 0, 12, 8, 2);
+        mainPane.add(itemsTable, 8, 1, 2, 5);
+        mainPane.add(total, 8, 6, 2, 1);
+        mainPane.add(quantity, 8, 7);
+        mainPane.add(voidSelected, 9, 7);
+        mainPane.add(barcode, 8, 8, 2, 1);
+        mainPane.add(numbers, 8, 9, 2, 5);
+        mainPane.add(payment, 8, 14, 2, 2);
+        mainPane.add(halfPrice, 2, 14, 1, 2);
+        mainPane.add(logoff, 0, 14, 1, 2);
+        mainPane.add(lookup, 1, 14, 1, 2);
+        mainPane.add(assisstance, 3, 14, 1, 2);
+
+        ColumnConstraints col = new ColumnConstraints();
+        col.setPercentWidth(10);
+
+        RowConstraints row = new RowConstraints();
+        row.setPercentHeight(6.25);
+
+        for (int i = 0; i <= 10; i++) {
+            mainPane.getColumnConstraints().add(col);
+        }
+
+        for (int i = 1; i <= 16; i++) {
+            mainPane.getRowConstraints().add(row);
+        }
 
         mainScene = new Scene(mainPane, 1024, 768);
     }
 
     private GridPane createNumbersPane() {
-        final int bWidth = 80;
-        final int bHeight = 50;
+//        final int bWidth = 80;
+//        final int bHeight = 50;
         GridPane grid = new GridPane();
 
         Button clear = new Button("clr");
-        clear.setMinSize(bWidth, bHeight);
-        clear.setMaxSize(bWidth, bHeight);
+        clear.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         HBox hClear = new HBox(0);
         hClear.getChildren().add(clear);
         clear.setOnAction((ActionEvent event) -> {
@@ -388,8 +405,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         Button seven = new Button("7");
         HBox hSeven = new HBox(0);
-        seven.setMaxSize(bWidth, bHeight);
-        seven.setMinSize(bWidth, bHeight);
+        seven.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hSeven.getChildren().add(seven);
 
         seven.setOnAction((ActionEvent event) -> {
@@ -398,8 +414,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         Button eight = new Button("8");
         HBox hEight = new HBox(0);
-        eight.setMaxSize(bWidth, bHeight);
-        eight.setMinSize(bWidth, bHeight);
+        eight.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hEight.getChildren().add(eight);
 
         eight.setOnAction((ActionEvent event) -> {
@@ -408,8 +423,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         Button nine = new Button("9");
         HBox hNine = new HBox(0);
-        nine.setMaxSize(bWidth, bHeight);
-        nine.setMinSize(bWidth, bHeight);
+        nine.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hNine.getChildren().add(nine);
 
         nine.setOnAction((ActionEvent event) -> {
@@ -418,8 +432,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         Button four = new Button("4");
         HBox hFour = new HBox(0);
-        four.setMaxSize(bWidth, bHeight);
-        four.setMinSize(bWidth, bHeight);
+        four.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hFour.getChildren().add(four);
 
         four.setOnAction((ActionEvent event) -> {
@@ -428,8 +441,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         Button five = new Button("5");
         HBox hFive = new HBox(0);
-        five.setMaxSize(bWidth, bHeight);
-        five.setMinSize(bWidth, bHeight);
+        five.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hFive.getChildren().add(five);
 
         five.setOnAction((ActionEvent event) -> {
@@ -438,8 +450,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         Button six = new Button("6");
         HBox hSix = new HBox(0);
-        six.setMaxSize(bWidth, bHeight);
-        six.setMinSize(bWidth, bHeight);
+        six.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hSix.getChildren().add(six);
 
         six.setOnAction((ActionEvent event) -> {
@@ -448,8 +459,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         Button one = new Button("1");
         HBox hOne = new HBox(0);
-        one.setMaxSize(bWidth, bHeight);
-        one.setMinSize(bWidth, bHeight);
+        one.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hOne.getChildren().add(one);
 
         one.setOnAction((ActionEvent event) -> {
@@ -458,8 +468,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         Button two = new Button("2");
         HBox hTwo = new HBox(0);
-        two.setMaxSize(bWidth, bHeight);
-        two.setMinSize(bWidth, bHeight);
+        two.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hTwo.getChildren().add(two);
 
         two.setOnAction((ActionEvent event) -> {
@@ -468,8 +477,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         Button three = new Button("3");
         HBox hThree = new HBox(0);
-        three.setMaxSize(bWidth, bHeight);
-        three.setMinSize(bWidth, bHeight);
+        three.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hThree.getChildren().add(three);
 
         three.setOnAction((ActionEvent event) -> {
@@ -478,8 +486,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         Button zero = new Button("0");
         HBox hZero = new HBox(0);
-        zero.setMaxSize(bWidth, bHeight);
-        zero.setMinSize(bWidth, bHeight);
+        zero.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hZero.getChildren().add(zero);
 
         zero.setOnAction((ActionEvent event) -> {
@@ -488,8 +495,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         Button dZero = new Button("00");
         HBox hDzero = new HBox(0);
-        dZero.setMaxSize(bWidth, bHeight);
-        dZero.setMinSize(bWidth, bHeight);
+        dZero.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hDzero.getChildren().add(dZero);
 
         dZero.setOnAction((ActionEvent event) -> {
@@ -498,8 +504,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         Button enter = new Button("Ent");
         HBox hEnter = new HBox(0);
-        enter.setMaxSize(bWidth, bHeight);
-        enter.setMinSize(bWidth, bHeight);
+        enter.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hEnter.getChildren().add(enter);
 
         enter.setOnAction((ActionEvent event) -> {
@@ -509,19 +514,33 @@ public class MainStage extends Stage implements GUIInterface {
             }
         });
 
-        grid.add(hClear, 1, 0);
-        grid.add(hSeven, 1, 1);
-        grid.add(hEight, 2, 1);
-        grid.add(hNine, 3, 1);
-        grid.add(hFour, 1, 2);
-        grid.add(hFive, 2, 2);
-        grid.add(hSix, 3, 2);
-        grid.add(hOne, 1, 3);
-        grid.add(hTwo, 2, 3);
-        grid.add(hThree, 3, 3);
-        grid.add(hZero, 1, 4);
-        grid.add(hDzero, 2, 4);
-        grid.add(hEnter, 3, 4);
+        grid.add(clear, 0, 0, 1, 1);
+        grid.add(seven, 0, 1, 1, 1);
+        grid.add(eight, 1, 1, 1, 1);
+        grid.add(nine, 2, 1, 1, 1);
+        grid.add(four, 0, 2, 1, 1);
+        grid.add(five, 1, 2, 1, 1);
+        grid.add(six, 2, 2, 1, 1);
+        grid.add(one, 0, 3, 1, 1);
+        grid.add(two, 1, 3, 1, 1);
+        grid.add(three, 2, 3, 1, 1);
+        grid.add(zero, 0, 4, 1, 1);
+        grid.add(dZero, 1, 4, 1, 1);
+        grid.add(enter, 2, 4, 1, 1);
+
+        for (int i = 1; i <= 3; i++) {
+            ColumnConstraints col = new ColumnConstraints();
+            col.setFillWidth(true);
+            col.setHgrow(Priority.ALWAYS);
+            grid.getColumnConstraints().add(col);
+        }
+
+        for (int i = 1; i <= 5; i++) {
+            RowConstraints row = new RowConstraints();
+            row.setFillHeight(true);
+            row.setVgrow(Priority.ALWAYS);
+            grid.getRowConstraints().add(row);
+        }
 
         return grid;
     }
