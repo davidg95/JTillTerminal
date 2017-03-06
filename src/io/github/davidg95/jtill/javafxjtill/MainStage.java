@@ -755,6 +755,7 @@ public class MainStage extends Stage implements GUIInterface {
             if (staff.getPosition() >= 3) {
                 CashUpDialog.showDialog(this, dc);
                 clearLoginScreen();
+                logoff();
             } else {
                 MessageDialog.showMessage(this, "Cash Up", "You are not allowed to view this screen");
             }
@@ -1006,40 +1007,46 @@ public class MainStage extends Stage implements GUIInterface {
         }
     }
 
-    private void addItemToSale(Product p) {
-        if (p.getCategory().isTimeRestrict()) {
-            Calendar c = Calendar.getInstance();
-            long now = c.getTimeInMillis();
-            c.set(Calendar.HOUR_OF_DAY, 1);
-            c.set(Calendar.MINUTE, 0);
-            c.set(Calendar.SECOND, 0);
-            c.set(Calendar.MILLISECOND, 0);
-            long passed = now - c.getTimeInMillis();
-            if (!p.getCategory().isSellTime(new Time(passed))) {
-                MessageDialog.showMessage(this, "Time Restriction", "This item cannot be sold now");
-                return;
+    private void addItemToSale(Item i) {
+        if (i instanceof Product) {
+            Product p = (Product) i;
+            if (p.getCategory().isTimeRestrict()) {
+                Calendar c = Calendar.getInstance();
+                long now = c.getTimeInMillis();
+                c.set(Calendar.HOUR_OF_DAY, 1);
+                c.set(Calendar.MINUTE, 0);
+                c.set(Calendar.SECOND, 0);
+                c.set(Calendar.MILLISECOND, 0);
+                long passed = now - c.getTimeInMillis();
+                if (!p.getCategory().isSellTime(new Time(passed))) {
+                    MessageDialog.showMessage(this, "Time Restriction", "This item cannot be sold now");
+                    return;
+                }
             }
+            if (p.getCategory().getMinAge() > age) {
+                if (YesNoDialog.showDialog(this, "Age Restriction", "Is customer over " + p.getCategory().getMinAge() + "?") == YesNoDialog.NO) {
+                    return;
+                }
+                age = p.getCategory().getMinAge();
+            }
+            if (p.isOpen()) {
+                int value;
+                if (barcode.getText().equals("")) {
+                    value = NumberEntry.showNumberEntryDialog(this, "Enter price");
+                } else {
+                    value = Integer.parseInt(barcode.getText());
+                    barcode.setText("");
+                }
+                if (value == 0) {
+                    return;
+                }
+                p.setPrice(new BigDecimal(Double.toString((double) value / 100)));
+            }
+        } else {
+            Discount d = (Discount) i;
+            d.setPrice(sale.getTotal().multiply(new BigDecimal(Double.toString(d.getPercentage() / 100)).negate()));
         }
-        if (p.getCategory().getMinAge() > age) {
-            if (YesNoDialog.showDialog(this, "Age Restriction", "Is customer over " + p.getCategory().getMinAge() + "?") == YesNoDialog.NO) {
-                return;
-            }
-            age = p.getCategory().getMinAge();
-        }
-        if (p.isOpen()) {
-            int value;
-            if (barcode.getText().equals("")) {
-                value = NumberEntry.showNumberEntryDialog(this, "Enter price");
-            } else {
-                value = Integer.parseInt(barcode.getText());
-                barcode.setText("");
-            }
-            if (value == 0) {
-                return;
-            }
-            p.setPrice(new BigDecimal(Double.toString((double) value / 100)));
-        }
-        boolean inSale = sale.addItem(p, itemQuantity);
+        boolean inSale = sale.addItem(i, itemQuantity);
         if (!inSale) {
             obTable.add(sale.getLastAdded());
             itemsTable.scrollTo(obTable.size() - 1);
@@ -1123,9 +1130,9 @@ public class MainStage extends Stage implements GUIInterface {
                 hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
                 hbBtn.getChildren().add(button);
                 button.setOnAction((ActionEvent e) -> {
-                    Product p = b.getProduct().clone();
+                    Item i = b.getItem().clone();
                     Platform.runLater(() -> {
-                        onProductButton(p);
+                        onProductButton(i);
                     });
                 });
             }
@@ -1139,8 +1146,8 @@ public class MainStage extends Stage implements GUIInterface {
         }
     }
 
-    private void onProductButton(Product p) {
-        addItemToSale(p);
+    private void onProductButton(Item i) {
+        addItemToSale(i);
     }
 
     @Override
