@@ -720,7 +720,13 @@ public class MainStage extends Stage implements GUIInterface {
             Discount d = DiscountSelectDialog.showDialog(this, dc);
             if (d != null) {
                 d.setPrice(sale.getTotal().multiply(new BigDecimal(Double.toString(d.getPercentage() / 100)).negate()));
-                sale.addItem(d, 1);
+                boolean inSale = sale.addItem(d, 1);
+                if (!inSale) {
+                    obTable.add(sale.getLastAdded());
+                    itemsTable.scrollTo(obTable.size() - 1);
+                } else {
+                    itemsTable.refresh();
+                }
                 setTotalLabel();
                 itemsTable.refresh();
             }
@@ -763,7 +769,7 @@ public class MainStage extends Stage implements GUIInterface {
             if (staff.getPosition() >= 2) {
                 clearLoginScreen();
                 MessageDialog.showMessage(this, "Login Screen", "Staff cleared from login screen");
-            } else{
+            } else {
                 MessageDialog.showMessage(this, "Login Screen", "You are not allowed to do this");
             }
         });
@@ -850,9 +856,10 @@ public class MainStage extends Stage implements GUIInterface {
                                 obTable.setAll(rs.getSaleItems());
                                 setTotalLabel();
                                 setCustomer(rs.getCustomer());
+                            } else {
+                                newSale();
                             }
                             staffLabel.setText("Staff: " + s.getName());
-                            newSale();
                             setScene(mainScene);
                         } catch (LoginException | SQLException ex) {
                             MessageDialog.showMessage(MainStage.this, "Log on", ex.getMessage());
