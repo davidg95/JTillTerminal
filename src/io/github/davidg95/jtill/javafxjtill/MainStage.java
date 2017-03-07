@@ -49,8 +49,8 @@ import java.util.Calendar;
 import java.util.Date;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.shape.Box;
 import javax.mail.MessagingException;
 
 /**
@@ -81,8 +81,8 @@ public class MainStage extends Stage implements GUIInterface {
     private Scene mainScene;
     private GridPane mainPane;
     private Pane buttonPane;
-    private List<FlowPane> buttonPanes;
-    private FlowPane screenPane;
+    private List<GridPane> buttonPanes;
+    private GridPane screenPane;
     private ToggleGroup screenButtonGroup;
     private Label staffLabel;
     private Label time;
@@ -119,6 +119,9 @@ public class MainStage extends Stage implements GUIInterface {
     private Button cashUp;
     private Button clearLogins;
 
+    private final double SCREEN_WIDTH = javafx.stage.Screen.getPrimary().getBounds().getWidth();
+    private final double SCREEN_HEIGHT = javafx.stage.Screen.getPrimary().getBounds().getHeight();
+
     public MainStage(DataConnect dc) {
         super();
         this.dc = dc;
@@ -153,6 +156,7 @@ public class MainStage extends Stage implements GUIInterface {
                     tryConnect();
                     MessageScreen.hideWindow();
                     tryCon = false;
+                    this.allow();
                 } catch (IOException ex) {
                     MessageScreen.hideWindow();
                     if (YesNoDialog.showDialog(this, "Try Again?", "Do you want to try connect again?") == YesNoDialog.NO) {
@@ -166,8 +170,10 @@ public class MainStage extends Stage implements GUIInterface {
     private void tryConnect() throws IOException {
         JavaFXJTill.loadProperties();
         dc.setGUI(MainStage.this);
-        ServerConnection sc = (ServerConnection) dc;
-        sc.connect(JavaFXJTill.HOST, JavaFXJTill.PORT, JavaFXJTill.NAME);
+        if (dc instanceof ServerConnection) {
+            ServerConnection sc = (ServerConnection) dc;
+            sc.connect(JavaFXJTill.HOST, JavaFXJTill.PORT, JavaFXJTill.NAME);
+        }
     }
 
     public void getServerData() {
@@ -192,33 +198,28 @@ public class MainStage extends Stage implements GUIInterface {
 
         buttonPanes = new ArrayList<>();
         buttonPane = new StackPane();
-        screenPane = new FlowPane();
-        screenPane.setPrefWrapLength(750);
+        screenPane = new GridPane();
         screenButtonGroup = new ToggleGroup();
         buttonPane.getChildren().clear();
         if (!buttonPanes.isEmpty()) {
+            buttonPane.getChildren().clear();
             buttonPane.getChildren().add(buttonPanes.get(0));
         }
 
         itemsTable = new TableView();
         itemsTable.setEditable(false);
-        itemsTable.setMinSize(0, 0);
-        itemsTable.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+//        itemsTable.setMinSize(0, 0);
+//        itemsTable.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         TableColumn qty = new TableColumn("Qty.");
         TableColumn itm = new TableColumn("Item");
         TableColumn cst = new TableColumn("£");
         qty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         itm.setCellValueFactory(new PropertyValueFactory<>("item"));
         cst.setCellValueFactory(new PropertyValueFactory<>("price"));
-        qty.setMaxWidth(40);
-        qty.setMinWidth(40);
-        itm.setMaxWidth(150);
-        itm.setMinWidth(150);
-        cst.setMaxWidth(50);
-        cst.setMinWidth(50);
+        qty.prefWidthProperty().bind(itemsTable.widthProperty().divide(4));
+        itm.prefWidthProperty().bind(itemsTable.widthProperty().divide(2));
+        cst.prefWidthProperty().bind(itemsTable.widthProperty().divide(4));
         itemsTable.getColumns().addAll(qty, itm, cst);
-        HBox hTable = new HBox();
-        hTable.getChildren().add(itemsTable);
         obTable = FXCollections.observableArrayList();
         itemsTable.setItems(obTable);
 
@@ -247,8 +248,6 @@ public class MainStage extends Stage implements GUIInterface {
         quantity.setMinSize(0, 0);
         quantity.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         itemQuantity = 1;
-        HBox hQuantity = new HBox(0);
-        hQuantity.getChildren().add(quantity);
         quantity.setOnAction((ActionEvent event) -> {
             if (barcode.getText().equals("")) {
                 int val = NumberEntry.showNumberEntryDialog(this, "Enter Quantity", itemQuantity);
@@ -265,8 +264,6 @@ public class MainStage extends Stage implements GUIInterface {
         voidSelected = new Button("Void Selected");
         voidSelected.setMinSize(0, 0);
         voidSelected.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        HBox hVoid = new HBox(0);
-        hVoid.getChildren().add(voidSelected);
         voidSelected.setOnAction((ActionEvent event) -> {
             if (itemsTable.getSelectionModel().getSelectedIndex() > -1) {
                 sale.voidItem((SaleItem) itemsTable.getSelectionModel().getSelectedItem());
@@ -276,8 +273,8 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         barcode = new TextField();
-        barcode.setMinSize(0, 0);
-        barcode.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+//        barcode.setMinSize(0, 0);
+//        barcode.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         barcode.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
         barcode.setOnAction((ActionEvent event) -> {
             Platform.runLater(() -> {
@@ -292,8 +289,6 @@ public class MainStage extends Stage implements GUIInterface {
         payment.setId("payment");
         payment.setMinSize(0, 0);
         payment.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        HBox hPayment = new HBox(0);
-        hPayment.getChildren().add(payment);
         payment.setOnAction((ActionEvent event) -> {
             setScene(paymentScene);
         });
@@ -302,8 +297,6 @@ public class MainStage extends Stage implements GUIInterface {
         logoff.setId("logoff");
         logoff.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         logoff.setMinSize(0, 0);
-        HBox hLogoff = new HBox(0);
-        hLogoff.getChildren().add(logoff);
         logoff.setOnAction((ActionEvent event) -> {
             Platform.runLater(this::logoff);
         });
@@ -313,8 +306,6 @@ public class MainStage extends Stage implements GUIInterface {
         lookup.setId("lookup");
         lookup.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         lookup.setMinSize(0, 0);
-        HBox hLookup = new HBox(0);
-        hLookup.getChildren().add(lookup);
         lookup.setOnAction((ActionEvent event) -> {
             Product p = ProductSelectDialog.showDialog(this, dc);
             if (p != null) {
@@ -326,8 +317,6 @@ public class MainStage extends Stage implements GUIInterface {
         halfPrice.setId("halfprice");
         halfPrice.setMinSize(0, 0);
         halfPrice.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        HBox hHalfPrice = new HBox(0);
-        hHalfPrice.getChildren().add(halfPrice);
         halfPrice.setOnAction((ActionEvent event) -> {
             if (itemsTable.getSelectionModel().getSelectedIndex() > -1) {
                 SaleItem item = (SaleItem) itemsTable.getSelectionModel().getSelectedItem();
@@ -345,8 +334,6 @@ public class MainStage extends Stage implements GUIInterface {
         assisstance.setId("assisstance");
         assisstance.setMinSize(0, 0);
         assisstance.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        HBox hAssisstance = new HBox(0);
-        hAssisstance.getChildren().add(assisstance);
         assisstance.setOnAction((ActionEvent event) -> {
             String message = EntryDialog.show(this, "Assisstance", "Enter message");
             try {
@@ -373,21 +360,23 @@ public class MainStage extends Stage implements GUIInterface {
         mainPane.add(lookup, 1, 14, 1, 2);
         mainPane.add(assisstance, 3, 14, 1, 2);
 
-        ColumnConstraints col = new ColumnConstraints();
-        col.setPercentWidth(10);
-
-        RowConstraints row = new RowConstraints();
-        row.setPercentHeight(6.25);
-
-        for (int i = 0; i <= 10; i++) {
+        for (int i = 1; i <= 10; i++) {
+            ColumnConstraints col = new ColumnConstraints();
+            col.setPercentWidth(10);
+            col.setFillWidth(true);
+            col.setHgrow(Priority.ALWAYS);
             mainPane.getColumnConstraints().add(col);
         }
 
         for (int i = 1; i <= 16; i++) {
+            RowConstraints row = new RowConstraints();
+            row.setPrefHeight(SCREEN_HEIGHT/16);
+            row.setFillHeight(true);
+            row.setVgrow(Priority.ALWAYS);
             mainPane.getRowConstraints().add(row);
         }
 
-        mainScene = new Scene(mainPane, 1024, 768);
+        mainScene = new Scene(mainPane, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
     private GridPane createNumbersPane() {
@@ -814,7 +803,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentPane.add(hCashUp, 8, 2);
         paymentPane.add(hClearLogins, 8, 3);
 
-        paymentScene = new Scene(paymentPane, 1024, 768);
+        paymentScene = new Scene(paymentPane, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
     private void initLogin() {
@@ -908,7 +897,7 @@ public class MainStage extends Stage implements GUIInterface {
 //        } catch (IOException ex) {
 //            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-        loginScene = new Scene(loginPane, 1024, 768);
+        loginScene = new Scene(loginPane, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
     private void clearLoginScreen() {
@@ -1089,7 +1078,7 @@ public class MainStage extends Stage implements GUIInterface {
         amountDue = sale.getTotal();
     }
 
-    private void addScreens(List<Screen> screens, FlowPane pane) {
+    private void addScreens(List<Screen> screens, GridPane pane) {
         final int WIDTH = 180;
         final int HEIGHT = 50;
 
@@ -1097,16 +1086,15 @@ public class MainStage extends Stage implements GUIInterface {
         int y = 0;
 
         for (Screen s : screens) {
-            FlowPane grid = new FlowPane();
-            grid.setPrefWrapLength(750);
+            GridPane grid = new GridPane();
             ToggleButton button = new ToggleButton(s.getName());
             button.setToggleGroup(screenButtonGroup);
             button.setId("screenButton");
-            button.setMaxSize(WIDTH, HEIGHT);
-            button.setMinSize(WIDTH, HEIGHT);
-            HBox hButton = new HBox(0);
-            hButton.getChildren().add(button);
-            pane.getChildren().add(hButton);
+            button.prefWidthProperty().bind(pane.widthProperty().divide(4));
+            button.prefHeightProperty().bind(pane.heightProperty().divide(2));
+//            button.setMaxSize(WIDTH, HEIGHT);
+//            button.setMinSize(WIDTH, HEIGHT);
+            pane.add(button, x, y);
             setScreenButtons(s, grid);
             buttonPanes.add(grid);
             button.setOnAction((ActionEvent event) -> {
@@ -1114,14 +1102,14 @@ public class MainStage extends Stage implements GUIInterface {
                 buttonPane.getChildren().add(grid);
             });
             x++;
-            if (x == 5) {
+            if (x == 3) {
                 x = 1;
                 y++;
             }
         }
     }
 
-    private void setScreenButtons(Screen s, FlowPane pane) {
+    private void setScreenButtons(Screen s, GridPane pane) {
         try {
             List<TillButton> buttons = dc.getButtonsOnScreen(s);
             addButtons(buttons, pane);
@@ -1130,38 +1118,52 @@ public class MainStage extends Stage implements GUIInterface {
         }
     }
 
-    private void addButtons(List<TillButton> buttons, FlowPane grid) {
+    private void addButtons(List<TillButton> buttons, GridPane grid) {
         int x = 0;
         int y = 0;
+        int buttonsAdded = 0;
+
         for (TillButton b : buttons) {
-            HBox hbBtn;
             if (b.getName().equals("[SPACE]")) {
-                hbBtn = new HBox(10);
-                hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-                hbBtn.setMinSize(150, 50);
-                hbBtn.setMaxSize(150, 50);
+                Box box = new Box();
+                box.prefWidth(grid.getWidth() / 5);
+                box.prefHeight(grid.getHeight() / 10);
+                grid.add(box, x, y);
             } else {
                 Button button = new Button(b.getName());
                 button.setId("productButton");
-                button.setMaxSize(150, 50);
-                button.setMinSize(150, 50);
-                hbBtn = new HBox(10);
-                hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-                hbBtn.getChildren().add(button);
+                button.prefWidthProperty().bind(grid.widthProperty().divide(5));
+                button.prefHeightProperty().bind(grid.heightProperty().divide(10));
                 button.setOnAction((ActionEvent e) -> {
                     Item i = b.getItem().clone();
                     Platform.runLater(() -> {
                         onProductButton(i);
                     });
                 });
+                grid.add(button, x, y);
             }
-            grid.getChildren().add(hbBtn);
 
             x++;
-            if (x == 5) {
+            if (x == 4) {
                 x = 0;
                 y++;
             }
+
+            buttonsAdded++;
+        }
+
+        for (int i = 1; i <= 5; i++) {
+            ColumnConstraints col = new ColumnConstraints();
+            col.setFillWidth(true);
+            col.setHgrow(Priority.ALWAYS);
+            mainPane.getColumnConstraints().add(col);
+        }
+
+        for (int i = 1; i <= 10; i++) {
+            RowConstraints row = new RowConstraints();
+            row.setFillHeight(true);
+            row.setVgrow(Priority.ALWAYS);
+            mainPane.getRowConstraints().add(row);
         }
     }
 

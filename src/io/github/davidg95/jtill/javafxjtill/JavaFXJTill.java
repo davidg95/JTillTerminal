@@ -23,7 +23,7 @@ import javafx.stage.Stage;
  */
 public class JavaFXJTill extends Application {
 
-    private static ServerConnection sc;
+    private static DataConnect dc;
     private static Properties properties;
     public static String NAME;
     public static String HOST;
@@ -32,8 +32,9 @@ public class JavaFXJTill extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        sc = new ServerConnection();
-        mainStage = new MainStage(sc);
+        dc = new ServerConnection();
+        //dc = new DummyData();
+        mainStage = new MainStage(dc);
         mainStage.initalise();
     }
     
