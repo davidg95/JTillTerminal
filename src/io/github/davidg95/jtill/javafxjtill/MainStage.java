@@ -378,8 +378,6 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     private GridPane createNumbersPane() {
-//        final int bWidth = 80;
-//        final int bHeight = 50;
         GridPane grid = new GridPane();
 
         Button clear = new Button("clr");

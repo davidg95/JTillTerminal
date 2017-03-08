@@ -340,11 +340,6 @@ public class DummyData implements DataConnect {
     }
 
     @Override
-    public int getCustomerCount() throws IOException, SQLException {
-        return customers.size();
-    }
-
-    @Override
     public List<Customer> getAllCustomers() throws IOException, SQLException {
         return customers;
     }
@@ -425,7 +420,7 @@ public class DummyData implements DataConnect {
     }
 
     @Override
-    public Staff addStaff(Staff s) throws IOException, StaffNotFoundException, SQLException {
+    public Staff addStaff(Staff s) throws IOException, SQLException {
         return null;
     }
 
@@ -464,7 +459,7 @@ public class DummyData implements DataConnect {
     }
 
     @Override
-    public int staffCount() throws IOException, StaffNotFoundException, SQLException {
+    public int getStaffCount() throws IOException, SQLException {
         return staff.size();
     }
 
@@ -608,34 +603,6 @@ public class DummyData implements DataConnect {
 
     @Override
     public List<Product> getProductsInTax(int id) throws IOException, SQLException, TaxNotFoundException {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public Voucher addVoucher(Voucher v) throws IOException, SQLException {
-        return v;
-    }
-
-    @Override
-    public void removeVoucher(Voucher v) throws IOException, SQLException, VoucherNotFoundException {
-    }
-
-    @Override
-    public void removeVoucher(int id) throws IOException, SQLException, VoucherNotFoundException {
-    }
-
-    @Override
-    public Voucher getVoucher(int id) throws IOException, SQLException, VoucherNotFoundException {
-        return null;
-    }
-
-    @Override
-    public Voucher updateVoucher(Voucher v) throws IOException, SQLException, VoucherNotFoundException {
-        return v;
-    }
-
-    @Override
-    public List<Voucher> getAllVouchers() throws IOException, SQLException {
         return new ArrayList<>();
     }
 
