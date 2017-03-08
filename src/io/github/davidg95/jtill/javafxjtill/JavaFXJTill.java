@@ -32,8 +32,8 @@ public class JavaFXJTill extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        //dc = new ServerConnection();
-        dc = new DummyData();
+        dc = new ServerConnection();
+        //dc = new DummyData();
         mainStage = new MainStage(dc);
         mainStage.initalise();
     }
