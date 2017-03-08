@@ -16,6 +16,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
 /**
+ * THIS CLASS IS PURELY FOR TESTING PURPOSES
  *
  * @author David
  */
@@ -58,42 +59,42 @@ public class DummyData implements DataConnect {
         buttons = new ArrayList<>();
 
         loggedIn = new ArrayList<>();
-        
+
         createData();
     }
-    
-    private void createData(){
+
+    private void createData() {
         Plu plu1 = new Plu(1, "124234");
         Plu plu2 = new Plu(2, "4230348");
-        
+
         plus.add(plu1);
         plus.add(plu2);
-        
+
         Category c1 = new Category(1, "Default", null, null, false, 0);
-        
+
         categories.add(c1);
-        
+
         Tax t1 = new Tax(1, "ZERO", 0);
-        
+
         taxes.add(t1);
-        
+
         Product p1 = new Product("Open", "Open", c1, "None", t1, plu1, true, 1);
         Product p2 = new Product("Cheese", "Cheese", c1, "None", t1, false, new BigDecimal("5.00"), new BigDecimal("3.00"), 5, 2, 10, plu2, 2);
-        
+
         products.add(p1);
         products.add(p2);
-        
+
         Staff s = new Staff(1, "David Grant", 3, "dgrant", "password123");
-        
+
         staff.add(s);
-        
+
         Screen sc = new Screen("Main", 1, 0, 1);
-        
+
         screens.add(sc);
-        
+
         TillButton b1 = new TillButton("Cheese", p2, sc, 0, 1);
         TillButton b2 = new TillButton("Open", p1, sc, 0, 2);
-        
+
         buttons.add(b1);
         buttons.add(b2);
     }
@@ -163,7 +164,7 @@ public class DummyData implements DataConnect {
     public int purchaseProduct(int code, int amount) throws IOException, ProductNotFoundException, OutOfStockException, SQLException {
         for (int i = 0; i < products.size(); i++) {
             if (products.get(i).getId() == code) {
-                for (int j= 1; j <= amount; j++) {
+                for (int j = 1; j <= amount; j++) {
                     products.get(i).purchace();
                     return products.get(i).getStock();
                 }
@@ -174,8 +175,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Product getProduct(int code) throws IOException, ProductNotFoundException, SQLException {
-        for(Product p: products){
-            if(p.getId() == code){
+        for (Product p : products) {
+            if (p.getId() == code) {
                 return p;
             }
         }
@@ -189,8 +190,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Product updateProduct(Product p) throws IOException, ProductNotFoundException, SQLException {
-        for(int i = 0; i < products.size(); i++){
-            if(products.get(i).equals(p)){
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).equals(p)) {
                 products.set(i, p);
                 return p;
             }
@@ -200,8 +201,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public boolean checkBarcode(String barcode) throws IOException, SQLException {
-        for(Product p: products){
-            if(p.getPlu().getCode().equals(barcode)){
+        for (Product p : products) {
+            if (p.getPlu().getCode().equals(barcode)) {
                 return true;
             }
         }
@@ -210,8 +211,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Product getProductByBarcode(String barcode) throws IOException, ProductNotFoundException, SQLException {
-        for(Product p: products){
-            if(p.getPlu().getCode().equals(barcode)){
+        for (Product p : products) {
+            if (p.getPlu().getCode().equals(barcode)) {
                 return p;
             }
         }
@@ -226,8 +227,8 @@ public class DummyData implements DataConnect {
     @Override
     public List<Product> productLookup(String terms) throws IOException, SQLException {
         List<Product> pl = new ArrayList<>();
-        for(Product p: products){
-            if(p.getName().toLowerCase().contains(terms.toLowerCase())){
+        for (Product p : products) {
+            if (p.getName().toLowerCase().contains(terms.toLowerCase())) {
                 pl.add(p);
             }
         }
@@ -244,8 +245,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public void removePlu(int id) throws IOException, JTillException, SQLException {
-        for(int i = 0; i < plus.size(); i++){
-            if(plus.get(i).getId() == id){
+        for (int i = 0; i < plus.size(); i++) {
+            if (plus.get(i).getId() == id) {
                 plus.remove(i);
                 return;
             }
@@ -260,8 +261,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Plu getPlu(int id) throws IOException, JTillException, SQLException {
-        for(Plu p: plus){
-            if(p.getId() == id){
+        for (Plu p : plus) {
+            if (p.getId() == id) {
                 return p;
             }
         }
@@ -270,8 +271,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Plu getPluByCode(String code) throws IOException, JTillException, SQLException {
-        for(Plu p: plus){
-            if(p.getCode().equals(code)){
+        for (Plu p : plus) {
+            if (p.getCode().equals(code)) {
                 return p;
             }
         }
@@ -285,8 +286,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Plu updatePlu(Plu p) throws IOException, JTillException, SQLException {
-        for(int i = 0; i < plus.size(); i++){
-            if(plus.get(i).equals(p)){
+        for (int i = 0; i < plus.size(); i++) {
+            if (plus.get(i).equals(p)) {
                 plus.set(i, p);
                 return p;
             }
@@ -304,8 +305,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public void removeCustomer(int id) throws IOException, CustomerNotFoundException, SQLException {
-        for(int i = 0; i < customers.size(); i++){
-            if(customers.get(i).getId() == id){
+        for (int i = 0; i < customers.size(); i++) {
+            if (customers.get(i).getId() == id) {
                 customers.remove(i);
                 return;
             }
@@ -320,8 +321,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Customer getCustomer(int id) throws IOException, CustomerNotFoundException, SQLException {
-        for(Customer c: customers){
-            if(c.getId() == id){
+        for (Customer c : customers) {
+            if (c.getId() == id) {
                 return c;
             }
         }
@@ -331,12 +332,12 @@ public class DummyData implements DataConnect {
     @Override
     public List<Customer> getCustomerByName(String name) throws IOException, CustomerNotFoundException, SQLException {
         List<Customer> cl = new ArrayList<>();
-        for(Customer c: customers){
-            if(c.getName().toLowerCase().contains(name.toLowerCase())){
+        for (Customer c : customers) {
+            if (c.getName().toLowerCase().contains(name.toLowerCase())) {
                 cl.add(c);
             }
         }
-       return cl;
+        return cl;
     }
 
     @Override
@@ -346,8 +347,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Customer updateCustomer(Customer c) throws IOException, CustomerNotFoundException, SQLException {
-        for(int i = 0; i < customers.size(); i++){
-            if(customers.get(i).equals(c)){
+        for (int i = 0; i < customers.size(); i++) {
+            if (customers.get(i).equals(c)) {
                 customers.set(i, c);
                 return c;
             }
@@ -358,12 +359,12 @@ public class DummyData implements DataConnect {
     @Override
     public List<Customer> customerLookup(String terms) throws IOException, SQLException {
         List<Customer> cl = new ArrayList<>();
-        for(Customer c: customers){
-            if(c.getName().toLowerCase().contains(terms.toLowerCase())){
+        for (Customer c : customers) {
+            if (c.getName().toLowerCase().contains(terms.toLowerCase())) {
                 cl.add(c);
             }
         }
-       return cl;
+        return cl;
     }
 
     @Override
@@ -381,8 +382,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Sale getSale(int id) throws IOException, SQLException, SaleNotFoundException {
-        for(Sale s: sales){
-            if(s.getId() == id){
+        for (Sale s : sales) {
+            if (s.getId() == id) {
                 return s;
             }
         }
@@ -396,8 +397,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Sale updateSale(Sale s) throws IOException, SQLException, SaleNotFoundException {
-        for(int i = 0; i < sales.size(); i++){
-            if(sales.get(i).equals(s)){
+        for (int i = 0; i < sales.size(); i++) {
+            if (sales.get(i).equals(s)) {
                 sales.set(i, s);
                 return s;
             }
@@ -434,8 +435,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Staff getStaff(int id) throws IOException, StaffNotFoundException, SQLException {
-        for(Staff s: staff){
-            if(s.getId() == id){
+        for (Staff s : staff) {
+            if (s.getId() == id) {
                 return s;
             }
         }
@@ -449,8 +450,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Staff updateStaff(Staff s) throws IOException, StaffNotFoundException, SQLException {
-        for(int i = 0; i < staff.size(); i++){
-            if(staff.get(i).equals(s)){
+        for (int i = 0; i < staff.size(); i++) {
+            if (staff.get(i).equals(s)) {
                 staff.set(i, s);
                 return s;
             }
@@ -465,8 +466,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Staff login(String username, String password) throws IOException, LoginException, SQLException {
-        for(Staff s: staff){
-            if(s.getUsername().equalsIgnoreCase(username)){
+        for (Staff s : staff) {
+            if (s.getUsername().equalsIgnoreCase(username)) {
                 s.login(password);
                 return s;
             }
@@ -476,9 +477,9 @@ public class DummyData implements DataConnect {
 
     @Override
     public Staff tillLogin(int id) throws IOException, LoginException, SQLException {
-        for(Staff s: staff){
-            if(s.getId() == id){
-                if(loggedIn.contains(s)){
+        for (Staff s : staff) {
+            if (s.getId() == id) {
+                if (loggedIn.contains(s)) {
                     throw new LoginException("You are already logged in elsewhere");
                 }
                 loggedIn.add(s);
@@ -517,8 +518,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Category getCategory(int id) throws IOException, SQLException, CategoryNotFoundException {
-        for(Category c: categories){
-            if(c.getID() == id){
+        for (Category c : categories) {
+            if (c.getID() == id) {
                 return c;
             }
         }
@@ -555,8 +556,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Discount getDiscount(int id) throws IOException, SQLException, DiscountNotFoundException {
-        for(Discount d: discounts){
-            if(d.getId() == id){
+        for (Discount d : discounts) {
+            if (d.getId() == id) {
                 return d;
             }
         }
@@ -583,8 +584,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Tax getTax(int id) throws IOException, SQLException, TaxNotFoundException {
-        for(Tax t: taxes){
-            if(t.getId() == id){
+        for (Tax t : taxes) {
+            if (t.getId() == id) {
                 return t;
             }
         }
@@ -630,8 +631,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public Screen getScreen(int id) throws IOException, SQLException, ScreenNotFoundException {
-        for(Screen s: screens){
-            if(s.getId() == id){
+        for (Screen s : screens) {
+            if (s.getId() == id) {
                 return s;
             }
         }
@@ -640,8 +641,8 @@ public class DummyData implements DataConnect {
 
     @Override
     public TillButton getButton(int id) throws IOException, SQLException, ButtonNotFoundException {
-        for(TillButton b: buttons){
-            if(b.getId() == id){
+        for (TillButton b : buttons) {
+            if (b.getId() == id) {
                 return b;
             }
         }
@@ -671,8 +672,8 @@ public class DummyData implements DataConnect {
     @Override
     public List<TillButton> getButtonsOnScreen(Screen s) throws IOException, SQLException, ScreenNotFoundException {
         List<TillButton> bons = new ArrayList<>();
-        for(TillButton b: buttons){
-            if(b.getScreen().equals(s)){
+        for (TillButton b : buttons) {
+            if (b.getScreen().equals(s)) {
                 bons.add(b);
             }
         }
@@ -707,6 +708,16 @@ public class DummyData implements DataConnect {
     @Override
     public boolean connectTill(String t) throws IOException {
         return true;
+    }
+
+    @Override
+    public boolean checkUsername(String username) throws IOException, SQLException {
+        return false;
+    }
+
+    @Override
+    public boolean isTillLoggedIn(Staff s) throws IOException, StaffNotFoundException, SQLException {
+        return false;
     }
 
 }
