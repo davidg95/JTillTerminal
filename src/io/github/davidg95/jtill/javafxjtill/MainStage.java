@@ -1257,6 +1257,10 @@ public class MainStage extends Stage implements GUIInterface {
     @Override
     public void log(Object o) {
     }
+    
+    @Override
+    public void logWarning(Object o){
+    }
 
     @Override
     public void setClientLabel(String text) {
