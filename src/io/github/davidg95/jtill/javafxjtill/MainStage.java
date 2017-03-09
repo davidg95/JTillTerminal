@@ -122,6 +122,11 @@ public class MainStage extends Stage implements GUIInterface {
     private Button cashUp;
     private Button clearLogins;
     private Button back;
+    private Label paymentLoggedIn;
+    private Label paymentVersion;
+    private Label paymentTime;
+    private Label paymentMessages;
+    private Button paymentLogoff;
 
     private final double SCREEN_WIDTH = javafx.stage.Screen.getPrimary().getBounds().getWidth();
     private final double SCREEN_HEIGHT = javafx.stage.Screen.getPrimary().getBounds().getHeight();
@@ -135,6 +140,8 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     public void initalise() {
+        paymentLoggedIn = new Label();
+        paymentLoggedIn.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         init();
         initPayment();
         initLogin();
@@ -411,7 +418,7 @@ public class MainStage extends Stage implements GUIInterface {
         hSeven.getChildren().add(seven);
 
         seven.setOnAction((ActionEvent event) -> {
-            if(barcode.getText().length() == 20){
+            if (barcode.getText().length() == 20) {
                 showMessageAlert("Maximum size reached", 2000);
                 return;
             }
@@ -424,7 +431,7 @@ public class MainStage extends Stage implements GUIInterface {
         hEight.getChildren().add(eight);
 
         eight.setOnAction((ActionEvent event) -> {
-            if(barcode.getText().length() == 20){
+            if (barcode.getText().length() == 20) {
                 showMessageAlert("Maximum size reached", 2000);
                 return;
             }
@@ -437,7 +444,7 @@ public class MainStage extends Stage implements GUIInterface {
         hNine.getChildren().add(nine);
 
         nine.setOnAction((ActionEvent event) -> {
-            if(barcode.getText().length() == 20){
+            if (barcode.getText().length() == 20) {
                 showMessageAlert("Maximum size reached", 2000);
                 return;
             }
@@ -450,7 +457,7 @@ public class MainStage extends Stage implements GUIInterface {
         hFour.getChildren().add(four);
 
         four.setOnAction((ActionEvent event) -> {
-            if(barcode.getText().length() == 20){
+            if (barcode.getText().length() == 20) {
                 showMessageAlert("Maximum size reached", 2000);
                 return;
             }
@@ -463,7 +470,7 @@ public class MainStage extends Stage implements GUIInterface {
         hFive.getChildren().add(five);
 
         five.setOnAction((ActionEvent event) -> {
-            if(barcode.getText().length() == 20){
+            if (barcode.getText().length() == 20) {
                 showMessageAlert("Maximum size reached", 2000);
                 return;
             }
@@ -476,7 +483,7 @@ public class MainStage extends Stage implements GUIInterface {
         hSix.getChildren().add(six);
 
         six.setOnAction((ActionEvent event) -> {
-            if(barcode.getText().length() == 20){
+            if (barcode.getText().length() == 20) {
                 showMessageAlert("Maximum size reached", 2000);
                 return;
             }
@@ -489,7 +496,7 @@ public class MainStage extends Stage implements GUIInterface {
         hOne.getChildren().add(one);
 
         one.setOnAction((ActionEvent event) -> {
-            if(barcode.getText().length() == 20){
+            if (barcode.getText().length() == 20) {
                 showMessageAlert("Maximum size reached", 2000);
                 return;
             }
@@ -502,7 +509,7 @@ public class MainStage extends Stage implements GUIInterface {
         hTwo.getChildren().add(two);
 
         two.setOnAction((ActionEvent event) -> {
-            if(barcode.getText().length() == 20){
+            if (barcode.getText().length() == 20) {
                 showMessageAlert("Maximum size reached", 2000);
                 return;
             }
@@ -515,7 +522,7 @@ public class MainStage extends Stage implements GUIInterface {
         hThree.getChildren().add(three);
 
         three.setOnAction((ActionEvent event) -> {
-            if(barcode.getText().length() == 20){
+            if (barcode.getText().length() == 20) {
                 showMessageAlert("Maximum size reached", 2000);
                 return;
             }
@@ -528,7 +535,7 @@ public class MainStage extends Stage implements GUIInterface {
         hZero.getChildren().add(zero);
 
         zero.setOnAction((ActionEvent event) -> {
-            if(barcode.getText().length() == 20){
+            if (barcode.getText().length() == 20) {
                 showMessageAlert("Maximum size reached", 2000);
                 return;
             }
@@ -541,7 +548,7 @@ public class MainStage extends Stage implements GUIInterface {
         hDzero.getChildren().add(dZero);
 
         dZero.setOnAction((ActionEvent event) -> {
-            if(barcode.getText().length() == 20){
+            if (barcode.getText().length() == 20) {
                 showMessageAlert("Maximum size reached", 2000);
                 return;
             }
@@ -593,6 +600,14 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void initPayment() {
         paymentPane = new GridPane();
+
+        paymentVersion = new Label("JTill Terminal");
+        paymentVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        paymentTime = new Label("--:-- --/--/----");
+        paymentTime.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        ClockThread.addClockLabel(paymentTime);
+        paymentTime.setAlignment(Pos.CENTER_RIGHT);
 
         fivePounds = new Button("£5");
         fivePounds.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -791,37 +806,55 @@ public class MainStage extends Stage implements GUIInterface {
             }
         });
 
-        paymentPane.add(fivePounds, 0, 0, 1, 2);
-        paymentPane.add(tenPounds, 1, 0, 1, 2);
-        paymentPane.add(twentyPounds, 2, 0, 1, 2);
-        paymentPane.add(customValue, 0, 2, 1, 2);
-        paymentPane.add(exactValue, 1, 2, 1, 2);
-        paymentPane.add(card, 2, 2, 1, 2);
-        paymentPane.add(addCustomer, 0, 4, 1, 2);
-        paymentPane.add(chargeAccount, 1, 4, 1, 2);
-        paymentPane.add(cheque, 2, 4, 1, 2);
-        paymentPane.add(saleCustomer, 0, 6, 2, 1);
-        paymentPane.add(back, 5, 6, 1, 2);
-        paymentPane.add(paymentsList, 3, 0, 2, 6);
-        paymentPane.add(paymentTotal, 3, 6, 2, 1);
-        paymentPane.add(voidItem, 5, 0, 1, 2);
-        paymentPane.add(voidSale, 5, 2, 1, 2);
-        paymentPane.add(discount, 5, 4, 1, 2);
-        paymentPane.add(settings, 6, 0, 1, 2);
-        paymentPane.add(cashUp, 6, 2, 1, 2);
-        paymentPane.add(clearLogins, 6, 4, 1, 2);
+        paymentLogoff = new Button("Logoff");
+        paymentLogoff.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        paymentLogoff.setOnAction((ActionEvent event) -> {
+            Platform.runLater(this::logoff);
+        });
+        paymentLogoff.setStyle("-fx-base: #0000FF;");
 
-        for (int i = 1; i <= 7; i++) {
+        paymentMessages = new Label();
+        paymentMessages.setFont(Font.font("Tahoma", FontWeight.NORMAL, 40));
+        paymentMessages.setId("message");
+        paymentMessages.setMinSize(0, 0);
+        paymentMessages.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+        paymentPane.add(paymentLoggedIn, 0, 0, 2, 1);
+        paymentPane.add(paymentVersion, 3, 0, 3, 1);
+        paymentPane.add(paymentTime, 7, 0, 3, 1);
+        paymentPane.add(fivePounds, 0, 1, 1, 2);
+        paymentPane.add(tenPounds, 1, 1, 1, 2);
+        paymentPane.add(twentyPounds, 2, 1, 1, 2);
+        paymentPane.add(customValue, 0, 3, 1, 2);
+        paymentPane.add(exactValue, 1, 3, 1, 2);
+        paymentPane.add(card, 2, 3, 1, 2);
+        paymentPane.add(addCustomer, 0, 5, 1, 2);
+        paymentPane.add(chargeAccount, 1, 5, 1, 2);
+        paymentPane.add(cheque, 2, 5, 1, 2);
+        paymentPane.add(saleCustomer, 8, 7, 2, 1);
+        paymentPane.add(back, 8, 14, 2, 2);
+        paymentPane.add(paymentsList, 8, 1, 2, 5);
+        paymentPane.add(paymentTotal, 8, 6, 2, 1);
+        paymentPane.add(voidItem, 7, 1, 1, 2);
+        paymentPane.add(voidSale, 6, 1, 1, 2);
+        paymentPane.add(discount, 5, 1, 1, 2);
+        paymentPane.add(settings, 7, 3, 1, 2);
+        paymentPane.add(cashUp, 6, 3, 1, 2);
+        paymentPane.add(clearLogins, 5, 3, 1, 2);
+        paymentPane.add(paymentMessages, 4, 14, 4, 2);
+        paymentPane.add(paymentLogoff, 0, 14, 1, 2);
+
+        for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();
-            col.setPrefWidth(SCREEN_WIDTH / 7);
+            col.setPrefWidth(SCREEN_WIDTH / 10);
             col.setFillWidth(true);
             col.setHgrow(Priority.ALWAYS);
             paymentPane.getColumnConstraints().add(col);
         }
 
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 1; i <= 16; i++) {
             RowConstraints row = new RowConstraints();
-            row.setPrefHeight(SCREEN_HEIGHT / 12);
+            row.setPrefHeight(SCREEN_HEIGHT / 16);
             row.setFillHeight(true);
             row.setVgrow(Priority.ALWAYS);
             paymentPane.getRowConstraints().add(row);
@@ -927,6 +960,7 @@ public class MainStage extends Stage implements GUIInterface {
                                 newSale();
                             }
                             staffLabel.setText("Staff: " + s.getName());
+                            paymentLoggedIn.setText("Staff: " + s.getName());
                             if (!buttonPanes.isEmpty()) {
                                 buttonPane.getChildren().clear();
                                 buttonPane.getChildren().add(buttonPanes.get(0));
@@ -965,6 +999,8 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void clearLoginScreen() {
         staffLayout.getChildren().clear();
+        x = 0;
+        y = 0;
     }
 
     private void setCustomer(Customer c) {
@@ -1041,6 +1077,7 @@ public class MainStage extends Stage implements GUIInterface {
             public void run() {
                 Platform.runLater(() -> {
                     MainStage.this.alertMessage.setText(message);
+                    MainStage.this.paymentMessages.setText(message);
                 });
                 try {
                     Thread.sleep(duration);
@@ -1049,6 +1086,7 @@ public class MainStage extends Stage implements GUIInterface {
                 }
                 Platform.runLater(() -> {
                     MainStage.this.alertMessage.setText("");
+                    MainStage.this.paymentMessages.setText("");
                 });
             }
         }.start();
@@ -1162,8 +1200,6 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     private void addScreens(List<Screen> screens, GridPane pane) {
-        final int WIDTH = 180;
-        final int HEIGHT = 50;
 
         int xPos = 0;
         int yPos = 0;
@@ -1175,8 +1211,6 @@ public class MainStage extends Stage implements GUIInterface {
             button.setId("screenButton");
             button.prefWidthProperty().bind(pane.widthProperty().divide(4));
             button.prefHeightProperty().bind(pane.heightProperty().divide(2));
-//            button.setMaxSize(WIDTH, HEIGHT);
-//            button.setMinSize(WIDTH, HEIGHT);
             pane.add(button, xPos, yPos);
             setScreenButtons(s, grid);
             buttonPanes.add(grid);
@@ -1185,8 +1219,8 @@ public class MainStage extends Stage implements GUIInterface {
                 buttonPane.getChildren().add(grid);
             });
             xPos++;
-            if (xPos == 3) {
-                xPos = 1;
+            if (xPos == 4) {
+                xPos = 0;
                 yPos++;
             }
         }
@@ -1204,13 +1238,12 @@ public class MainStage extends Stage implements GUIInterface {
     private void addButtons(List<TillButton> buttons, GridPane grid) {
         int xPos = 0;
         int yPos = 0;
-        int buttonsAdded = 0;
 
         for (TillButton b : buttons) {
             if (b.getName().equals("[SPACE]")) {
                 Box box = new Box();
-                box.prefWidth(grid.getWidth() / 5);
-                box.prefHeight(grid.getHeight() / 10);
+                box.widthProperty().bind(grid.widthProperty().divide(5));
+                box.heightProperty().bind(grid.heightProperty().divide(10));
                 grid.add(box, xPos, yPos);
             } else {
                 Button button = new Button(b.getName());
@@ -1227,12 +1260,10 @@ public class MainStage extends Stage implements GUIInterface {
             }
 
             xPos++;
-            if (xPos == 4) {
+            if (xPos == 5) {
                 xPos = 0;
                 yPos++;
             }
-
-            buttonsAdded++;
         }
 
         for (int i = 1; i <= 5; i++) {
@@ -1257,9 +1288,9 @@ public class MainStage extends Stage implements GUIInterface {
     @Override
     public void log(Object o) {
     }
-    
+
     @Override
-    public void logWarning(Object o){
+    public void logWarning(Object o) {
     }
 
     @Override
