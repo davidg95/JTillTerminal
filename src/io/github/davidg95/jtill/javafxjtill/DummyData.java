@@ -132,7 +132,7 @@ public class DummyData implements DataConnect {
     }
 
     @Override
-    public String getSettings(String key) throws IOException {
+    public String getSetting(String key) throws IOException {
         return "";
     }
 
@@ -718,6 +718,16 @@ public class DummyData implements DataConnect {
     @Override
     public boolean isTillLoggedIn(Staff s) throws IOException, StaffNotFoundException, SQLException {
         return false;
+    }
+
+    @Override
+    public String getSetting(String key, String value) throws IOException {
+        return "";
+    }
+
+    @Override
+    public Settings getSettingsInstance() throws IOException {
+        return null;
     }
 
 }

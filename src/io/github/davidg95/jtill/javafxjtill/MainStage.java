@@ -1044,7 +1044,7 @@ public class MainStage extends Stage implements GUIInterface {
                 }
             }
             try {
-                if (dc.getSettings("AUTO_LOGOUT").equals("TRUE")) {
+                if (dc.getSetting("AUTO_LOGOUT").equals("TRUE")) {
                     try {
                         dc.tillLogout(staff);
                     } catch (StaffNotFoundException ex) {
