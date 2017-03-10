@@ -735,8 +735,4 @@ public class DummyData implements DataConnect {
         return this.g;
     }
 
-    @Override
-    public void log(Object o) {
-    }
-
 }
