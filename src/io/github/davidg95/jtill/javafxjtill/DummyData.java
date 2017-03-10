@@ -730,4 +730,13 @@ public class DummyData implements DataConnect {
         return null;
     }
 
+    @Override
+    public GUIInterface getGUI() {
+        return this.g;
+    }
+
+    @Override
+    public void log(Object o) {
+    }
+
 }
