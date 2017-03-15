@@ -783,4 +783,28 @@ public class DummyData implements DataConnect {
         return null;
     }
 
+    @Override
+    public WasteReason addWasteReason(WasteReason wr) throws IOException, SQLException, JTillException {
+        return null;
+    }
+
+    @Override
+    public void removeWasteReason(int id) throws IOException, SQLException, JTillException {
+    }
+
+    @Override
+    public WasteReason getWasteReason(int id) throws IOException, SQLException, JTillException {
+        return null;
+    }
+
+    @Override
+    public List<WasteReason> getAllWasteReasons() throws IOException, SQLException {
+        return null;
+    }
+
+    @Override
+    public WasteReason updateWasteReason(WasteReason wr) throws IOException, SQLException, JTillException {
+        return null;
+    }
+
 }
