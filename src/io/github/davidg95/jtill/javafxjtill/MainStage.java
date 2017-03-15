@@ -63,6 +63,7 @@ public class MainStage extends Stage implements GUIInterface {
     private int itemQuantity;
     private BigDecimal amountDue;
     private final DataConnect dc;
+    private int MAX_SALES;
 
     private final String stylesheet;
 
@@ -160,7 +161,7 @@ public class MainStage extends Stage implements GUIInterface {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException ex) {
-                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                log.log(Level.SEVERE, null, ex);
             }
             boolean tryCon = true;
             while (tryCon) {
@@ -171,8 +172,10 @@ public class MainStage extends Stage implements GUIInterface {
                     this.allow();
                 } catch (IOException ex) {
                     MessageScreen.hideWindow();
+                    log.log(Level.WARNING, "Error connecting to the server");
                     if (YesNoDialog.showDialog(this, "Try Again?", "Do you want to try connect again?") == YesNoDialog.NO) {
-                        tryCon = false;
+                        log.log(Level.INFO, "Stopping JTill Terminal");
+                        System.exit(0);
                     }
                 }
             }
@@ -184,12 +187,29 @@ public class MainStage extends Stage implements GUIInterface {
         dc.setGUI(MainStage.this);
         if (dc instanceof ServerConnection) {
             ServerConnection sc = (ServerConnection) dc;
+            log.log(Level.INFO, "Attempting connection to the server on IP address " + JavaFXJTill.HOST);
             sc.connect(JavaFXJTill.HOST, JavaFXJTill.PORT, JavaFXJTill.NAME);
         }
     }
 
     public void getServerData() {
         try {
+            try {
+                MAX_SALES = Integer.parseInt(dc.getSetting("MAX_CACHE_SALES"));
+                log.log(Level.INFO, "Max sales set to " + MAX_SALES);
+            } catch (IOException ex) {
+                log.log(Level.SEVERE, null, ex);
+            }
+            try {
+                if (dc.getSetting("SEND_PRODUCTS_START").equals("TRUE")) {
+                    log.log(Level.INFO, "Downloading products list from server");
+                    ProductCache.getInstance().setProducts(dc.getAllProducts());
+                    log.log(Level.INFO, "Products list downloaded from server");
+                }
+            } catch (IOException | SQLException ex) {
+                log.log(Level.SEVERE, null, ex);
+            }
+            log.log(Level.INFO, "Loading screen and button configurations from the server");
             List<Screen> screens = dc.getAllScreens();
             addScreens(screens, screenPane);
         } catch (IOException | SQLException ex) {
@@ -340,7 +360,6 @@ public class MainStage extends Stage implements GUIInterface {
                     setTotalLabel();
                     itemsTable.refresh();
                 } else {
-                    //MessageDialog.showMessage(this, "Hald Price", "Item not discountable");
                     showMessageAlert("Item not discountable", 2000);
                 }
             }
@@ -354,7 +373,7 @@ public class MainStage extends Stage implements GUIInterface {
             String message = EntryDialog.show(this, "Assisstance", "Enter message");
             try {
                 dc.assisstance(message);
-                //MessageDialog.showMessage(this, "Assisstance", "Message sent");
+                log.log(Level.INFO, "Assisstance message sent to server");
                 showMessageAlert("Message Sent", 2000);
             } catch (IOException ex) {
                 MessageDialog.showMessage(this, "Assisstance", ex.getMessage());
@@ -791,16 +810,7 @@ public class MainStage extends Stage implements GUIInterface {
         cashUp.setOnAction((ActionEvent event) -> {
             if (staff.getPosition() >= 3) {
                 log.log(Level.INFO, "Submitting all sales to the server");
-                List<Sale> s = SaleCache.getInstance().getAllSales();
-                for (Sale sale : s) {
-                    try {
-                        dc.addSale(sale);
-                        log.log(Level.INFO, "Sale {0} has been submitted to the server", sale.getId());
-                    } catch (IOException | SQLException ex) {
-                        log.log(Level.SEVERE, null, ex);
-                    }
-                }
-                log.log(Level.INFO, "All sales submitted");
+                sendSalesToServer();
                 SaleCache.getInstance().clearAll();
                 CashUpDialog.showDialog(this, dc);
                 clearLoginScreen();
@@ -824,16 +834,7 @@ public class MainStage extends Stage implements GUIInterface {
         submitSales = new Button("Submit all sales");
         submitSales.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         submitSales.setOnAction((ActionEvent event) -> {
-            List<Sale> sales = SaleCache.getInstance().getAllSales();
-            for (Sale s : sales) {
-                try {
-                    s = dc.addSale(s);
-                    log.log(Level.INFO, "Sale {0} has been submitted to the server", s.getId());
-                } catch (IOException | SQLException ex) {
-                    log.log(Level.SEVERE, null, ex);
-                }
-            }
-            SaleCache.getInstance().clearAll();
+            sendSalesToServer();
         });
 
         paymentLogoff = new Button("Logoff");
@@ -1062,11 +1063,28 @@ public class MainStage extends Stage implements GUIInterface {
         }
     }
 
+    private void sendSalesToServer() {
+        List<Sale> sales = SaleCache.getInstance().getAllSales();
+        for (Sale s : sales) {
+            try {
+                s = dc.addSale(s);
+                log.log(Level.INFO, "Sale " + s.getId() + " has been sent to the server");
+            } catch (IOException | SQLException ex) {
+                log.log(Level.SEVERE, null, ex);
+            }
+        }
+        SaleCache.getInstance().clearAll();
+    }
+
     private void completeCurrentSale() {
         try {
             sale.setDate(new Date());
 //            Sale s = dc.addSale(sale);
             SaleCache.getInstance().addSale(sale);
+            if (SaleCache.getInstance().getAllSales().size() == MAX_SALES) {
+                log.log(Level.INFO, "Sending sales to server as the limit has been reached");
+                sendSalesToServer();
+            }
             sale.setId(0);
             if (YesNoDialog.showDialog(this, "Email Receipt", "Email Customer Receipt?") == YesNoDialog.YES) {
                 if (sale.getCustomer() != null) {
@@ -1178,9 +1196,9 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     private void addItemToSale(Item i) {
-        if (i instanceof Product) {
+        if (i instanceof Product) { //If the item is a product
             Product p = (Product) i;
-            if (p.getCategory().isTimeRestrict()) {
+            if (p.getCategory().isTimeRestrict()) { //Check for time restrictions
                 Calendar c = Calendar.getInstance();
                 long now = c.getTimeInMillis();
                 c.set(Calendar.HOUR_OF_DAY, 1);
@@ -1188,41 +1206,42 @@ public class MainStage extends Stage implements GUIInterface {
                 c.set(Calendar.SECOND, 0);
                 c.set(Calendar.MILLISECOND, 0);
                 long passed = now - c.getTimeInMillis();
-                if (!p.getCategory().isSellTime(new Time(passed))) {
+                if (!p.getCategory().isSellTime(new Time(passed))) { //If the item can not be sold now due to the time
                     MessageDialog.showMessage(this, "Time Restriction", "This item cannot be sold now");
                     return;
                 }
             }
-            if (p.getCategory().getMinAge() > age) {
+            if (p.getCategory().getMinAge() > age) { //Check for age restrictions
                 if (YesNoDialog.showDialog(this, "Age Restriction", "Is customer over " + p.getCategory().getMinAge() + "?") == YesNoDialog.NO) {
                     return;
                 }
                 age = p.getCategory().getMinAge();
             }
-            if (p.isOpen()) {
+            if (p.isOpen()) { //Check if the product is open price
                 int value;
                 if (barcode.getText().equals("")) {
-                    value = NumberEntry.showNumberEntryDialog(this, "Enter price");
+                    value = NumberEntry.showNumberEntryDialog(this, "Enter price"); //Show the dialog asking for the price
                 } else {
-                    value = Integer.parseInt(barcode.getText());
+                    value = Integer.parseInt(barcode.getText()); //Get the price value from the input field
                     barcode.setText("");
                 }
                 if (value == 0) {
-                    return;
+                    return; //Exit the method if nothing was entered
                 }
                 p.setPrice(new BigDecimal(Double.toString((double) value / 100)));
             }
-        } else {
+        } else { //If the item was a discount
             Discount d = (Discount) i;
             d.setPrice(sale.getTotal().multiply(new BigDecimal(Double.toString(d.getPercentage() / 100)).negate()));
         }
-        boolean inSale = sale.addItem(i, itemQuantity);
+        boolean inSale = sale.addItem(i, itemQuantity); //Add the item to the sale
         if (!inSale) {
             obTable.add(sale.getLastAdded());
             itemsTable.scrollTo(obTable.size() - 1);
         } else {
             itemsTable.refresh();
         }
+        log.log(Level.INFO, "Item has been added to a sale");
         setTotalLabel();
         itemQuantity = 1;
         quantity.setText("Quantity: 1");
@@ -1241,9 +1260,10 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     private void addScreens(List<Screen> screens, GridPane pane) {
-
         int xPos = 0;
         int yPos = 0;
+
+        log.log(Level.INFO, "Got " + screens.size() + " screens from the server");
 
         for (Screen s : screens) {
             GridPane grid = new GridPane();
@@ -1269,6 +1289,7 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void setScreenButtons(Screen s, GridPane pane) {
         try {
+            log.log(Level.INFO, "Getting buttons for " + s.getName() + " screen");
             List<TillButton> buttons = dc.getButtonsOnScreen(s);
             addButtons(buttons, pane);
         } catch (IOException | SQLException | ScreenNotFoundException ex) {
@@ -1279,6 +1300,8 @@ public class MainStage extends Stage implements GUIInterface {
     private void addButtons(List<TillButton> buttons, GridPane grid) {
         int xPos = 0;
         int yPos = 0;
+
+        log.log(Level.INFO, "Got " + buttons.size() + " buttons for this screen");
 
         for (TillButton b : buttons) {
             if (b.getName().equals("[SPACE]")) {

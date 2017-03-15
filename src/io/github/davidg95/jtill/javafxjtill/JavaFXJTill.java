@@ -52,6 +52,7 @@ public class JavaFXJTill extends Application {
     }
 
     public static void loadProperties() {
+        LOG.log(Level.INFO, "Loading properties file");
         properties = new Properties();
         InputStream in;
 
@@ -66,6 +67,7 @@ public class JavaFXJTill extends Application {
 
             in.close();
         } catch (FileNotFoundException | UnknownHostException ex) {
+            LOG.log(Level.INFO, "Properties file not found, going into initial configuration");
             SetupDialog.showDialog(null);
             saveProperties();
         } catch (IOException ex) {
@@ -73,6 +75,7 @@ public class JavaFXJTill extends Application {
     }
 
     public static void saveProperties() {
+        LOG.log(Level.INFO, "Saving properties file");
         properties = new Properties();
         OutputStream out;
 
