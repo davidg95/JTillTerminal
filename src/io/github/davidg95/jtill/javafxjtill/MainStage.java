@@ -135,12 +135,15 @@ public class MainStage extends Stage implements GUIInterface {
     private final double SCREEN_WIDTH = javafx.stage.Screen.getPrimary().getBounds().getWidth();
     private final double SCREEN_HEIGHT = javafx.stage.Screen.getPrimary().getBounds().getHeight();
 
+    private final List<ProductListener> listeners;
+
     public MainStage(DataConnect dc) {
         super();
         this.dc = dc;
         this.sale = new Sale(JavaFXJTill.NAME, staff);
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
+        listeners = new ArrayList<>();
     }
 
     public void initalise() {
@@ -169,7 +172,6 @@ public class MainStage extends Stage implements GUIInterface {
                     tryConnect();
                     MessageScreen.hideWindow();
                     tryCon = false;
-                    this.allow();
                 } catch (IOException ex) {
                     MessageScreen.hideWindow();
                     log.log(Level.WARNING, "Error connecting to the server");
@@ -192,7 +194,7 @@ public class MainStage extends Stage implements GUIInterface {
         }
     }
 
-    public void getServerData() {
+    private void getServerData() {
         try {
             try {
                 MAX_SALES = Integer.parseInt(dc.getSetting("MAX_CACHE_SALES"));
@@ -209,6 +211,7 @@ public class MainStage extends Stage implements GUIInterface {
             } catch (IOException | SQLException ex) {
                 log.log(Level.SEVERE, null, ex);
             }
+            DiscountCache.getInstance().setDiscounts(dc.getAllDiscounts(), this);
             log.log(Level.INFO, "Loading screen and button configurations from the server");
             List<Screen> screens = dc.getAllScreens();
             addScreens(screens, screenPane);
@@ -1195,9 +1198,10 @@ public class MainStage extends Stage implements GUIInterface {
         }
     }
 
-    private void addItemToSale(Item i) {
+    public void addItemToSale(Item i) {
         if (i instanceof Product) { //If the item is a product
             Product p = (Product) i;
+            notifyAllListeners(new ProductEvent(p));
             if (p.getCategory().isTimeRestrict()) { //Check for time restrictions
                 Calendar c = Calendar.getInstance();
                 long now = c.getTimeInMillis();
@@ -1245,6 +1249,21 @@ public class MainStage extends Stage implements GUIInterface {
         setTotalLabel();
         itemQuantity = 1;
         quantity.setText("Quantity: 1");
+    }
+
+    public void addListener(ProductListener pl) {
+        listeners.add(pl);
+    }
+
+    private void notifyAllListeners(ProductEvent pe) {
+        listeners.forEach((pl) -> {
+            new Thread() {
+                @Override
+                public void run() {
+                    pl.onProductAdd(pe);
+                }
+            }.start();
+        });
     }
 
     private void setTotalLabel() {
