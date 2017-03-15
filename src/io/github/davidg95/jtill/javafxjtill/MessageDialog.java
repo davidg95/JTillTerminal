@@ -28,15 +28,15 @@ public class MessageDialog extends Stage {
 
     private final String message;
 
-    public MessageDialog(Window parent, String title, String message) {
-        this.message = message;
+    public MessageDialog(Window parent, String title, Object message) {
+        this.message = message.toString();
         init();
         setTitle(title);
         initOwner(parent);
         initModality(Modality.APPLICATION_MODAL);
     }
 
-    public static void showMessage(Window parent, String title, String message) {
+    public static void showMessage(Window parent, String title, Object message) {
         dialog = new MessageDialog(parent, title, message);
         dialog.showAndWait();
     }

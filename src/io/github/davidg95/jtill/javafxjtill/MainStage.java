@@ -243,8 +243,6 @@ public class MainStage extends Stage implements GUIInterface {
 
         itemsTable = new TableView();
         itemsTable.setEditable(false);
-//        itemsTable.setMinSize(0, 0);
-//        itemsTable.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         TableColumn qty = new TableColumn("Qty.");
         TableColumn itm = new TableColumn("Item");
         TableColumn cst = new TableColumn("£");
@@ -1077,15 +1075,10 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     private void completeCurrentSale() {
+        sale.setDate(new Date());
         try {
-            sale.setDate(new Date());
-//            Sale s = dc.addSale(sale);
-            SaleCache.getInstance().addSale(sale);
-            if (SaleCache.getInstance().getAllSales().size() == MAX_SALES) {
-                log.log(Level.INFO, "Sending sales to server as the limit has been reached");
-                sendSalesToServer();
-            }
-            sale.setId(0);
+            Sale s = dc.addSale(sale);
+            log.log(Level.INFO, "Sale " + s.getId() + " sent to server");
             if (YesNoDialog.showDialog(this, "Email Receipt", "Email Customer Receipt?") == YesNoDialog.YES) {
                 if (sale.getCustomer() != null) {
                     dc.emailReceipt(sale.getCustomer().getEmail(), sale);
@@ -1094,24 +1087,31 @@ public class MainStage extends Stage implements GUIInterface {
                     dc.emailReceipt(email, sale);
                 }
             }
-            try {
-                if (dc.getSetting("AUTO_LOGOUT").equals("TRUE")) {
-                    try {
-                        dc.tillLogout(staff);
-                    } catch (StaffNotFoundException ex) {
-                        Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    newSale();
-                    setScene(loginScene);
-                } else {
-                    newSale();
-                    setScene(mainScene);
+        } catch (IOException | SQLException ex) {
+            log.log(Level.WARNING, "Error connecting to server");
+            SaleCache.getInstance().addSale(sale);
+            sale.setId(0);
+        } catch (MessagingException ex) {
+            MessageDialog.showMessage(this, "Error", ex);
+        }
+
+        try {
+            if (dc.getSetting("AUTO_LOGOUT").equals("TRUE")) {
+                try {
+                    dc.tillLogout(staff);
+                } catch (StaffNotFoundException ex) {
+                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                newSale();
+                setScene(loginScene);
+            } else {
+                newSale();
+                setScene(mainScene);
             }
-        } catch (MessagingException | IOException ex) {
-            showErrorAlert(ex);
+        } catch (IOException ex) {
+            log.log(Level.SEVERE, null, ex);
+            newSale();
+            setScene(mainScene);
         }
     }
 
