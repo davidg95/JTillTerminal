@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.UnknownHostException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -22,6 +24,7 @@ import javafx.stage.Stage;
  * @author David
  */
 public class JavaFXJTill extends Application {
+    private static final Logger LOG = Logger.getGlobal();
 
     private static DataConnect dc;
     private static Properties properties;
@@ -32,9 +35,12 @@ public class JavaFXJTill extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        LOG.addHandler(new LogFileHandler());
+        LOG.log(Level.INFO, "Starting JTill Terminal");
         dc = new ServerConnection();
         //dc = new DummyData();
         mainStage = new MainStage(dc);
+        LOG.log(Level.INFO, "Initalising");
         mainStage.initalise();
     }
     

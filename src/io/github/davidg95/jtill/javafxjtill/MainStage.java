@@ -55,6 +55,8 @@ import javax.mail.MessagingException;
  */
 public class MainStage extends Stage implements GUIInterface {
 
+    private static final Logger log = Logger.getGlobal();
+
     private Staff staff;
     private Sale sale;
     private int age;
@@ -127,6 +129,7 @@ public class MainStage extends Stage implements GUIInterface {
     private Label paymentTime;
     private Label paymentMessages;
     private Button paymentLogoff;
+    private Button submitSales;
 
     private final double SCREEN_WIDTH = javafx.stage.Screen.getPrimary().getBounds().getWidth();
     private final double SCREEN_HEIGHT = javafx.stage.Screen.getPrimary().getBounds().getHeight();
@@ -787,6 +790,18 @@ public class MainStage extends Stage implements GUIInterface {
         cashUp.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         cashUp.setOnAction((ActionEvent event) -> {
             if (staff.getPosition() >= 3) {
+                log.log(Level.INFO, "Submitting all sales to the server");
+                List<Sale> s = SaleCache.getInstance().getAllSales();
+                for (Sale sale : s) {
+                    try {
+                        dc.addSale(sale);
+                        log.log(Level.INFO, "Sale {0} has been submitted to the server", sale.getId());
+                    } catch (IOException | SQLException ex) {
+                        log.log(Level.SEVERE, null, ex);
+                    }
+                }
+                log.log(Level.INFO, "All sales submitted");
+                SaleCache.getInstance().clearAll();
                 CashUpDialog.showDialog(this, dc);
                 clearLoginScreen();
                 logoff();
@@ -804,6 +819,21 @@ public class MainStage extends Stage implements GUIInterface {
             } else {
                 MessageDialog.showMessage(this, "Login Screen", "You are not allowed to do this");
             }
+        });
+
+        submitSales = new Button("Submit all sales");
+        submitSales.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        submitSales.setOnAction((ActionEvent event) -> {
+            List<Sale> sales = SaleCache.getInstance().getAllSales();
+            for (Sale s : sales) {
+                try {
+                    s = dc.addSale(s);
+                    log.log(Level.INFO, "Sale {0} has been submitted to the server", s.getId());
+                } catch (IOException | SQLException ex) {
+                    log.log(Level.SEVERE, null, ex);
+                }
+            }
+            SaleCache.getInstance().clearAll();
         });
 
         paymentLogoff = new Button("Logoff");
@@ -841,6 +871,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentPane.add(settings, 7, 3, 1, 2);
         paymentPane.add(cashUp, 6, 3, 1, 2);
         paymentPane.add(clearLogins, 5, 3, 1, 2);
+        paymentPane.add(submitSales, 5, 5, 1, 2);
         paymentPane.add(paymentMessages, 4, 14, 4, 2);
         paymentPane.add(paymentLogoff, 0, 14, 1, 2);
 
@@ -1034,13 +1065,15 @@ public class MainStage extends Stage implements GUIInterface {
     private void completeCurrentSale() {
         try {
             sale.setDate(new Date());
-            Sale s = dc.addSale(sale);
+//            Sale s = dc.addSale(sale);
+            SaleCache.getInstance().addSale(sale);
+            sale.setId(0);
             if (YesNoDialog.showDialog(this, "Email Receipt", "Email Customer Receipt?") == YesNoDialog.YES) {
                 if (sale.getCustomer() != null) {
-                    dc.emailReceipt(sale.getCustomer().getEmail(), s);
+                    dc.emailReceipt(sale.getCustomer().getEmail(), sale);
                 } else {
                     String email = EntryDialog.show(this, "Email Receipt", "Enter email");
-                    dc.emailReceipt(email, s);
+                    dc.emailReceipt(email, sale);
                 }
             }
             try {
@@ -1059,7 +1092,7 @@ public class MainStage extends Stage implements GUIInterface {
             } catch (IOException ex) {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (MessagingException | IOException | SQLException ex) {
+        } catch (MessagingException | IOException ex) {
             showErrorAlert(ex);
         }
     }
@@ -1128,11 +1161,19 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void getProductByBarcode(String barcode) {
         try {
-            Product p = dc.getProductByBarcode(barcode);
+            Product p;
+            try {
+                p = ProductCache.getInstance().getProductByBarcode(barcode);
+            } catch (ProductNotFoundException ex) {
+                log.log(Level.INFO, "Checking server for product {0}", barcode);
+                p = dc.getProductByBarcode(barcode);
+                log.log(Level.INFO, "Product was found on server");
+                ProductCache.getInstance().addProductToCache(p);
+            }
             addItemToSale(p);
         } catch (IOException | ProductNotFoundException | SQLException ex) {
-            //MessageDialog.showMessage(this, "Barcode", ex.getMessage());
-            this.showMessageAlert(barcode + " not found", 2000);
+            log.log(Level.WARNING, "Product not found on server");
+            showMessageAlert(barcode + " not found", 2000);
         }
     }
 
