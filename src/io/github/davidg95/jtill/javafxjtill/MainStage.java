@@ -1415,4 +1415,8 @@ public class MainStage extends Stage implements GUIInterface {
     public void hideModalMessage() {
         MessageScreen.hideWindow();
     }
+
+    @Override
+    public void updateTills() {
+    }
 }

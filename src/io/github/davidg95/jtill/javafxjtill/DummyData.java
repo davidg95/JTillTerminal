@@ -706,8 +706,17 @@ public class DummyData implements DataConnect {
     }
 
     @Override
-    public boolean connectTill(String t) throws IOException {
-        return true;
+    public Till connectTill(String t) throws IOException {
+        return null;
+    }
+
+    @Override
+    public void disconnectTill(Till t) {
+    }
+
+    @Override
+    public List<Till> getConnectedTills() throws IOException {
+        return null;
     }
 
     @Override
