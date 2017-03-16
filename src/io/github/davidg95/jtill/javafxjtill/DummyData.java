@@ -519,7 +519,7 @@ public class DummyData implements DataConnect {
     @Override
     public Category getCategory(int id) throws IOException, SQLException, CategoryNotFoundException {
         for (Category c : categories) {
-            if (c.getID() == id) {
+            if (c.getId() == id) {
                 return c;
             }
         }
