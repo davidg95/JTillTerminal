@@ -1,24 +1,140 @@
-JTill log Wed Mar 15 16:40:38 GMT 2017
-[16:40:38] [INFO] Starting JTill Terminal
-[16:40:38] [INFO] Initalising
-[16:40:40] [INFO] Loading properties file
-[16:40:40] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[16:40:40] [INFO] Max sales set to 20
-[16:40:40] [INFO] Set discounts in cache
-[16:40:40] [INFO] Loading screen and button configurations from the server
-[16:40:40] [INFO] Got 0 screens from the server
-[16:40:45] [INFO] Checking cache for {0}
-[16:40:45] [INFO] Product not found in cache
-[16:40:45] [INFO] Checking server for product {0}
-[16:40:45] [INFO] Product was found on server
-[16:40:45] [INFO] Adding product to cache
-[16:40:45] [INFO] Item has been added to a sale
-[16:40:45] [INFO] Item has been added to a sale
-[16:40:48] [INFO] Checking cache for {0}
-[16:40:48] [INFO] Product not found in cache
-[16:40:48] [INFO] Checking server for product {0}
-[16:40:48] [INFO] Product was found on server
-[16:40:48] [INFO] Adding product to cache
-[16:40:48] [INFO] Item has been added to a sale
-[16:40:48] [INFO] Item has been added to a sale
-[16:40:54] [INFO] Sale 9 sent to server
+JTill log Thu Mar 16 13:33:47 GMT 2017
+[13:33:47] [INFO] Starting JTill Terminal
+[13:33:47] [INFO] Initalising
+[13:33:49] [INFO] Loading properties file
+[13:33:49] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[13:33:49] [INFO] Max sales set to 20
+[13:33:49] [INFO] Set discounts in cache
+[13:33:49] [INFO] Loading screen and button configurations from the server
+[13:33:49] [INFO] Got 1 screens from the server
+[13:33:49] [INFO] Getting buttons for Main screen
+[13:33:49] [INFO] Got 50 buttons for this screen
+[13:33:53] [INFO] Item has been added to a sale
+[13:33:54] [INFO] Item has been added to a sale
+[13:33:54] [INFO] Item has been added to a sale
+[13:34:02] [INFO] Sale 2 sent to server
+[13:34:04] [INFO] Item has been added to a sale
+[13:34:04] [INFO] Item has been added to a sale
+[13:34:05] [INFO] Item has been added to a sale
+[13:34:05] [INFO] Item has been added to a sale
+[13:34:05] [INFO] Item has been added to a sale
+[13:34:05] [INFO] Item has been added to a sale
+[13:34:06] [INFO] Item has been added to a sale
+[13:34:06] [INFO] Item has been added to a sale
+[13:34:06] [INFO] Item has been added to a sale
+[13:34:06] [INFO] Item has been added to a sale
+[13:34:06] [INFO] Item has been added to a sale
+[13:34:06] [INFO] Item has been added to a sale
+[13:34:06] [INFO] Item has been added to a sale
+[13:34:06] [INFO] Item has been added to a sale
+[13:34:06] [INFO] Item has been added to a sale
+[13:34:06] [INFO] Item has been added to a sale
+[13:34:07] [INFO] Item has been added to a sale
+[13:34:07] [INFO] Item has been added to a sale
+[13:34:07] [INFO] Item has been added to a sale
+[13:34:07] [INFO] Item has been added to a sale
+[13:34:07] [INFO] Item has been added to a sale
+[13:34:07] [INFO] Item has been added to a sale
+[13:34:07] [INFO] Item has been added to a sale
+[13:34:07] [INFO] Item has been added to a sale
+[13:34:07] [INFO] Item has been added to a sale
+[13:34:07] [INFO] Item has been added to a sale
+[13:34:08] [INFO] Item has been added to a sale
+[13:34:08] [INFO] Item has been added to a sale
+[13:34:08] [INFO] Item has been added to a sale
+[13:34:08] [INFO] Item has been added to a sale
+[13:34:08] [INFO] Item has been added to a sale
+[13:34:08] [INFO] Item has been added to a sale
+[13:34:10] [INFO] Item has been added to a sale
+[13:34:10] [INFO] Item has been added to a sale
+[13:34:10] [INFO] Item has been added to a sale
+[13:34:10] [INFO] Item has been added to a sale
+[13:34:10] [INFO] Item has been added to a sale
+[13:34:10] [INFO] Item has been added to a sale
+[13:34:11] [INFO] Item has been added to a sale
+[13:34:11] [INFO] Item has been added to a sale
+[13:34:11] [INFO] Item has been added to a sale
+[13:34:11] [INFO] Item has been added to a sale
+[13:34:11] [INFO] Item has been added to a sale
+[13:34:11] [INFO] Item has been added to a sale
+[13:34:11] [INFO] Item has been added to a sale
+[13:34:11] [INFO] Item has been added to a sale
+[13:34:11] [INFO] Item has been added to a sale
+[13:34:11] [INFO] Item has been added to a sale
+[13:34:12] [INFO] Item has been added to a sale
+[13:34:12] [INFO] Item has been added to a sale
+[13:34:12] [INFO] Item has been added to a sale
+[13:34:12] [INFO] Item has been added to a sale
+[13:34:12] [INFO] Item has been added to a sale
+[13:34:12] [INFO] Item has been added to a sale
+[13:34:12] [INFO] Item has been added to a sale
+[13:34:12] [INFO] Item has been added to a sale
+[13:34:12] [INFO] Item has been added to a sale
+[13:34:12] [INFO] Item has been added to a sale
+[13:34:13] [INFO] Item has been added to a sale
+[13:34:13] [INFO] Item has been added to a sale
+[13:34:13] [INFO] Item has been added to a sale
+[13:34:13] [INFO] Item has been added to a sale
+[13:34:13] [INFO] Item has been added to a sale
+[13:34:13] [INFO] Item has been added to a sale
+[13:34:13] [INFO] Item has been added to a sale
+[13:34:13] [INFO] Item has been added to a sale
+[13:34:13] [INFO] Item has been added to a sale
+[13:34:13] [INFO] Item has been added to a sale
+[13:34:14] [INFO] Item has been added to a sale
+[13:34:14] [INFO] Item has been added to a sale
+[13:34:14] [INFO] Item has been added to a sale
+[13:34:14] [INFO] Item has been added to a sale
+[13:34:14] [INFO] Item has been added to a sale
+[13:34:14] [INFO] Item has been added to a sale
+[13:34:14] [INFO] Item has been added to a sale
+[13:34:14] [INFO] Item has been added to a sale
+[13:34:14] [INFO] Item has been added to a sale
+[13:34:14] [INFO] Item has been added to a sale
+[13:34:15] [INFO] Item has been added to a sale
+[13:34:15] [INFO] Item has been added to a sale
+[13:34:15] [INFO] Item has been added to a sale
+[13:34:15] [INFO] Item has been added to a sale
+[13:34:15] [INFO] Item has been added to a sale
+[13:34:15] [INFO] Item has been added to a sale
+[13:34:15] [INFO] Item has been added to a sale
+[13:34:15] [INFO] Item has been added to a sale
+[13:34:15] [INFO] Item has been added to a sale
+[13:34:15] [INFO] Item has been added to a sale
+[13:34:16] [INFO] Item has been added to a sale
+[13:34:16] [INFO] Item has been added to a sale
+[13:34:16] [INFO] Item has been added to a sale
+[13:34:16] [INFO] Item has been added to a sale
+[13:34:17] [INFO] Item has been added to a sale
+[13:34:17] [INFO] Item has been added to a sale
+[13:34:17] [INFO] Item has been added to a sale
+[13:34:17] [INFO] Item has been added to a sale
+[13:34:17] [INFO] Item has been added to a sale
+[13:34:17] [INFO] Item has been added to a sale
+[13:34:17] [INFO] Item has been added to a sale
+[13:34:17] [INFO] Item has been added to a sale
+[13:34:17] [INFO] Item has been added to a sale
+[13:34:17] [INFO] Item has been added to a sale
+[13:34:17] [INFO] Item has been added to a sale
+[13:34:17] [INFO] Item has been added to a sale
+[13:34:18] [INFO] Item has been added to a sale
+[13:34:18] [INFO] Item has been added to a sale
+[13:34:18] [INFO] Item has been added to a sale
+[13:34:18] [INFO] Item has been added to a sale
+[13:34:18] [INFO] Item has been added to a sale
+[13:34:18] [INFO] Item has been added to a sale
+[13:34:18] [INFO] Item has been added to a sale
+[13:34:18] [INFO] Item has been added to a sale
+[13:34:18] [INFO] Item has been added to a sale
+[13:34:18] [INFO] Item has been added to a sale
+[13:34:19] [INFO] Item has been added to a sale
+[13:34:19] [INFO] Item has been added to a sale
+[13:34:19] [INFO] Item has been added to a sale
+[13:34:19] [INFO] Item has been added to a sale
+[13:34:19] [INFO] Item has been added to a sale
+[13:34:19] [INFO] Item has been added to a sale
+[13:34:19] [INFO] Item has been added to a sale
+[13:34:19] [INFO] Item has been added to a sale
+[13:34:19] [INFO] Item has been added to a sale
+[13:34:19] [INFO] Item has been added to a sale
+[13:34:21] [INFO] Sale 3 sent to server
