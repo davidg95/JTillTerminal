@@ -64,6 +64,7 @@ public class MainStage extends Stage implements GUIInterface {
     private BigDecimal amountDue;
     private final DataConnect dc;
     private int MAX_SALES;
+    private String symbol;
 
     private final String stylesheet;
 
@@ -211,6 +212,16 @@ public class MainStage extends Stage implements GUIInterface {
             } catch (IOException | SQLException ex) {
                 log.log(Level.SEVERE, null, ex);
             }
+            try {
+                symbol = dc.getSetting("CURRENCY_SYMBOL");
+            } catch (IOException ex) {
+                log.log(Level.WARNING, "Could not get currency symbol from server", ex);
+                symbol = "£";
+            }
+            ((TableColumn) itemsTable.getColumns().get(2)).setText(symbol);
+            twentyPounds.setText(symbol + "20");
+            tenPounds.setText(symbol + "10");
+            fivePounds.setText(symbol + "5");
             DiscountCache.getInstance().setDiscounts(dc.getAllDiscounts(), this);
             log.log(Level.INFO, "Loading screen and button configurations from the server");
             List<Screen> screens = dc.getAllScreens();
@@ -248,7 +259,7 @@ public class MainStage extends Stage implements GUIInterface {
         itemsTable.setEditable(false);
         TableColumn qty = new TableColumn("Qty.");
         TableColumn itm = new TableColumn("Item");
-        TableColumn cst = new TableColumn("£");
+        TableColumn cst = new TableColumn(symbol);
         qty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         itm.setCellValueFactory(new PropertyValueFactory<>("item"));
         cst.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -277,7 +288,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         updateList();
 
-        total = new Label("Total: £0.00");
+        total = new Label("Total: " + symbol + "0.00");
         total.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         total.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
@@ -632,7 +643,7 @@ public class MainStage extends Stage implements GUIInterface {
         ClockThread.addClockLabel(paymentTime);
         paymentTime.setAlignment(Pos.CENTER_RIGHT);
 
-        fivePounds = new Button("£5");
+        fivePounds = new Button(symbol + "5");
         fivePounds.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         fivePounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
@@ -642,7 +653,7 @@ public class MainStage extends Stage implements GUIInterface {
             }
         });
 
-        tenPounds = new Button("£10");
+        tenPounds = new Button(symbol + "10");
         tenPounds.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         tenPounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
@@ -652,7 +663,7 @@ public class MainStage extends Stage implements GUIInterface {
             }
         });
 
-        twentyPounds = new Button("£20");
+        twentyPounds = new Button(symbol + "20");
         twentyPounds.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         twentyPounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
@@ -754,7 +765,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentsList.setItems(obPayments);
         paymentsList.setId("PAYMENT_LIST");
 
-        paymentTotal = new Label("Total: £" + sale.getTotal().toString());
+        paymentTotal = new Label("Total: " + symbol + sale.getTotal().toString());
         paymentTotal.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         paymentTotal.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -1054,10 +1065,10 @@ public class MainStage extends Stage implements GUIInterface {
         if (val.compareTo(BigDecimal.ZERO) > 0) {
             obPayments.add(new PaymentItem(type, val));
         }
-        total.setText("Total: £" + amountDue);
-        paymentTotal.setText("Total: £" + amountDue);
+        total.setText("Total: " + symbol + amountDue);
+        paymentTotal.setText("Total: " + symbol + amountDue);
         if (amountDue.compareTo(BigDecimal.ZERO) < 0) {
-            MessageDialog.showMessage(this, "Change", "Change Due: £" + amountDue.abs().toString());
+            MessageDialog.showMessage(this, "Change", "Change Due: " + symbol + amountDue.abs().toString());
             completeCurrentSale();
         } else if (amountDue.compareTo(BigDecimal.ZERO) == 0) {
             completeCurrentSale();
@@ -1166,8 +1177,8 @@ public class MainStage extends Stage implements GUIInterface {
         obPayments = FXCollections.observableArrayList();
         paymentsList.setItems(obPayments);
         updateList();
-        total.setText("Total: £0.00");
-        paymentTotal.setText("Total: £0.00");
+        total.setText("Total: " + symbol + "0.00");
+        paymentTotal.setText("Total: " + symbol + "0.00");
         itemQuantity = 1;
         quantity.setText("Quantity: 1");
         saleCustomer.setText("No Customer");
@@ -1273,8 +1284,8 @@ public class MainStage extends Stage implements GUIInterface {
         } else {
             df = new DecimalFormat("0.00");
         }
-        total.setText("Total: £" + df.format(sale.getTotal()));
-        paymentTotal.setText("Total: £" + df.format(sale.getTotal()));
+        total.setText("Total: " + symbol + df.format(sale.getTotal()));
+        paymentTotal.setText("Total: " + symbol + df.format(sale.getTotal()));
         amountDue = sale.getTotal();
     }
 
