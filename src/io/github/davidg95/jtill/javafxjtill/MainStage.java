@@ -41,6 +41,9 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import io.github.davidg95.JTill.jtill.DataConnect;
+import java.awt.print.PrinterAbortException;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.util.Calendar;
 import java.util.Date;
 import javafx.scene.layout.ColumnConstraints;
@@ -59,12 +62,16 @@ public class MainStage extends Stage implements GUIInterface {
 
     private Staff staff;
     private Sale sale;
+    private Sale lastSale;
     private int age;
     private int itemQuantity;
     private BigDecimal amountDue;
     private final DataConnect dc;
     private int MAX_SALES;
     private String symbol;
+
+    private final PrinterJob job;
+    private boolean printOk;
 
     private final String stylesheet;
 
@@ -73,6 +80,8 @@ public class MainStage extends Stage implements GUIInterface {
     private GridPane loginPane;
     private Button exit;
     private Button login;
+    private Button print;
+    private Label loginMessage;
     private GridPane staffLayout;
     private Label loginTime;
     private Label notLoggedIn;
@@ -145,6 +154,7 @@ public class MainStage extends Stage implements GUIInterface {
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
         listeners = new ArrayList<>();
+        this.job = PrinterJob.getPrinterJob();
     }
 
     public void initalise() {
@@ -159,6 +169,7 @@ public class MainStage extends Stage implements GUIInterface {
         setScene(loginScene); //Show the login scene first
         initStyle(StageStyle.UNDECORATED);
         show();
+        printOk = job.printDialog();
         MessageScreen.changeMessage("Initialising");
         MessageScreen.showWindow();
         Platform.runLater(() -> {
@@ -217,6 +228,14 @@ public class MainStage extends Stage implements GUIInterface {
             } catch (IOException ex) {
                 log.log(Level.WARNING, "Could not get currency symbol from server", ex);
                 symbol = "£";
+            }
+            try{
+                String siteName = "JTill Terminal - " + dc.getSetting("SITE_NAME");
+                loginVersion.setText(siteName);
+                mainVersion.setText(siteName);
+                paymentVersion.setText(siteName);
+            } catch(IOException ex){
+                log.log(Level.WARNING, "Could not get site name", ex);
             }
             ((TableColumn) itemsTable.getColumns().get(2)).setText(symbol);
             twentyPounds.setText(symbol + "20");
@@ -400,7 +419,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         mainPane.add(staffLabel, 0, 0, 2, 1);
         mainPane.add(mainVersion, 3, 0, 3, 1);
-        mainPane.add(time, 7, 0, 3, 1);
+        mainPane.add(time, 9, 0, 1, 1);
         mainPane.add(buttonPane, 0, 1, 8, 11);
         mainPane.add(screenPane, 0, 12, 8, 2);
         mainPane.add(itemsTable, 8, 1, 2, 5);
@@ -864,7 +883,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         paymentPane.add(paymentLoggedIn, 0, 0, 2, 1);
         paymentPane.add(paymentVersion, 3, 0, 3, 1);
-        paymentPane.add(paymentTime, 7, 0, 3, 1);
+        paymentPane.add(paymentTime, 9, 0, 1, 1);
         paymentPane.add(fivePounds, 0, 1, 1, 2);
         paymentPane.add(tenPounds, 1, 1, 1, 2);
         paymentPane.add(twentyPounds, 2, 1, 1, 2);
@@ -1031,10 +1050,34 @@ public class MainStage extends Stage implements GUIInterface {
             });
         });
 
+        print = new Button("Print Last");
+        print.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        print.setOnAction((ActionEvent event) -> {
+            if(lastSale == null){
+                MainStage.this.showMessageAlert("No previous sale", 2000);
+                return;
+            }
+            ReceiptPrinter printer = new ReceiptPrinter(dc, lastSale);
+            job.setPrintable(printer);
+            try {
+                job.print();
+            } catch (PrinterException ex) {
+                MainStage.this.showMessageAlert("Printer Error", 2000);
+            }
+        });
+        
+        loginMessage = new Label();
+        loginMessage.setFont(Font.font("Tahoma", FontWeight.NORMAL, 40));
+        loginMessage.setId("message");
+        loginMessage.setMinSize(0, 0);
+        loginMessage.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
         loginPane.add(staffLayout, 2, 2, 8, 12);
         loginPane.add(exit, 0, 14, 1, 2);
         loginPane.add(login, 1, 14, 1, 2);
-        loginPane.add(loginTime, 7, 0, 3, 1);
+        loginPane.add(print, 2, 14, 1, 2);
+        loginPane.add(loginMessage, 4, 14, 4, 2);
+        loginPane.add(loginTime, 9, 0, 1, 1);
         loginPane.add(notLoggedIn, 0, 0, 2, 1);
         loginPane.add(loginVersion, 3, 0, 3, 1);
 
@@ -1090,6 +1133,25 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void completeCurrentSale() {
         sale.setDate(new Date());
+        ReceiptPrinter prt = new ReceiptPrinter(dc, sale);
+        job.setPrintable(prt);
+        if (printOk) {
+            Runnable print = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        job.print();
+                    } catch (PrinterAbortException ex) {
+                        MainStage.this.showMessageAlert("Printer Error", 2000);
+                    } catch (PrinterException ex) {
+                        Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            };
+            Thread th = new Thread(print);
+            th.start();
+        }
+        lastSale = sale.clone();
         try {
             Sale s = dc.addSale(sale);
             log.log(Level.INFO, "Sale " + s.getId() + " sent to server");
@@ -1143,6 +1205,7 @@ public class MainStage extends Stage implements GUIInterface {
                 Platform.runLater(() -> {
                     MainStage.this.alertMessage.setText(message);
                     MainStage.this.paymentMessages.setText(message);
+                    MainStage.this.loginMessage.setText(message);
                 });
                 try {
                     Thread.sleep(duration);
@@ -1152,6 +1215,7 @@ public class MainStage extends Stage implements GUIInterface {
                 Platform.runLater(() -> {
                     MainStage.this.alertMessage.setText("");
                     MainStage.this.paymentMessages.setText("");
+                    MainStage.this.loginMessage.setText("");
                 });
             }
         }.start();
