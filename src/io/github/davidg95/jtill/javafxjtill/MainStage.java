@@ -70,8 +70,8 @@ public class MainStage extends Stage implements GUIInterface {
     private int MAX_SALES;
     private String symbol;
 
-    private final PrinterJob job;
-    private boolean printOk;
+    public static PrinterJob job;
+    public static boolean printOk;
 
     private final String stylesheet;
 
@@ -229,12 +229,12 @@ public class MainStage extends Stage implements GUIInterface {
                 log.log(Level.WARNING, "Could not get currency symbol from server", ex);
                 symbol = "£";
             }
-            try{
+            try {
                 String siteName = "JTill Terminal - " + dc.getSetting("SITE_NAME");
                 loginVersion.setText(siteName);
                 mainVersion.setText(siteName);
                 paymentVersion.setText(siteName);
-            } catch(IOException ex){
+            } catch (IOException ex) {
                 log.log(Level.WARNING, "Could not get site name", ex);
             }
             ((TableColumn) itemsTable.getColumns().get(2)).setText(symbol);
@@ -830,7 +830,7 @@ public class MainStage extends Stage implements GUIInterface {
         settings.setOnAction((ActionEvent event) -> {
             if (staff.getPosition() >= 3) {
                 SetupDialog.showDialog(MainStage.this);
-                MessageDialog.showMessage(this, "Settings", "Changes will apply after restart");
+                MessageDialog.showMessage(this, "Settings", "Some changes will apply after restart");
             } else {
                 MessageDialog.showMessage(this, "Settings", "You are not allowed to view this screen");
             }
@@ -1053,7 +1053,7 @@ public class MainStage extends Stage implements GUIInterface {
         print = new Button("Print Last");
         print.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         print.setOnAction((ActionEvent event) -> {
-            if(lastSale == null){
+            if (lastSale == null) {
                 MainStage.this.showMessageAlert("No previous sale", 2000);
                 return;
             }
@@ -1065,7 +1065,7 @@ public class MainStage extends Stage implements GUIInterface {
                 MainStage.this.showMessageAlert("Printer Error", 2000);
             }
         });
-        
+
         loginMessage = new Label();
         loginMessage.setFont(Font.font("Tahoma", FontWeight.NORMAL, 40));
         loginMessage.setId("message");

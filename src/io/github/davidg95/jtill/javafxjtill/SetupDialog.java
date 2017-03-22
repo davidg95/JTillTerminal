@@ -5,6 +5,11 @@
  */
 package io.github.davidg95.jtill.javafxjtill;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -15,7 +20,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
+import javax.print.attribute.Attribute;
+import javax.print.attribute.PrintServiceAttributeSet;
 
 /**
  *
@@ -24,15 +30,17 @@ import javafx.stage.Window;
 public class SetupDialog extends Stage {
 
     private static Stage dialog;
+    private final MainStage stage;
 
-    public SetupDialog(Window parent) {
+    public SetupDialog(MainStage parent) {
+        stage = parent;
         init();
         setTitle("JTill Setup");
         initOwner(parent);
         initModality(Modality.APPLICATION_MODAL);
     }
 
-    public static void showDialog(Window parent) {
+    public static void showDialog(MainStage parent) {
         dialog = new SetupDialog(parent);
         dialog.showAndWait();
     }
@@ -51,6 +59,31 @@ public class SetupDialog extends Stage {
         TextField serverAddress = new TextField(JavaFXJTill.HOST);
         TextField serverPort = new TextField(Integer.toString(JavaFXJTill.PORT));
 
+        Button printerSettings = new Button("Printer settings");
+        printerSettings.setOnAction((ActionEvent evt) -> {
+            MainStage.printOk = MainStage.job.printDialog();
+            File file = new File("printer.settings");
+            Attribute[] set = MainStage.job.getPrintService().getAttributes().toArray();
+            FileWriter fw = null;
+            try {
+                fw = new FileWriter(file);
+                for (Attribute a : set) {
+                    fw.append(a.toString());
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(SetupDialog.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    if (fw != null) {
+                        fw.flush();
+                        fw.close();
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(SetupDialog.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
         Button enter = new Button("Enter");
         HBox hEnter = new HBox(10);
         hEnter.getChildren().add(enter);
@@ -67,7 +100,8 @@ public class SetupDialog extends Stage {
         pane.add(serverAddress, 2, 2);
         pane.add(portLabel, 1, 3);
         pane.add(serverPort, 2, 3);
-        pane.add(hEnter, 2, 4);
+        pane.add(printerSettings, 2, 4);
+        pane.add(hEnter, 2, 5);
 
         Scene scene = new Scene(pane, 360, 200);
         String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
