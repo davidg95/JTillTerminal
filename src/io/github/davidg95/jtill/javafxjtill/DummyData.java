@@ -816,4 +816,28 @@ public class DummyData implements DataConnect {
         return null;
     }
 
+    @Override
+    public Supplier addSupplier(Supplier s) throws IOException, SQLException, JTillException {
+        return null;
+    }
+
+    @Override
+    public void removeSupplier(int id) throws IOException, SQLException, JTillException {
+    }
+
+    @Override
+    public Supplier getSupplier(int id) throws IOException, SQLException, JTillException {
+        return null;
+    }
+
+    @Override
+    public List<Supplier> getAllSuppliers() throws IOException, SQLException {
+        return null;
+    }
+
+    @Override
+    public Supplier updateSupplier(Supplier s) throws IOException, SQLException, JTillException {
+        return null;
+    }
+
 }
