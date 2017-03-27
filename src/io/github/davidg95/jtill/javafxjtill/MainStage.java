@@ -1211,6 +1211,9 @@ public class MainStage extends Stage implements GUIInterface {
         }.start();
     }
 
+    /**
+     * Log the member of staff off and return to the login screen.
+     */
     private void logoff() {
         try {
             dc.tillLogout(staff);
@@ -1225,8 +1228,12 @@ public class MainStage extends Stage implements GUIInterface {
         setScene(loginScene);
     }
 
+    /**
+     * Create a new sale.
+     */
     private void newSale() {
         sale = new Sale(JavaFXJTill.NAME, staff);
+        sale.setCustomer(new Customer(1, "DEFAULT", "", "", "", "", "", "", "", "", "", "", 0, BigDecimal.ZERO));
         obTable = FXCollections.observableArrayList();
         obPayments = FXCollections.observableArrayList();
         paymentsList.setItems(obPayments);
