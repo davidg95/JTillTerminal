@@ -12,6 +12,7 @@ import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,13 +22,32 @@ import java.util.logging.Logger;
  * @author David
  */
 public class ReceiptPrinter implements Printable {
-    
+
     private final Sale sale; //The Sale to print.
     private final DataConnect dc;
+    public static PrinterJob job;
+    public static boolean ready;
 
     public ReceiptPrinter(DataConnect dc, Sale s) {
         this.sale = s;
         this.dc = dc;
+    }
+
+    public static void initPrinter() {
+        job = PrinterJob.getPrinterJob();
+        ready = job.printDialog();
+    }
+
+    public static PrinterJob getJob() {
+        return job;
+    }
+
+    public static void print(DataConnect dc, Sale sale) throws PrinterException {
+        if (ready) {
+            ReceiptPrinter print = new ReceiptPrinter(dc, sale);
+            job.setPrintable(print);
+            job.print();
+        }
     }
 
     @Override

@@ -1,9 +1,13 @@
-JTill log Mon Mar 27 14:22:28 BST 2017
-[14:22:28] [INFO] Starting JTill Terminal
-[14:22:28] [INFO] Initalising
-[14:22:35] [INFO] Loading properties file
-[14:22:35] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[14:22:35] [INFO] Max sales set to 20
-[14:22:35] [INFO] Set discounts in cache
-[14:22:35] [INFO] Loading screen and button configurations from the server
-[14:22:35] [INFO] Got 0 screens from the server
+JTill log Mon Mar 27 15:08:54 BST 2017
+[15:08:54] [INFO] Starting JTill Terminal
+[15:08:54] [INFO] Initalising
+[15:08:56] [INFO] Loading properties file
+[15:08:56] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[15:08:56] [INFO] Max sales set to 20
+[15:08:56] [INFO] Set discounts in cache
+[15:08:56] [INFO] Loading screen and button configurations from the server
+[15:08:56] [INFO] Got 1 screens from the server
+[15:08:56] [INFO] Getting buttons for Main screen
+[15:08:56] [INFO] Got 50 buttons for this screen
+[15:08:59] [INFO] Item has been added to a sale
+[15:09:01] [INFO] Sale 4 sent to server

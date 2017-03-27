@@ -24,13 +24,32 @@ import javafx.stage.Stage;
  * @author David
  */
 public class JavaFXJTill extends Application {
+
     private static final Logger LOG = Logger.getGlobal();
 
+    /**
+     * The data connection.
+     */
     private static DataConnect dc;
+    /**
+     * The properties for the terminal.
+     */
     private static Properties properties;
+    /**
+     * The name of the terminal.
+     */
     public static String NAME;
-    public static String HOST;
+    /**
+     * The server address.
+     */
+    public static String SERVER;
+    /**
+     * The server port number. Default is 52341.
+     */
     public static int PORT = 52341;
+    /**
+     * The graphics user interface object.
+     */
     private static MainStage mainStage;
 
     @Override
@@ -43,7 +62,7 @@ public class JavaFXJTill extends Application {
         LOG.log(Level.INFO, "Initalising");
         mainStage.initalise();
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -62,7 +81,7 @@ public class JavaFXJTill extends Application {
             properties.load(in);
 
             NAME = properties.getProperty("name");
-            HOST = properties.getProperty("host");
+            SERVER = properties.getProperty("host");
             PORT = Integer.parseInt(properties.getProperty("port", Integer.toString(PORT)));
 
             in.close();
@@ -83,7 +102,7 @@ public class JavaFXJTill extends Application {
             out = new FileOutputStream("server.properties");
 
             properties.setProperty("name", NAME);
-            properties.setProperty("host", HOST);
+            properties.setProperty("host", SERVER);
             properties.setProperty("port", Integer.toString(PORT));
 
             properties.store(out, null);

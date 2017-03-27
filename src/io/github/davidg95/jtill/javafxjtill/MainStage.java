@@ -70,7 +70,6 @@ public class MainStage extends Stage implements GUIInterface {
     private int MAX_SALES;
     private String symbol;
 
-    public static PrinterJob job;
     public static boolean printOk;
 
     private final String stylesheet;
@@ -154,7 +153,7 @@ public class MainStage extends Stage implements GUIInterface {
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
         listeners = new ArrayList<>();
-        this.job = PrinterJob.getPrinterJob();
+
     }
 
     public void initalise() {
@@ -169,7 +168,6 @@ public class MainStage extends Stage implements GUIInterface {
         setScene(loginScene); //Show the login scene first
         initStyle(StageStyle.UNDECORATED);
         show();
-        printOk = job.printDialog();
         MessageScreen.changeMessage("Initialising");
         MessageScreen.showWindow();
         Platform.runLater(() -> {
@@ -201,8 +199,8 @@ public class MainStage extends Stage implements GUIInterface {
         dc.setGUI(MainStage.this);
         if (dc instanceof ServerConnection) {
             ServerConnection sc = (ServerConnection) dc;
-            log.log(Level.INFO, "Attempting connection to the server on IP address " + JavaFXJTill.HOST);
-            sc.connect(JavaFXJTill.HOST, JavaFXJTill.PORT, JavaFXJTill.NAME);
+            log.log(Level.INFO, "Attempting connection to the server on IP address " + JavaFXJTill.SERVER);
+            sc.connect(JavaFXJTill.SERVER, JavaFXJTill.PORT, JavaFXJTill.NAME);
         }
     }
 
@@ -1057,10 +1055,8 @@ public class MainStage extends Stage implements GUIInterface {
                 MainStage.this.showMessageAlert("No previous sale", 2000);
                 return;
             }
-            ReceiptPrinter printer = new ReceiptPrinter(dc, lastSale);
-            job.setPrintable(printer);
             try {
-                job.print();
+                ReceiptPrinter.print(dc, lastSale);
             } catch (PrinterException ex) {
                 MainStage.this.showMessageAlert("Printer Error", 2000);
             }
@@ -1112,10 +1108,8 @@ public class MainStage extends Stage implements GUIInterface {
         paymentTotal.setText("Total: " + symbol + amountDue);
         if (amountDue.compareTo(BigDecimal.ZERO) < 0) {
             MessageDialog.showMessage(this, "Change", "Change Due: " + symbol + amountDue.abs().toString());
-            completeCurrentSale();
-        } else if (amountDue.compareTo(BigDecimal.ZERO) == 0) {
-            completeCurrentSale();
         }
+        completeCurrentSale();
     }
 
     private void sendSalesToServer() {
@@ -1133,24 +1127,20 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void completeCurrentSale() {
         sale.setDate(new Date());
-        ReceiptPrinter prt = new ReceiptPrinter(dc, sale);
-        job.setPrintable(prt);
-        if (printOk) {
-            Runnable print = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        job.print();
-                    } catch (PrinterAbortException ex) {
-                        MainStage.this.showMessageAlert("Printer Error", 2000);
-                    } catch (PrinterException ex) {
-                        Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+        Runnable print = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ReceiptPrinter.print(dc, sale);
+                } catch (PrinterAbortException ex) {
+                    MainStage.this.showMessageAlert("Printer Error", 2000);
+                } catch (PrinterException ex) {
+                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            };
-            Thread th = new Thread(print);
-            th.start();
-        }
+            }
+        };
+        Thread th = new Thread(print);
+        th.start();
         lastSale = sale.clone();
         try {
             Sale s = dc.addSale(sale);
