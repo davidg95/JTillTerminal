@@ -840,4 +840,28 @@ public class DummyData implements DataConnect {
         return null;
     }
 
+    @Override
+    public Department addDepartment(Department d) throws IOException, SQLException {
+        return null;
+    }
+
+    @Override
+    public void removeDepartment(int id) throws IOException, SQLException, JTillException {
+    }
+
+    @Override
+    public Department getDepartment(int id) throws IOException, SQLException, JTillException {
+        return null;
+    }
+
+    @Override
+    public List<Department> getAllDepartments() throws IOException, SQLException {
+        return null;
+    }
+
+    @Override
+    public Department updateDepartment(Department d) throws IOException, SQLException, JTillException {
+        return null;
+    }
+
 }
