@@ -78,8 +78,8 @@ public class DummyData implements DataConnect {
 
         taxes.add(t1);
 
-        Product p1 = new Product("Open", "Open", c1, "None", t1, plu1, true, 1);
-        Product p2 = new Product("Cheese", "Cheese", c1, "None", t1, false, new BigDecimal("5.00"), new BigDecimal("3.00"), 5, 2, 10, plu2, 2);
+        Product p1 = new Product("Open", "Open", c1, new Department(1, "DEFAULT"), "None", t1, plu1, true, 1);
+        Product p2 = new Product("Cheese", "Cheese", c1, new Department(1, "DEFAULT"), "None", t1, false, new BigDecimal("5.00"), new BigDecimal("3.00"), 5, 2, 10, plu2, 2);
 
         products.add(p1);
         products.add(p2);
