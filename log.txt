@@ -1,13 +1,17 @@
-JTill log Mon Mar 27 16:05:54 BST 2017
-[16:05:54] [INFO] Starting JTill Terminal
-[16:05:54] [INFO] Initalising
-[16:05:56] [INFO] Loading properties file
-[16:05:56] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[16:05:59] [INFO] Max sales set to 20
-[16:05:59] [INFO] Set discounts in cache
-[16:05:59] [INFO] Loading screen and button configurations from the server
-[16:05:59] [INFO] Got 1 screens from the server
-[16:05:59] [INFO] Getting buttons for Main screen
-[16:05:59] [INFO] Got 50 buttons for this screen
-[16:06:06] [INFO] Item has been added to a sale
-[16:06:08] [INFO] Sale 1 sent to server
+JTill log Tue Mar 28 12:27:10 BST 2017
+[12:27:10] [INFO] Starting JTill Terminal
+[12:27:10] [INFO] Initalising
+[12:27:13] [INFO] Loading properties file
+[12:27:13] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[12:27:15] [INFO] Max sales set to 20
+[12:27:15] [INFO] Set discounts in cache
+[12:27:15] [INFO] Loading screen and button configurations from the server
+[12:27:15] [INFO] Got 0 screens from the server
+[12:27:29] [INFO] Checking cache for {0}
+[12:27:29] [INFO] Product not found in cache
+[12:27:29] [INFO] Checking server for product {0}
+[12:27:29] [SEVERE] Error in ServerConnection while trying to get a product by barcode
+java.lang.ClassNotFoundException: org.apache.derby.impl.jdbc.EmbedSQLException
+[12:27:29] [WARNING] Product not found on server
+[12:27:36] [INFO] Item has been added to a sale
+[12:27:38] [INFO] Sale 1 sent to server

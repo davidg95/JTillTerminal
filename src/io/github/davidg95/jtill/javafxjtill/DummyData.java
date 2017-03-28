@@ -864,4 +864,33 @@ public class DummyData implements DataConnect {
         return null;
     }
 
+    @Override
+    public SaleItem addSaleItem(Sale s, SaleItem i) throws IOException, SQLException {
+        return null;
+    }
+
+    @Override
+    public void removeSaleItem(int id) throws IOException, SQLException, JTillException {
+    }
+
+    @Override
+    public SaleItem getSaleItem(int id) throws IOException, SQLException, JTillException {
+        return null;
+    }
+
+    @Override
+    public List<SaleItem> getAllSaleItems() throws IOException, SQLException {
+        return null;
+    }
+
+    @Override
+    public SaleItem updateSaleItem(SaleItem i) throws IOException, SQLException, JTillException {
+        return null;
+    }
+
+    @Override
+    public List<SaleItem> submitSaleItemQuery(String query) throws IOException, SQLException {
+        return null;
+    }
+
 }
