@@ -57,7 +57,7 @@ import javax.mail.MessagingException;
  */
 public class MainStage extends Stage implements GUIInterface {
 
-    private static final Logger log = Logger.getGlobal();
+    private static final Logger LOG = Logger.getGlobal();
 
     private Staff staff;
     private Sale sale;
@@ -173,7 +173,7 @@ public class MainStage extends Stage implements GUIInterface {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException ex) {
-                log.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
             }
             boolean tryCon = true;
             while (tryCon) {
@@ -183,9 +183,9 @@ public class MainStage extends Stage implements GUIInterface {
                     tryCon = false;
                 } catch (IOException ex) {
                     MessageScreen.hideWindow();
-                    log.log(Level.WARNING, "Error connecting to the server");
+                    LOG.log(Level.WARNING, "Error connecting to the server");
                     if (YesNoDialog.showDialog(this, "Try Again?", "Do you want to try connect again?") == YesNoDialog.NO) {
-                        log.log(Level.INFO, "Stopping JTill Terminal");
+                        LOG.log(Level.INFO, "Stopping JTill Terminal");
                         System.exit(0);
                     }
                 }
@@ -198,7 +198,7 @@ public class MainStage extends Stage implements GUIInterface {
         dc.setGUI(MainStage.this);
         if (dc instanceof ServerConnection) {
             ServerConnection sc = (ServerConnection) dc;
-            log.log(Level.INFO, "Attempting connection to the server on IP address " + JavaFXJTill.SERVER);
+            LOG.log(Level.INFO, "Attempting connection to the server on IP address {0}", JavaFXJTill.SERVER);
             sc.connect(JavaFXJTill.SERVER, JavaFXJTill.PORT, JavaFXJTill.NAME);
         }
     }
@@ -207,23 +207,23 @@ public class MainStage extends Stage implements GUIInterface {
         try {
             try {
                 MAX_SALES = Integer.parseInt(dc.getSetting("MAX_CACHE_SALES"));
-                log.log(Level.INFO, "Max sales set to " + MAX_SALES);
+                LOG.log(Level.INFO, "Max sales set to {0}", MAX_SALES);
             } catch (IOException ex) {
-                log.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
             }
             try {
                 if (dc.getSetting("SEND_PRODUCTS_START").equals("TRUE")) {
-                    log.log(Level.INFO, "Downloading products list from server");
+                    LOG.log(Level.INFO, "Downloading products list from server");
                     ProductCache.getInstance().setProducts(dc.getAllProducts());
-                    log.log(Level.INFO, "Products list downloaded from server");
+                    LOG.log(Level.INFO, "Products list downloaded from server");
                 }
             } catch (IOException | SQLException ex) {
-                log.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
             }
             try {
                 symbol = dc.getSetting("CURRENCY_SYMBOL");
             } catch (IOException ex) {
-                log.log(Level.WARNING, "Could not get currency symbol from server", ex);
+                LOG.log(Level.WARNING, "Could not get currency symbol from server", ex);
                 symbol = "£";
             }
             try {
@@ -232,14 +232,14 @@ public class MainStage extends Stage implements GUIInterface {
                 mainVersion.setText(siteName);
                 paymentVersion.setText(siteName);
             } catch (IOException ex) {
-                log.log(Level.WARNING, "Could not get site name", ex);
+                LOG.log(Level.WARNING, "Could not get site name", ex);
             }
             ((TableColumn) itemsTable.getColumns().get(2)).setText(symbol);
             twentyPounds.setText(symbol + "20");
             tenPounds.setText(symbol + "10");
             fivePounds.setText(symbol + "5");
             DiscountCache.getInstance().setDiscounts(dc.getAllDiscounts(), this);
-            log.log(Level.INFO, "Loading screen and button configurations from the server");
+            LOG.log(Level.INFO, "Loading screen and button configurations from the server");
             List<Screen> screens = dc.getAllScreens();
             addScreens(screens, screenPane);
         } catch (IOException | SQLException ex) {
@@ -404,7 +404,7 @@ public class MainStage extends Stage implements GUIInterface {
             String message = EntryDialog.show(this, "Assisstance", "Enter message");
             try {
                 dc.assisstance(message);
-                log.log(Level.INFO, "Assisstance message sent to server");
+                LOG.log(Level.INFO, "Assisstance message sent to server");
                 showMessageAlert("Message Sent", 2000);
             } catch (IOException ex) {
                 MessageDialog.showMessage(this, "Assisstance", ex.getMessage());
@@ -850,7 +850,7 @@ public class MainStage extends Stage implements GUIInterface {
         cashUp.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         cashUp.setOnAction((ActionEvent event) -> {
             if (staff.getPosition() >= 3) {
-                log.log(Level.INFO, "Submitting all sales to the server");
+                LOG.log(Level.INFO, "Submitting all sales to the server");
                 sendSalesToServer();
                 SaleCache.getInstance().clearAll();
                 CashUpDialog.showDialog(this, dc);
@@ -1127,37 +1127,34 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void sendSalesToServer() {
         List<Sale> sales = SaleCache.getInstance().getAllSales();
-        for (Sale s : sales) {
+        sales.forEach((s) -> {
             try {
                 s = dc.addSale(s);
-                log.log(Level.INFO, "Sale " + s.getId() + " has been sent to the server");
+                LOG.log(Level.INFO, "Sale {0} has been sent to the server", s.getId());
             } catch (IOException | SQLException ex) {
-                log.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
             }
-        }
+        });
         SaleCache.getInstance().clearAll();
     }
 
     private void completeCurrentSale() {
         sale.setDate(new Date());
-        Runnable print = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ReceiptPrinter.print(dc, sale);
-                } catch (PrinterAbortException ex) {
-                    MainStage.this.showMessageAlert("Printer Error", 2000);
-                } catch (PrinterException ex) {
-                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        Runnable printRun = () -> {
+            try {
+                ReceiptPrinter.print(dc, sale);
+            } catch (PrinterAbortException ex) {
+                MainStage.this.showMessageAlert("Printer Error", 2000);
+            } catch (PrinterException ex) {
+                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
             }
         };
-        Thread th = new Thread(print);
+        Thread th = new Thread(printRun);
         th.start();
         lastSale = sale.clone();
         try {
             Sale s = dc.addSale(sale);
-            log.log(Level.INFO, "Sale " + s.getId() + " sent to server");
+            LOG.log(Level.INFO, "Sale {0} sent to server", s.getId());
             if (YesNoDialog.showDialog(this, "Email Receipt", "Email Customer Receipt?") == YesNoDialog.YES) {
                 if (sale.getCustomer() != null) {
                     dc.emailReceipt(sale.getCustomer().getEmail(), sale);
@@ -1167,7 +1164,7 @@ public class MainStage extends Stage implements GUIInterface {
                 }
             }
         } catch (IOException | SQLException ex) {
-            log.log(Level.WARNING, "Error connecting to server");
+            LOG.log(Level.WARNING, "Error connecting to server");
             SaleCache.getInstance().addSale(sale);
             sale.setId(0);
         } catch (MessagingException ex) {
@@ -1188,7 +1185,7 @@ public class MainStage extends Stage implements GUIInterface {
                 setScene(mainScene);
             }
         } catch (IOException ex) {
-            log.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
             newSale();
             setScene(mainScene);
         }
@@ -1271,14 +1268,14 @@ public class MainStage extends Stage implements GUIInterface {
             try {
                 p = ProductCache.getInstance().getProductByBarcode(barcode);
             } catch (ProductNotFoundException ex) {
-                log.log(Level.INFO, "Checking server for product {0}", barcode);
+                LOG.log(Level.INFO, "Checking server for product {0}", barcode);
                 p = dc.getProductByBarcode(barcode);
-                log.log(Level.INFO, "Product was found on server");
+                LOG.log(Level.INFO, "Product was found on server");
                 ProductCache.getInstance().addProductToCache(p);
             }
             addItemToSale(p);
         } catch (IOException | ProductNotFoundException | SQLException ex) {
-            log.log(Level.WARNING, "Product not found on server");
+            LOG.log(Level.WARNING, "Product not found on server");
             showMessageAlert(barcode + " not found", 2000);
         }
     }
@@ -1330,7 +1327,7 @@ public class MainStage extends Stage implements GUIInterface {
         } else {
             itemsTable.refresh();
         }
-        log.log(Level.INFO, "Item has been added to a sale");
+        LOG.log(Level.INFO, "Item has been added to a sale");
         setTotalLabel();
         itemQuantity = 1;
         quantity.setText("Quantity: 1");
@@ -1367,7 +1364,7 @@ public class MainStage extends Stage implements GUIInterface {
         int xPos = 0;
         int yPos = 0;
 
-        log.log(Level.INFO, "Got " + screens.size() + " screens from the server");
+        LOG.log(Level.INFO, "Got {0} screens from the server", screens.size());
 
         for (Screen s : screens) {
             GridPane grid = new GridPane();
@@ -1393,7 +1390,7 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void setScreenButtons(Screen s, GridPane pane) {
         try {
-            log.log(Level.INFO, "Getting buttons for " + s.getName() + " screen");
+            LOG.log(Level.INFO, "Getting buttons for {0} screen", s.getName());
             List<TillButton> buttons = dc.getButtonsOnScreen(s);
             addButtons(buttons, pane);
         } catch (IOException | SQLException | ScreenNotFoundException ex) {
@@ -1405,7 +1402,7 @@ public class MainStage extends Stage implements GUIInterface {
         int xPos = 0;
         int yPos = 0;
 
-        log.log(Level.INFO, "Got " + buttons.size() + " buttons for this screen");
+        LOG.log(Level.INFO, "Got {0} buttons for this screen", buttons.size());
 
         for (TillButton b : buttons) {
             if (b.getName().equals("[SPACE]")) {
