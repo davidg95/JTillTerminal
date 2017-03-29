@@ -43,7 +43,6 @@ import javafx.stage.StageStyle;
 import io.github.davidg95.JTill.jtill.DataConnect;
 import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.util.Calendar;
 import java.util.Date;
 import javafx.scene.layout.ColumnConstraints;
@@ -273,6 +272,7 @@ public class MainStage extends Stage implements GUIInterface {
         }
 
         itemsTable = new TableView();
+        itemsTable.setId("ITEMS");
         itemsTable.setEditable(false);
         TableColumn qty = new TableColumn("Qty.");
         TableColumn itm = new TableColumn("Item");
@@ -310,6 +310,7 @@ public class MainStage extends Stage implements GUIInterface {
         total.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
         quantity = new Button("Quantity: 1");
+        quantity.setId("red");
         quantity.setMinSize(0, 0);
         quantity.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         itemQuantity = 1;
@@ -327,6 +328,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         voidSelected = new Button("Void Selected");
+        voidSelected.setId("red");
         voidSelected.setMinSize(0, 0);
         voidSelected.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         voidSelected.setOnAction((ActionEvent event) -> {
@@ -350,7 +352,7 @@ public class MainStage extends Stage implements GUIInterface {
         GridPane numbers = createNumbersPane();
 
         payment = new Button("Payment");
-        payment.setId("payment");
+        payment.setId("bottom");
         payment.setMinSize(0, 0);
         payment.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         payment.setOnAction((ActionEvent event) -> {
@@ -358,7 +360,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         logoff = new Button("Logoff");
-        logoff.setId("logoff");
+        logoff.setId("bottom");
         logoff.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         logoff.setMinSize(0, 0);
         logoff.setOnAction((ActionEvent event) -> {
@@ -367,7 +369,7 @@ public class MainStage extends Stage implements GUIInterface {
         logoff.setStyle("-fx-base: #0000FF;");
 
         lookup = new Button("Lookup");
-        lookup.setId("lookup");
+        lookup.setId("bottom");
         lookup.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         lookup.setMinSize(0, 0);
         lookup.setOnAction((ActionEvent event) -> {
@@ -378,7 +380,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         halfPrice = new Button("Half Price");
-        halfPrice.setId("halfprice");
+        halfPrice.setId("bottom");
         halfPrice.setMinSize(0, 0);
         halfPrice.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         halfPrice.setOnAction((ActionEvent event) -> {
@@ -395,7 +397,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         assisstance = new Button("Assisstance");
-        assisstance.setId("assisstance");
+        assisstance.setId("bottom");
         assisstance.setMinSize(0, 0);
         assisstance.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         assisstance.setOnAction((ActionEvent event) -> {
@@ -661,6 +663,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentTime.setAlignment(Pos.CENTER_RIGHT);
 
         fivePounds = new Button(symbol + "5");
+        fivePounds.setId("paymentMethods");
         fivePounds.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         fivePounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
@@ -671,6 +674,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         tenPounds = new Button(symbol + "10");
+        tenPounds.setId("paymentMethods");
         tenPounds.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         tenPounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
@@ -681,6 +685,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         twentyPounds = new Button(symbol + "20");
+        twentyPounds.setId("paymentMethods");
         twentyPounds.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         twentyPounds.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
@@ -691,6 +696,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         customValue = new Button("Custom Value");
+        customValue.setId("paymentMethods");
         customValue.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         customValue.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
@@ -703,6 +709,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         exactValue = new Button("Exact Value");
+        exactValue.setId("paymentMethods");
         exactValue.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         exactValue.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
@@ -713,6 +720,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         card = new Button("Credit Card");
+        card.setId("paymentMethods");
         card.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         card.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
@@ -724,6 +732,7 @@ public class MainStage extends Stage implements GUIInterface {
         card.setDisable(true);
 
         addCustomer = new Button("Add Customer");
+        addCustomer.setId("paymentMethods");
         addCustomer.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         addCustomer.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
@@ -745,6 +754,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         chargeAccount = new Button("Charge Account");
+        chargeAccount.setId("paymentMethods");
         chargeAccount.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         chargeAccount.setDisable(true);
         chargeAccount.setOnAction((ActionEvent event) -> {
@@ -755,6 +765,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         cheque = new Button("Cheque");
+        cheque.setId("paymentMethods");
         cheque.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         cheque.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
@@ -771,6 +782,7 @@ public class MainStage extends Stage implements GUIInterface {
         saleCustomer.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         back = new Button("Back");
+        back.setId("bottom");
         back.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         back.setOnAction((ActionEvent event) -> {
             setScene(mainScene);
@@ -867,6 +879,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         paymentLogoff = new Button("Logoff");
+        paymentLogoff.setId("bottom");
         paymentLogoff.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         paymentLogoff.setOnAction((ActionEvent event) -> {
             Platform.runLater(this::logoff);

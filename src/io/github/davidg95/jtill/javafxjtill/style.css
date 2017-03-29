@@ -9,22 +9,16 @@ and open the template in the editor.
 */
 
 .root{
-    /*    -fx-background-image: url("background.bmp");
-        -fx-background-size: cover;*/
-}
-
-.label {
-    /*    -fx-font-size: 12px;
-        -fx-font-weight: bold;
-        -fx-text-fill: #333333;
-        -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );*/
+    -fx-background-color: #343434;
 }
 
 .button{
-    -fx-text-fill: white;
-    -fx-font-family: "Arial Narrow";
+    -fx-text-fill: black;
+    -fx-font-family: "Arial";
     -fx-font-weight: bold;
-    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-font-size: 20px;
+    /*-fx-background-color: linear-gradient(#61a2b1, #2A5058);*/
+    -fx-background-color: linear-gradient(#999, #999);
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 
@@ -32,15 +26,13 @@ and open the template in the editor.
     -fx-background-color: linear-gradient(#2A5058, #61a2b1);
 }*/
 
-.button:pressed{
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
-}
-
 .togglebutton{
-    -fx-text-fill: white;
-    -fx-font-family: "Arial Narrow";
+    -fx-text-fill: black;
+    -fx-font-family: "Arial";
     -fx-font-weight: bold;
-    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-font-size: 20px;
+    /*-fx-background-color: linear-gradient(#61a2b1, #2A5058);*/
+    -fx-background-color: linear-gradient(#999, #999);
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 
@@ -48,7 +40,27 @@ and open the template in the editor.
     -fx-background-color: linear-gradient(#2A5058, #61a2b1);
 }
 
-#payment{
+#productButton{
+    -fx-background-color: #2a5be7;
+}
+
+#bottom{
+    -fx-background-color: green;
+}
+
+#red{
+    -fx-background-color: red;
+}
+
+#paymentMethods{
+    -fx-background-color: #2a5be7;
+}
+
+/*.button:pressed{
+    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}*/
+
+/*#payment{
     -fx-background-color: linear-gradient(#0000FF, #0000AA);
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
@@ -64,10 +76,68 @@ and open the template in the editor.
 
 #logoff:pressed{
     -fx-background-color: linear-gradient(#AA0000, #FF0000);
-}
+}*/
 
 #PAYMENT_LIST{
     -fx-text-fill: white;
     -fx-font-family: "Tahoma";
     -fx-font-size: 28;
+}
+
+.table-view{
+    /*-fx-background-color: transparent;*/
+ }
+
+.table-view:focused{
+    /*-fx-background-color: transparent;*/
+}
+
+.table-view .column-header {
+     -fx-background-color: transparent;
+} 
+
+.table-view .column-header-background{
+    -fx-background-color: linear-gradient(#131313 0.0%, #424141 100.0%);
+}
+
+.table-view .column-header-background .label{
+     -fx-background-color: transparent; 
+    -fx-font-weight:bold;
+    -fx-text-fill: white;
+}
+
+.table-view .table-column{
+    -fx-alignment:center;
+}
+
+.table-view .table-cell{
+    -fx-font-weight:bold;
+    -fx-font-size:20px;
+    /* -fx-text-fill:orange; */
+
+}
+
+.table-row-cell{
+    -fx-background-color: white;
+    -fx-background-insets: 0.0, 0.0 0.0 1.0 0.0;
+    -fx-padding: 0.0em; 
+}
+
+.table-row-cell:odd{
+    -fx-background-color: darkgrey;
+    -fx-background-insets: 0.0, 0.0 0.0 1.0 0.0;
+    -fx-padding: 0.0em;  
+}
+
+.table-row-cell:selected {
+    /*-fx-border-color: darkgray  ;
+    -fx-border-width:2.0;*/
+}
+
+.table-row-cell:hover {
+    -fx-background-color: gray;
+}
+
+.table-row-cell:focused {
+    /*-fx-background-color:purple;*/
 }
