@@ -14,26 +14,34 @@ and open the template in the editor.
 
 .button{
     -fx-text-fill: black;
-    -fx-font-family: "Arial";
-    -fx-font-weight: bold;
+    -fx-font-family: "Tahoma";
     -fx-font-size: 20px;
-    /*-fx-background-color: linear-gradient(#61a2b1, #2A5058);*/
     -fx-background-color: linear-gradient(#999, #999);
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 
-/*.button:hover{
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
-}*/
+.button:pressed{
+    -fx-background-color: linear-gradient(#777, #777);
+}
 
 .togglebutton{
     -fx-text-fill: black;
-    -fx-font-family: "Arial";
-    -fx-font-weight: bold;
+    -fx-font-family: "Tahoma";
     -fx-font-size: 20px;
-    /*-fx-background-color: linear-gradient(#61a2b1, #2A5058);*/
     -fx-background-color: linear-gradient(#999, #999);
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+#screenButton{
+    -fx-text-fill: black;
+    -fx-font-family: "Tahoma";
+    -fx-font-size: 20px;
+    -fx-background-color: linear-gradient(#999, #999);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+#screenButton:selected{
+    -fx-background-color: linear-gradient(#777, #777);
 }
 
 .togglebutton:hover{
@@ -44,39 +52,44 @@ and open the template in the editor.
     -fx-background-color: #2a5be7;
 }
 
+#productButton:pressed{
+    -fx-background-color: #1a27ac;
+}
+
 #bottom{
     -fx-background-color: green;
+}
+
+#bottom:pressed{
+    -fx-background-color: darkgreen;
 }
 
 #red{
     -fx-background-color: red;
 }
 
+#red:pressed{
+    -fx-background-color: darkRed;
+}
+
+
 #paymentMethods{
     -fx-background-color: #2a5be7;
 }
 
-/*.button:pressed{
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
-}*/
-
-/*#payment{
-    -fx-background-color: linear-gradient(#0000FF, #0000AA);
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+#paymentMethods:pressed{
+    -fx-background-color: #1a27ac;
 }
 
-#payment:pressed{
-    -fx-background-color: linear-gradient(#0000AA, #0000FF);
+#total{
+    -fx-font-size: 28px;
+    -fx-font-family: "Tahoma";
 }
 
-#logoff{
-    -fx-background-color: linear-gradient(#FF0000, #AA0000);
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+#toplabel{
+    -fx-font-size: 28px;
+    -fx-font-family: "Tahoma";
 }
-
-#logoff:pressed{
-    -fx-background-color: linear-gradient(#AA0000, #FF0000);
-}*/
 
 #PAYMENT_LIST{
     -fx-text-fill: white;
@@ -86,14 +99,14 @@ and open the template in the editor.
 
 .table-view{
     /*-fx-background-color: transparent;*/
- }
+}
 
 .table-view:focused{
     /*-fx-background-color: transparent;*/
 }
 
 .table-view .column-header {
-     -fx-background-color: transparent;
+    -fx-background-color: transparent;
 } 
 
 .table-view .column-header-background{
@@ -101,7 +114,7 @@ and open the template in the editor.
 }
 
 .table-view .column-header-background .label{
-     -fx-background-color: transparent; 
+    -fx-background-color: transparent; 
     -fx-font-weight:bold;
     -fx-text-fill: white;
 }
@@ -111,33 +124,36 @@ and open the template in the editor.
 }
 
 .table-view .table-cell{
-    -fx-font-weight:bold;
+    -fx-font-family: "Tahoma";
     -fx-font-size:20px;
-    /* -fx-text-fill:orange; */
-
+    -fx-font-color: black;
 }
 
 .table-row-cell{
     -fx-background-color: white;
     -fx-background-insets: 0.0, 0.0 0.0 1.0 0.0;
     -fx-padding: 0.0em; 
+    -fx-font-color: black;
 }
 
 .table-row-cell:odd{
-    -fx-background-color: darkgrey;
+    -fx-background-color: lightgrey;
     -fx-background-insets: 0.0, 0.0 0.0 1.0 0.0;
-    -fx-padding: 0.0em;  
+    -fx-padding: 0.0em; 
+    -fx-font-color: black;
 }
 
 .table-row-cell:selected {
-    /*-fx-border-color: darkgray  ;
-    -fx-border-width:2.0;*/
+    -fx-border-color: lightblue;
+    -fx-border-width:2.0;
+    -fx-font-color: black;
 }
 
 .table-row-cell:hover {
     -fx-background-color: gray;
+    -fx-font-color: black;
 }
 
 .table-row-cell:focused {
-    /*-fx-background-color:purple;*/
+    -fx-font-color: black;
 }

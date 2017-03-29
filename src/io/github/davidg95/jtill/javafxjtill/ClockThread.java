@@ -21,11 +21,14 @@ import javafx.scene.control.Label;
  */
 public class ClockThread extends Thread {
 
+    /**
+     * The ClockThread.
+     */
     private static final ClockThread CLOCK_THREAD;
 
     protected boolean isRunning;
 
-    protected List<Label> dataTimeLabels;
+    protected List<Label> dataTimeLabels; //The labels on the list.
 
     protected SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
@@ -33,9 +36,11 @@ public class ClockThread extends Thread {
 
     protected SimpleDateFormat dateTimeFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
 
-    protected Time time;
+    protected Time time; //The time.
 
-    protected int format;
+    protected int format; //The chosen format.
+
+    private boolean flash;
 
     /**
      * Value = 1.
@@ -108,21 +113,32 @@ public class ClockThread extends Thread {
             time = new Time(currentCalendar.getTimeInMillis());
             for (Label l : dataTimeLabels) {
                 Platform.runLater(() -> {
+                    String t;
                     switch (format) {
-                        case 1:
-                            l.setText(timeFormat.format(currentTime));
+                        case 1: //If time format was selected.
+                            t = timeFormat.format(currentTime);
+//                            if (flash) {
+//                                t = t.replace(":", " ");
+//                            }
+//                            flash = !flash;
+                            l.setText(t);
                             break;
-                        case 2:
+                        case 2: //If date format was selected.
                             l.setText(dateFormat.format(currentTime));
                             break;
-                        default:
-                            l.setText(dateTimeFormat.format(currentTime));
+                        default: //If date and time format was selected.
+                            t = dateTimeFormat.format(currentTime);
+//                            if (flash) {
+//                                t = t.replace(":", " ");
+//                            }
+//                            flash = !flash;
+                            l.setText(t);
                             break;
                     }
                 });
             }
             try {
-                Thread.sleep(5000L);
+                Thread.sleep(500L);
             } catch (InterruptedException e) {
             }
         }

@@ -157,6 +157,7 @@ public class MainStage extends Stage implements GUIInterface {
 
     public void initalise() {
         paymentLoggedIn = new Label();
+        paymentLoggedIn.setId("toplabel");
         paymentLoggedIn.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         init();
         initPayment();
@@ -251,12 +252,15 @@ public class MainStage extends Stage implements GUIInterface {
         mainPane = new GridPane();
 
         staffLabel = new Label("Staff: ");
+        staffLabel.setId("toplabel");
         staffLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         mainVersion = new Label("JTill Terminal");
+        mainVersion.setId("toplabel");
         mainVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         time = new Label("--:-- --/--/----");
+        time.setId("toplabel");
         time.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         ClockThread.addClockLabel(time);
         time.setAlignment(Pos.CENTER_RIGHT);
@@ -280,9 +284,9 @@ public class MainStage extends Stage implements GUIInterface {
         qty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         itm.setCellValueFactory(new PropertyValueFactory<>("item"));
         cst.setCellValueFactory(new PropertyValueFactory<>("price"));
-        qty.prefWidthProperty().bind(itemsTable.widthProperty().divide(4));
-        itm.prefWidthProperty().bind(itemsTable.widthProperty().divide(2));
-        cst.prefWidthProperty().bind(itemsTable.widthProperty().divide(4));
+        qty.prefWidthProperty().bind(itemsTable.widthProperty().divide(7));
+        itm.prefWidthProperty().bind(itemsTable.widthProperty().divide(7).multiply(4));
+        cst.prefWidthProperty().bind(itemsTable.widthProperty().divide(7).multiply(2));
         itemsTable.getColumns().addAll(qty, itm, cst);
         obTable = FXCollections.observableArrayList();
         itemsTable.setItems(obTable);
@@ -306,6 +310,7 @@ public class MainStage extends Stage implements GUIInterface {
         updateList();
 
         total = new Label("Total: " + symbol + "0.00");
+        total.setId("total");
         total.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         total.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
@@ -419,7 +424,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         mainPane.add(staffLabel, 0, 0, 2, 1);
         mainPane.add(mainVersion, 3, 0, 3, 1);
-        mainPane.add(time, 9, 0, 1, 1);
+        mainPane.add(time, 8, 0, 2, 1);
         mainPane.add(buttonPane, 0, 1, 8, 11);
         mainPane.add(screenPane, 0, 12, 8, 2);
         mainPane.add(itemsTable, 8, 1, 2, 5);
@@ -655,9 +660,11 @@ public class MainStage extends Stage implements GUIInterface {
         paymentPane = new GridPane();
 
         paymentVersion = new Label("JTill Terminal");
+        paymentVersion.setId("toplabel");
         paymentVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         paymentTime = new Label("--:-- --/--/----");
+        paymentTime.setId("toplabel");
         paymentTime.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         ClockThread.addClockLabel(paymentTime);
         paymentTime.setAlignment(Pos.CENTER_RIGHT);
@@ -894,7 +901,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         paymentPane.add(paymentLoggedIn, 0, 0, 2, 1);
         paymentPane.add(paymentVersion, 3, 0, 3, 1);
-        paymentPane.add(paymentTime, 9, 0, 1, 1);
+        paymentPane.add(paymentTime, 8, 0, 2, 1);
         paymentPane.add(fivePounds, 0, 1, 1, 2);
         paymentPane.add(tenPounds, 1, 1, 1, 2);
         paymentPane.add(twentyPounds, 2, 1, 1, 2);
@@ -977,12 +984,15 @@ public class MainStage extends Stage implements GUIInterface {
         }
 
         notLoggedIn = new Label("Not Logged In");
+        notLoggedIn.setId("toplabel");
         notLoggedIn.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         loginVersion = new Label("JTill Terminal");
+        loginVersion.setId("toplabel");
         loginVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         loginTime = new Label("--:-- --/--/----");
+        loginTime.setId("toplabel");
         loginTime.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         ClockThread.addClockLabel(loginTime);
         ClockThread.setFormat(ClockThread.DATE_TIME_FORMAT);
@@ -1086,7 +1096,7 @@ public class MainStage extends Stage implements GUIInterface {
         loginPane.add(login, 1, 14, 1, 2);
         loginPane.add(print, 2, 14, 1, 2);
         loginPane.add(loginMessage, 4, 14, 4, 2);
-        loginPane.add(loginTime, 9, 0, 1, 1);
+        loginPane.add(loginTime, 8, 0, 2, 1);
         loginPane.add(notLoggedIn, 0, 0, 2, 1);
         loginPane.add(loginVersion, 3, 0, 3, 1);
 
@@ -1122,7 +1132,9 @@ public class MainStage extends Stage implements GUIInterface {
         if (amountDue.compareTo(BigDecimal.ZERO) < 0) {
             MessageDialog.showMessage(this, "Change", "Change Due: " + symbol + amountDue.abs().toString());
         }
-        completeCurrentSale();
+        if (amountDue.compareTo(BigDecimal.ZERO) <= 0) {
+            completeCurrentSale();
+        }
     }
 
     private void sendSalesToServer() {
