@@ -923,4 +923,13 @@ public class DummyData implements DataConnect {
         return BigDecimal.ZERO;
     }
 
+    @Override
+    public void addReceivedItem(ReceivedItem i) throws IOException, SQLException {
+    }
+
+    @Override
+    public BigDecimal getValueSpentOnItem(int id) throws IOException, SQLException, ProductNotFoundException {
+        return BigDecimal.ZERO;
+    }
+
 }
