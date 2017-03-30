@@ -25,7 +25,7 @@ public class DiscountChecker implements ProductListener {
 
     @Override
     public void onProductAdd(ProductEvent pe) {
-        if (d.getTrigger().equals(pe.getProduct())) {
+        if (d.getTrigger() == pe.getProduct().getId()) {
             Platform.runLater(() -> {
                 ms.addItemToSale(d);
             });

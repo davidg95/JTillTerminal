@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
@@ -78,8 +80,8 @@ public class DummyData implements DataConnect {
 
         taxes.add(t1);
 
-        Product p1 = new Product("Open", "Open", c1, new Department(1, "DEFAULT"), "None", t1, plu1, true, 1);
-        Product p2 = new Product("Cheese", "Cheese", c1, new Department(1, "DEFAULT"), "None", t1, false, new BigDecimal("5.00"), new BigDecimal("3.00"), 5, 2, 10, plu2, 2);
+        Product p1 = new Product("Open", "Open", 1, 1, "None", 1, 1, true, 1);
+        Product p2 = new Product("Cheese", "Cheese", 1, 1, "None", 1, false, new BigDecimal("5.00"), new BigDecimal("3.00"), 5, 2, 10, 2, 2);
 
         products.add(p1);
         products.add(p2);
@@ -202,8 +204,12 @@ public class DummyData implements DataConnect {
     @Override
     public boolean checkBarcode(String barcode) throws IOException, SQLException {
         for (Product p : products) {
-            if (p.getPlu().getCode().equals(barcode)) {
-                return true;
+            try {
+                if (getPlu(p.getPlu()).getCode().equals(barcode)) {
+                    return true;
+                }
+            } catch (JTillException ex) {
+                Logger.getLogger(DummyData.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return false;
@@ -212,8 +218,12 @@ public class DummyData implements DataConnect {
     @Override
     public Product getProductByBarcode(String barcode) throws IOException, ProductNotFoundException, SQLException {
         for (Product p : products) {
-            if (p.getPlu().getCode().equals(barcode)) {
-                return p;
+            try {
+                if (getPlu(p.getPlu()).getCode().equals(barcode)) {
+                    return p;
+                }
+            } catch (JTillException ex) {
+                Logger.getLogger(DummyData.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         throw new ProductNotFoundException(barcode + " could not be found");
@@ -894,8 +904,23 @@ public class DummyData implements DataConnect {
     }
 
     @Override
-    public int getTotalSolfOfItem(int id) throws IOException, SQLException, ProductNotFoundException {
+    public int getTotalSoldOfItem(int id) throws IOException, SQLException, ProductNotFoundException {
         return 0;
+    }
+
+    @Override
+    public BigDecimal getTotalValueSold(int id) throws IOException, SQLException, ProductNotFoundException {
+        return BigDecimal.ZERO;
+    }
+
+    @Override
+    public int getTotalWastedOfItem(int id) throws IOException, SQLException, ProductNotFoundException {
+        return 0;
+    }
+
+    @Override
+    public BigDecimal getValueWastedOfItem(int id) throws IOException, SQLException, ProductNotFoundException {
+        return BigDecimal.ZERO;
     }
 
 }

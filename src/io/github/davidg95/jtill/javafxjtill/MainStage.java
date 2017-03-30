@@ -148,7 +148,12 @@ public class MainStage extends Stage implements GUIInterface {
     public MainStage(DataConnect dc) {
         super();
         this.dc = dc;
-        this.sale = new Sale(JavaFXJTill.NAME, staff);
+        if (staff == null) {
+            this.sale = new Sale(JavaFXJTill.NAME, 0);
+
+        } else {
+            this.sale = new Sale(JavaFXJTill.NAME, staff.getId());
+        }
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
         listeners = new ArrayList<>();
@@ -744,7 +749,7 @@ public class MainStage extends Stage implements GUIInterface {
         addCustomer.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
                 Platform.runLater(() -> {
-                    if (sale.getCustomer() != null) {
+                    if (sale.getCustomer() != 0) {
                         setCustomer(null);
                         chargeAccount.setDisable(true);
                         addCustomer.setText("Add Customer");
@@ -1039,7 +1044,12 @@ public class MainStage extends Stage implements GUIInterface {
                                 MainStage.this.sale = rs;
                                 obTable.setAll(rs.getSaleItems());
                                 setTotalLabel();
-                                setCustomer(rs.getCustomer());
+                                try {
+                                    final Customer c = dc.getCustomer(rs.getCustomer());
+                                    setCustomer(c);
+                                } catch (CustomerNotFoundException ex) {
+                                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             } else {
                                 newSale();
                             }
@@ -1119,7 +1129,7 @@ public class MainStage extends Stage implements GUIInterface {
             addCustomer.setText("Add Customer");
             chargeAccount.setDisable(true);
         }
-        sale.setCustomer(c);
+        sale.setCustomer(c.getId());
     }
 
     private void addMoney(PaymentItem.PaymentType type, BigDecimal val) {
@@ -1168,8 +1178,13 @@ public class MainStage extends Stage implements GUIInterface {
             Sale s = dc.addSale(sale);
             LOG.log(Level.INFO, "Sale {0} sent to server", s.getId());
             if (YesNoDialog.showDialog(this, "Email Receipt", "Email Customer Receipt?") == YesNoDialog.YES) {
-                if (sale.getCustomer() != null) {
-                    dc.emailReceipt(sale.getCustomer().getEmail(), sale);
+                if (sale.getCustomer() != 0) {
+                    try {
+                        final Customer c = dc.getCustomer(sale.getCustomer());
+                        dc.emailReceipt(c.getEmail(), sale);
+                    } catch (CustomerNotFoundException ex) {
+                        this.showMessage("Email", ex.getMessage());
+                    }
                 } else {
                     String email = EntryDialog.show(this, "Email Receipt", "Enter email");
                     dc.emailReceipt(email, sale);
@@ -1254,8 +1269,8 @@ public class MainStage extends Stage implements GUIInterface {
      * Create a new sale.
      */
     private void newSale() {
-        sale = new Sale(JavaFXJTill.NAME, staff);
-        sale.setCustomer(new Customer(1, "DEFAULT", "", "", "", "", "", "", "", "", "", "", 0, BigDecimal.ZERO));
+        sale = new Sale(JavaFXJTill.NAME, 0);
+        sale.setCustomer(1);
         obTable = FXCollections.observableArrayList();
         obPayments = FXCollections.observableArrayList();
         paymentsList.setItems(obPayments);
@@ -1279,7 +1294,7 @@ public class MainStage extends Stage implements GUIInterface {
             Product p;
             try {
                 p = ProductCache.getInstance().getProductByBarcode(barcode);
-            } catch (ProductNotFoundException ex) {
+            } catch (JTillException | ProductNotFoundException ex) {
                 LOG.log(Level.INFO, "Checking server for product {0}", barcode);
                 p = dc.getProductByBarcode(barcode);
                 LOG.log(Level.INFO, "Product was found on server");
@@ -1296,37 +1311,42 @@ public class MainStage extends Stage implements GUIInterface {
         if (i instanceof Product) { //If the item is a product
             Product p = (Product) i;
             notifyAllListeners(new ProductEvent(p));
-            if (p.getCategory().isTimeRestrict()) { //Check for time restrictions
-                Calendar c = Calendar.getInstance();
-                long now = c.getTimeInMillis();
-                c.set(Calendar.HOUR_OF_DAY, 1);
-                c.set(Calendar.MINUTE, 0);
-                c.set(Calendar.SECOND, 0);
-                c.set(Calendar.MILLISECOND, 0);
-                long passed = now - c.getTimeInMillis();
-                if (!p.getCategory().isSellTime(new Time(passed))) { //If the item can not be sold now due to the time
-                    MessageDialog.showMessage(this, "Time Restriction", "This item cannot be sold now");
-                    return;
+            try {
+                Category cat = dc.getCategory(p.getCategory());
+                if (cat.isTimeRestrict()) { //Check for time restrictions
+                    Calendar c = Calendar.getInstance();
+                    long now = c.getTimeInMillis();
+                    c.set(Calendar.HOUR_OF_DAY, 1);
+                    c.set(Calendar.MINUTE, 0);
+                    c.set(Calendar.SECOND, 0);
+                    c.set(Calendar.MILLISECOND, 0);
+                    long passed = now - c.getTimeInMillis();
+                    if (!cat.isSellTime(new Time(passed))) { //If the item can not be sold now due to the time
+                        MessageDialog.showMessage(this, "Time Restriction", "This item cannot be sold now");
+                        return;
+                    }
                 }
-            }
-            if (p.getCategory().getMinAge() > age) { //Check for age restrictions
-                if (YesNoDialog.showDialog(this, "Age Restriction", "Is customer over " + p.getCategory().getMinAge() + "?") == YesNoDialog.NO) {
-                    return;
+                if (cat.getMinAge() > age) { //Check for age restrictions
+                    if (YesNoDialog.showDialog(this, "Age Restriction", "Is customer over " + cat.getMinAge() + "?") == YesNoDialog.NO) {
+                        return;
+                    }
+                    age = cat.getMinAge();
                 }
-                age = p.getCategory().getMinAge();
-            }
-            if (p.isOpen()) { //Check if the product is open price
-                int value;
-                if (barcode.getText().equals("")) {
-                    value = NumberEntry.showNumberEntryDialog(this, "Enter price"); //Show the dialog asking for the price
-                } else {
-                    value = Integer.parseInt(barcode.getText()); //Get the price value from the input field
-                    barcode.setText("");
+                if (p.isOpen()) { //Check if the product is open price
+                    int value;
+                    if (barcode.getText().equals("")) {
+                        value = NumberEntry.showNumberEntryDialog(this, "Enter price"); //Show the dialog asking for the price
+                    } else {
+                        value = Integer.parseInt(barcode.getText()); //Get the price value from the input field
+                        barcode.setText("");
+                    }
+                    if (value == 0) {
+                        return; //Exit the method if nothing was entered
+                    }
+                    p.setPrice(new BigDecimal(Double.toString((double) value / 100)));
                 }
-                if (value == 0) {
-                    return; //Exit the method if nothing was entered
-                }
-                p.setPrice(new BigDecimal(Double.toString((double) value / 100)));
+            } catch (IOException | SQLException | CategoryNotFoundException ex) {
+                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else { //If the item was a discount
             Discount d = (Discount) i;
