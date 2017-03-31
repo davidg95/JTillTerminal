@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -930,6 +931,11 @@ public class DummyData implements DataConnect {
     @Override
     public BigDecimal getValueSpentOnItem(int id) throws IOException, SQLException, ProductNotFoundException {
         return BigDecimal.ZERO;
+    }
+
+    @Override
+    public List<SaleItem> getSaleItemsSearchTerms(int depId, int catId, Date start, Date end) throws IOException, SQLException {
+        return null;
     }
 
 }
