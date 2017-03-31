@@ -354,8 +354,10 @@ public class MainStage extends Stage implements GUIInterface {
         barcode.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
         barcode.setOnAction((ActionEvent event) -> {
             Platform.runLater(() -> {
-                getProductByBarcode(barcode.getText());
-                barcode.setText("");
+                if (!barcode.getText().equals("")) {
+                    getProductByBarcode(barcode.getText());
+                    barcode.setText("");
+                }
             });
         });
 
