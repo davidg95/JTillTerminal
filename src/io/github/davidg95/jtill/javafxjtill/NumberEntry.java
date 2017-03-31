@@ -6,13 +6,17 @@
 package io.github.davidg95.jtill.javafxjtill;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.shape.Box;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
@@ -33,6 +37,9 @@ public class NumberEntry extends Stage {
     private int initValue;
     private boolean init;
 
+    private Label l;
+    private Box box;
+
     public NumberEntry(Window parent, String title) {
         init = false;
         init();
@@ -40,6 +47,7 @@ public class NumberEntry extends Stage {
         initOwner(parent);
         initModality(Modality.APPLICATION_MODAL);
         initStyle(StageStyle.UNDECORATED);
+        makeDraggable(this, box);
     }
 
     public NumberEntry(Window parent, String title, int initValue) {
@@ -50,6 +58,55 @@ public class NumberEntry extends Stage {
         initOwner(parent);
         initModality(Modality.APPLICATION_MODAL);
         initStyle(StageStyle.UNDECORATED);
+        makeDraggable(this, box);
+    }
+
+    private static class Delta {
+
+        private double x;
+        private double y;
+    }
+
+    public static void makeDraggable(final Stage stage, final Node byNode) {
+        Delta d = new Delta();
+        byNode.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                // record a delta distance for the drag and drop operation.
+                d.x = stage.getX() - mouseEvent.getScreenX();
+                d.y = stage.getY() - mouseEvent.getScreenY();
+                byNode.setCursor(Cursor.MOVE);
+            }
+        });
+        byNode.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                byNode.setCursor(Cursor.HAND);
+            }
+        });
+        byNode.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                stage.setX(mouseEvent.getScreenX() + d.x);
+                stage.setY(mouseEvent.getScreenY() + d.y);
+            }
+        });
+        byNode.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!mouseEvent.isPrimaryButtonDown()) {
+                    byNode.setCursor(Cursor.HAND);
+                }
+            }
+        });
+        byNode.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!mouseEvent.isPrimaryButtonDown()) {
+                    byNode.setCursor(Cursor.DEFAULT);
+                }
+            }
+        });
     }
 
     public static int showNumberEntryDialog(Window parent, String title) {
@@ -68,11 +125,12 @@ public class NumberEntry extends Stage {
 
     private void init() {
         GridPane grid = new GridPane();
-        Label l = new Label(super.getTitle());
-        l.setId("top");
-        l.setMinHeight(30);
-        l.setMinWidth(super.getWidth());
-        grid.add(l, 2, 0, 4, 1);
+//        l = new Label(super.getTitle());
+//        l.setId("top");
+//        l.setMinWidth(super.getWidth());
+//        l.setMinHeight(50);
+//        grid.add(l, 1, 1, 4, 1);
+
         TextField number = new TextField();
         number.setMaxHeight(50);
         number.setMaxWidth(400);
@@ -82,6 +140,14 @@ public class NumberEntry extends Stage {
         number.setOnAction((ActionEvent event) -> {
             onEnter(number);
         });
+
+        box = new Box();
+        box.setId("top");
+        box.widthProperty().bind(grid.widthProperty());
+        double height = super.getHeight() - 400 - number.getHeight();
+        box.minHeight(height);
+        box.maxHeight(height);
+        grid.add(box, 1, 1, 4, 1);
         grid.add(number, 1, 2, 4, 1);
 
         if (init) {
@@ -97,7 +163,7 @@ public class NumberEntry extends Stage {
         grid.add(hSeven, 1, 3);
 
         seven.setOnAction((ActionEvent event) -> {
-            if(init){
+            if (init) {
                 number.clear();
                 init = false;
             }
@@ -113,7 +179,7 @@ public class NumberEntry extends Stage {
         grid.add(hEight, 2, 3);
 
         eight.setOnAction((ActionEvent event) -> {
-            if(init){
+            if (init) {
                 number.clear();
                 init = false;
             }
@@ -129,7 +195,7 @@ public class NumberEntry extends Stage {
         grid.add(hNine, 3, 3);
 
         nine.setOnAction((ActionEvent event) -> {
-            if(init){
+            if (init) {
                 number.clear();
                 init = false;
             }
@@ -145,7 +211,7 @@ public class NumberEntry extends Stage {
         grid.add(hFour, 1, 4);
 
         four.setOnAction((ActionEvent event) -> {
-            if(init){
+            if (init) {
                 number.clear();
                 init = false;
             }
@@ -161,7 +227,7 @@ public class NumberEntry extends Stage {
         grid.add(hFive, 2, 4);
 
         five.setOnAction((ActionEvent event) -> {
-            if(init){
+            if (init) {
                 number.clear();
                 init = false;
             }
@@ -177,7 +243,7 @@ public class NumberEntry extends Stage {
         grid.add(hSix, 3, 4);
 
         six.setOnAction((ActionEvent event) -> {
-            if(init){
+            if (init) {
                 number.clear();
                 init = false;
             }
@@ -193,7 +259,7 @@ public class NumberEntry extends Stage {
         grid.add(hOne, 1, 5);
 
         one.setOnAction((ActionEvent event) -> {
-            if(init){
+            if (init) {
                 number.clear();
                 init = false;
             }
@@ -209,7 +275,7 @@ public class NumberEntry extends Stage {
         grid.add(hTwo, 2, 5);
 
         two.setOnAction((ActionEvent event) -> {
-            if(init){
+            if (init) {
                 number.clear();
                 init = false;
             }
@@ -225,7 +291,7 @@ public class NumberEntry extends Stage {
         grid.add(hThree, 3, 5);
 
         three.setOnAction((ActionEvent event) -> {
-            if(init){
+            if (init) {
                 number.clear();
                 init = false;
             }
@@ -240,7 +306,7 @@ public class NumberEntry extends Stage {
         grid.add(hZero, 1, 6, 2, 1);
 
         zero.setOnAction((ActionEvent event) -> {
-            if(init){
+            if (init) {
                 number.clear();
                 init = false;
             }
@@ -255,7 +321,7 @@ public class NumberEntry extends Stage {
         grid.add(hDzero, 3, 6);
 
         dZero.setOnAction((ActionEvent event) -> {
-            if(init){
+            if (init) {
                 number.clear();
                 init = false;
             }

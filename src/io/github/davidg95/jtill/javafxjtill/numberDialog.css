@@ -13,6 +13,6 @@ and open the template in the editor.
 }
 
 #top{
-    -fx-background-color: blue;
+    -fx-background-color: red;
     -fx-background-radius: 10; 
 }
