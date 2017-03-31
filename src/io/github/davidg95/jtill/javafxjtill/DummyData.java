@@ -164,16 +164,16 @@ public class DummyData implements DataConnect {
     }
 
     @Override
-    public int purchaseProduct(Product p, int amount) throws IOException, ProductNotFoundException, OutOfStockException, SQLException {
+    public int purchaseProduct(int id, int amount) throws IOException, ProductNotFoundException, OutOfStockException, SQLException {
         for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).getId() == p.getId()) {
+            if (products.get(i).getId() == id) {
                 for (int j = 1; j <= amount; j++) {
                     products.get(i).purchace();
                     return products.get(i).getStock();
                 }
             }
         }
-        throw new ProductNotFoundException(p.getId() + " could not be found");
+        throw new ProductNotFoundException(id + " could not be found");
     }
 
     @Override

@@ -14,6 +14,7 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -94,10 +95,20 @@ public class ReceiptPrinter implements Printable {
 
         //Print the sale items.
         for (SaleItem it : sale.getSaleItems()) {
-            g2.drawString(it.getName(), item, y);
-            g2.drawString("" + it.getQuantity(), quantity, y);
-            g2.drawString("£" + it.getPrice(), total, y);
-            y += 30;
+            try {
+                if (it.getType() == SaleItem.PRODUCT) {
+                    final Product p = dc.getProduct(it.getItem());
+                    g2.drawString(p.getName(), item, y);
+                } else {
+                    final Discount d = dc.getDiscount(it.getItem());
+                    g2.drawString(d.getName(), item, y);
+                }
+                g2.drawString("" + it.getQuantity(), quantity, y);
+                g2.drawString("£" + it.getPrice(), total, y);
+                y += 30;
+            } catch (IOException | ProductNotFoundException | SQLException | DiscountNotFoundException ex) {
+                Logger.getLogger(ReceiptPrinter.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         g2.drawLine(item - 30, y - 20, total + 100, y - 20);
         g2.drawString("Total: £" + sale.getTotal(), total, y);

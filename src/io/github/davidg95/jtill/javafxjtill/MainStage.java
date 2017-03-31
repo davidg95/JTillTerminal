@@ -287,8 +287,8 @@ public class MainStage extends Stage implements GUIInterface {
         TableColumn itm = new TableColumn("Item");
         TableColumn cst = new TableColumn(symbol);
         qty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        itm.setCellValueFactory(new PropertyValueFactory<>("item"));
-        cst.setCellValueFactory(new PropertyValueFactory<>("price"));
+        itm.setCellValueFactory(new PropertyValueFactory<>("name"));
+        cst.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
         qty.prefWidthProperty().bind(itemsTable.widthProperty().divide(7));
         itm.prefWidthProperty().bind(itemsTable.widthProperty().divide(7).multiply(4));
         cst.prefWidthProperty().bind(itemsTable.widthProperty().divide(7).multiply(2));
@@ -396,7 +396,7 @@ public class MainStage extends Stage implements GUIInterface {
         halfPrice.setOnAction((ActionEvent event) -> {
             if (itemsTable.getSelectionModel().getSelectedIndex() > -1) {
                 SaleItem item = (SaleItem) itemsTable.getSelectionModel().getSelectedItem();
-                if (!(item.getItem() instanceof Discount)) {
+                if (!(item.getType() == SaleItem.DISCOUNT)) {
                     sale.halfPriceItem(item);
                     setTotalLabel();
                     itemsTable.refresh();
