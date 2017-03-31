@@ -118,7 +118,7 @@ public class ProductCache {
                 return p;
             }
         }
-        lock.unlockRead(stamp);
+        pLock.unlockRead(stamp);
         LOG.log(Level.INFO, "Plu not found in cache");
         throw new JTillException("Plu " + id + " not found");
     }
@@ -135,16 +135,18 @@ public class ProductCache {
      */
     public Product getProductByBarcode(String barcode) throws ProductNotFoundException, JTillException {
         long stamp = lock.readLock();
-        LOG.log(Level.INFO, "Checking cache for {0}", barcode);
-        for (Product p : products) {
-            final Plu plu = getPlu(p.getPlu());
-            if (plu.getCode().equals(barcode)) {
-                lock.unlockRead(stamp);
-                LOG.log(Level.INFO, "Product found in cache");
-                return p;
+        try {
+            LOG.log(Level.INFO, "Checking cache for {0}", barcode);
+            for (Product p : products) {
+                final Plu plu = getPlu(p.getPlu());
+                if (plu.getCode().equals(barcode)) {
+                    LOG.log(Level.INFO, "Product found in cache");
+                    return p;
+                }
             }
+        } finally {
+            lock.unlockRead(stamp);
         }
-        lock.unlockRead(stamp);
         LOG.log(Level.INFO, "Product not found in cache");
         throw new ProductNotFoundException("");
     }

@@ -1269,7 +1269,11 @@ public class MainStage extends Stage implements GUIInterface {
      * Create a new sale.
      */
     private void newSale() {
-        sale = new Sale(JavaFXJTill.NAME, 0);
+        if (staff == null) {
+            sale = new Sale(JavaFXJTill.NAME, 0);
+        } else {
+            sale = new Sale(JavaFXJTill.NAME, staff.getId());
+        }
         sale.setCustomer(1);
         obTable = FXCollections.observableArrayList();
         obPayments = FXCollections.observableArrayList();

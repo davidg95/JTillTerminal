@@ -1,15 +1,36 @@
-JTill log Thu Mar 30 14:56:08 BST 2017
-[14:56:08] [INFO] Starting JTill Terminal
-[14:56:09] [INFO] Initalising
-[14:56:11] [INFO] Loading properties file
-[14:56:11] [INFO] Attempting connection to the server on IP address {0}
-[14:56:11] [INFO] Max sales set to {0}
-[14:56:11] [INFO] Set discounts in cache
-[14:56:11] [INFO] Loading screen and button configurations from the server
-[14:56:11] [INFO] Got {0} screens from the server
-[14:56:11] [INFO] Getting buttons for {0} screen
-[14:56:11] [INFO] Got {0} buttons for this screen
-[14:56:11] [INFO] Getting buttons for {0} screen
-[14:56:11] [INFO] Got {0} buttons for this screen
-[14:56:17] [INFO] Item has been added to a sale
-[14:56:20] [INFO] Sale {0} sent to server
+JTill log Fri Mar 31 10:42:43 BST 2017
+[10:42:43] [INFO] Starting JTill Terminal
+[10:42:43] [INFO] Initalising
+[10:42:45] [INFO] Loading properties file
+[10:42:45] [INFO] Attempting connection to the server on IP address {0}
+[10:42:45] [INFO] Max sales set to {0}
+[10:42:45] [INFO] Set discounts in cache
+[10:42:45] [INFO] Loading screen and button configurations from the server
+[10:42:45] [INFO] Got {0} screens from the server
+[10:42:45] [INFO] Getting buttons for {0} screen
+[10:42:45] [INFO] Got {0} buttons for this screen
+[10:42:45] [INFO] Getting buttons for {0} screen
+[10:42:45] [INFO] Got {0} buttons for this screen
+[10:42:57] [INFO] Checking cache for {0}
+[10:42:57] [INFO] Product not found in cache
+[10:42:57] [INFO] Checking server for product {0}
+[10:42:58] [INFO] Product was found on server
+[10:42:58] [INFO] Adding product to cache
+[10:42:58] [INFO] Item has been added to a sale
+[10:42:59] [INFO] Sale {0} sent to server
+[10:43:05] [INFO] Checking cache for {0}
+[10:43:05] [INFO] Checking cache for {0}
+[10:43:05] [INFO] Plu not found in cache
+[10:43:05] [INFO] Checking server for product {0}
+[10:43:05] [INFO] Product was found on server
+[10:43:05] [INFO] Adding product to cache
+[10:43:05] [INFO] Item has been added to a sale
+[10:43:07] [INFO] Sale {0} sent to server
+[10:43:10] [INFO] Checking cache for {0}
+[10:43:10] [INFO] Checking cache for {0}
+[10:43:10] [INFO] Plu not found in cache
+[10:43:10] [INFO] Checking server for product {0}
+[10:43:10] [INFO] Product was found on server
+[10:43:10] [INFO] Adding product to cache
+[10:43:10] [INFO] Item has been added to a sale
+[10:43:12] [INFO] Sale {0} sent to server
