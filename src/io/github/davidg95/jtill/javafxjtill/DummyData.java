@@ -87,7 +87,7 @@ public class DummyData implements DataConnect {
         products.add(p1);
         products.add(p2);
 
-        Staff s = new Staff(1, "David Grant", 3, "dgrant", "password123");
+        Staff s = new Staff(1, "David Grant", 3, "dgrant", "password123", 7.25);
 
         staff.add(s);
 
