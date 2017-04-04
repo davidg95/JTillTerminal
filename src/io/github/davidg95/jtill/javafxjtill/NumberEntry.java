@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -36,29 +37,32 @@ public class NumberEntry extends Stage {
 
     private int initValue;
     private boolean init;
-
-    private Label l;
-    private Box box;
+    
+    private final String title;
+    
+    private Pane canvas;
 
     public NumberEntry(Window parent, String title) {
         init = false;
+        this.title = title;
         init();
         setTitle(title);
         initOwner(parent);
         initModality(Modality.APPLICATION_MODAL);
         initStyle(StageStyle.UNDECORATED);
-        makeDraggable(this, box);
+        makeDraggable(this, canvas);
     }
 
     public NumberEntry(Window parent, String title, int initValue) {
         init = true;
+        this.title = title;
         this.initValue = initValue;
         init();
         setTitle(title);
         initOwner(parent);
         initModality(Modality.APPLICATION_MODAL);
         initStyle(StageStyle.UNDECORATED);
-        makeDraggable(this, box);
+        makeDraggable(this, canvas);
     }
 
     private static class Delta {
@@ -125,11 +129,9 @@ public class NumberEntry extends Stage {
 
     private void init() {
         GridPane grid = new GridPane();
-//        l = new Label(super.getTitle());
-//        l.setId("top");
-//        l.setMinWidth(super.getWidth());
-//        l.setMinHeight(50);
-//        grid.add(l, 1, 1, 4, 1);
+        grid.setId("container");
+
+        Scene scene = new Scene(grid, 404, 482);
 
         TextField number = new TextField();
         number.setMaxHeight(50);
@@ -140,15 +142,16 @@ public class NumberEntry extends Stage {
         number.setOnAction((ActionEvent event) -> {
             onEnter(number);
         });
-
-        box = new Box();
-        box.setId("top");
-        box.widthProperty().bind(grid.widthProperty());
-        double height = super.getHeight() - 400 - number.getHeight();
-        box.minHeight(height);
-        box.maxHeight(height);
-        grid.add(box, 1, 1, 4, 1);
         grid.add(number, 1, 2, 4, 1);
+
+        canvas = new Pane();
+        canvas.setId("topbar");
+        canvas.setPrefWidth(400);
+        canvas.setPrefHeight(28);
+        Label label = new Label(title);
+        label.setId("title");
+        canvas.getChildren().add(label);
+        grid.add(canvas, 1, 1, 4, 1);
 
         if (init) {
             number.setText(initValue + "");
@@ -352,7 +355,6 @@ public class NumberEntry extends Stage {
             }
         });
 
-        Scene scene = new Scene(grid, 400, 478);
         scene.getStylesheets().add((NumberEntry.class.getResource("style.css").toExternalForm()));
         scene.getStylesheets().add((NumberEntry.class.getResource("numberDialog.css").toExternalForm()));
         setScene(scene);

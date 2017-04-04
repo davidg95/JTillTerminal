@@ -69,7 +69,7 @@ public class MessageDialog extends Stage {
         pane.add(hButton, 0, 1);
 
         Scene scene = new Scene(pane, WIDTH, 200);
-        String stylesheet = MainStage.class.getResource("dialog.css").toExternalForm();
+        String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
         scene.getStylesheets().add(stylesheet);
         setScene(scene);
     }
