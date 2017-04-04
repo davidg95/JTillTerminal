@@ -43,6 +43,7 @@ import javafx.stage.StageStyle;
 import io.github.davidg95.JTill.jtill.DataConnect;
 import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javafx.scene.layout.ColumnConstraints;
@@ -139,6 +140,7 @@ public class MainStage extends Stage implements GUIInterface {
     private Label paymentMessages;
     private Button paymentLogoff;
     private Button submitSales;
+    private Button clockOff;
 
     private final double SCREEN_WIDTH = javafx.stage.Screen.getPrimary().getBounds().getWidth();
     private final double SCREEN_HEIGHT = javafx.stage.Screen.getPrimary().getBounds().getHeight();
@@ -906,6 +908,18 @@ public class MainStage extends Stage implements GUIInterface {
         paymentMessages.setMinSize(0, 0);
         paymentMessages.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
+        clockOff = new Button("Clock Off");
+        clockOff.setId("bottom");
+        clockOff.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        clockOff.setOnAction((ActionEvent event) -> {
+            try {
+                dc.clockOff(staff.getId());
+                MessageDialog.showMessage(this, "Clock Off", "Clocked off at " + new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(new Date()));
+            } catch (IOException | SQLException | StaffNotFoundException ex) {
+                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+
         paymentPane.add(paymentLoggedIn, 0, 0, 2, 1);
         paymentPane.add(paymentVersion, 3, 0, 3, 1);
         paymentPane.add(paymentTime, 8, 0, 2, 1);
@@ -930,6 +944,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentPane.add(clearLogins, 5, 3, 1, 2);
         paymentPane.add(submitSales, 5, 5, 1, 2);
         paymentPane.add(paymentMessages, 4, 14, 4, 2);
+        paymentPane.add(clockOff, 1, 14, 1, 2);
         paymentPane.add(paymentLogoff, 0, 14, 1, 2);
 
         for (int i = 1; i <= 10; i++) {
@@ -1034,6 +1049,7 @@ public class MainStage extends Stage implements GUIInterface {
             Platform.runLater(() -> {
                 try {
                     Staff s = dc.getStaff(val);
+                    dc.clockOn(s.getId());
                     Button button = new Button(s.getName());
                     button.prefWidthProperty().bind(staffLayout.widthProperty().divide(4));
                     button.prefHeightProperty().bind(staffLayout.heightProperty().divide(2));

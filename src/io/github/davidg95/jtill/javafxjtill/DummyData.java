@@ -938,4 +938,21 @@ public class DummyData implements DataConnect {
         return null;
     }
 
+    @Override
+    public void clockOn(int id) throws IOException, SQLException, StaffNotFoundException {
+    }
+
+    @Override
+    public void clockOff(int id) throws IOException, SQLException, StaffNotFoundException {
+    }
+
+    @Override
+    public List<ClockItem> getAllClocks(int id) throws IOException, SQLException, StaffNotFoundException {
+        return null;
+    }
+
+    @Override
+    public void clearClocks(int id) throws IOException, SQLException, StaffNotFoundException {
+    }
+
 }

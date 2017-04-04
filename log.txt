@@ -1,11 +1,31 @@
-JTill log Fri Mar 31 16:48:30 BST 2017
-[16:48:30] [INFO] Starting JTill Terminal
-[16:48:30] [INFO] Initalising
-[16:48:33] [INFO] Loading properties file
-[16:48:33] [INFO] Attempting connection to the server on IP address {0}
-[16:48:33] [INFO] Max sales set to {0}
-[16:48:33] [INFO] Set discounts in cache
-[16:48:33] [INFO] Loading screen and button configurations from the server
-[16:48:33] [INFO] Got {0} screens from the server
-[16:48:33] [INFO] Getting buttons for {0} screen
-[16:48:33] [INFO] Got {0} buttons for this screen
+JTill log Tue Apr 04 15:23:17 BST 2017
+[15:23:17] [INFO] Starting JTill Terminal
+[15:23:17] [INFO] Initalising
+[15:23:20] [INFO] Loading properties file
+[15:23:20] [INFO] Attempting connection to the server on IP address {0}
+[15:23:20] [INFO] Max sales set to {0}
+[15:23:20] [INFO] Set discounts in cache
+[15:23:20] [INFO] Loading screen and button configurations from the server
+[15:23:20] [INFO] Got {0} screens from the server
+[15:23:27] [INFO] Checking cache for {0}
+[15:23:27] [INFO] Product not found in cache
+[15:23:27] [INFO] Checking server for product {0}
+[15:23:27] [INFO] Product was found on server
+[15:23:27] [INFO] Adding product to cache
+[15:23:27] [INFO] Item has been added to a sale
+[15:23:29] [INFO] Checking cache for {0}
+[15:23:29] [INFO] Checking cache for {0}
+[15:23:29] [INFO] Plu not found in cache
+[15:23:29] [INFO] Checking server for product {0}
+[15:23:29] [INFO] Product was found on server
+[15:23:29] [INFO] Adding product to cache
+[15:23:29] [INFO] Item has been added to a sale
+[15:23:30] [INFO] Sale {0} sent to server
+[15:23:40] [INFO] Checking cache for {0}
+[15:23:40] [INFO] Checking cache for {0}
+[15:23:40] [INFO] Plu not found in cache
+[15:23:40] [INFO] Checking server for product {0}
+[15:23:40] [INFO] Product was found on server
+[15:23:40] [INFO] Adding product to cache
+[15:23:40] [INFO] Item has been added to a sale
+[15:23:43] [INFO] Sale {0} sent to server
