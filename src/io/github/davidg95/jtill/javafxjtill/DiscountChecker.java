@@ -9,6 +9,7 @@ import io.github.davidg95.JTill.jtill.*;
 import javafx.application.Platform;
 
 /**
+ * Class which checks if the conditions for a given discounts have been met.
  *
  * @author David
  */
@@ -19,6 +20,12 @@ public class DiscountChecker implements ProductListener {
 
     private int hits;
 
+    /**
+     * Creates the new discount checker.
+     *
+     * @param ms the Main Stage.
+     * @param d the discount this check is checking for.
+     */
     public DiscountChecker(MainStage ms, Discount d) {
         this.ms = ms;
         this.d = d;
@@ -50,6 +57,9 @@ public class DiscountChecker implements ProductListener {
         }
     }
 
+    /**
+     * Resets this discount checker for a new sale or if the condition was met.
+     */
     public void reset() {
         hits = 0;
     }

@@ -1341,7 +1341,7 @@ public class MainStage extends Stage implements GUIInterface {
     public void addItemToSale(Item i) {
         if (i instanceof Product) { //If the item is a product
             Product p = (Product) i;
-            notifyAllListeners(new ProductEvent(p));
+            notifyAllListeners(new ProductEvent(p), itemQuantity);
             try {
                 Category cat = dc.getCategory(p.getCategory());
                 if (cat.isTimeRestrict()) { //Check for time restrictions
@@ -1381,9 +1381,11 @@ public class MainStage extends Stage implements GUIInterface {
             }
         } else { //If the item was a discount
             Discount d = (Discount) i;
+            //Check to see if it is a percentage discount for a price discount
             if (d.getAction() == Discount.PERCENTAGE_OFF) {
+                //If it is a percentage discounts then the price to take of must be calculated
                 d.setPrice(sale.getTotal().multiply(new BigDecimal(Double.toString(d.getPercentage() / 100)).negate()));
-            } else{
+            } else {
                 d.setPrice(d.getPrice().negate());
             }
         }
@@ -1404,12 +1406,14 @@ public class MainStage extends Stage implements GUIInterface {
         listeners.add(pl);
     }
 
-    private void notifyAllListeners(ProductEvent pe) {
+    private void notifyAllListeners(ProductEvent pe, int itemQuantity) {
         listeners.forEach((pl) -> {
             new Thread() {
                 @Override
                 public void run() {
-                    pl.onProductAdd(pe);
+                    for (int i = 0; i < itemQuantity; i++) {
+                        pl.onProductAdd(pe);
+                    }
                 }
             }.start();
         });

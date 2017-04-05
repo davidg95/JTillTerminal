@@ -11,5 +11,10 @@ package io.github.davidg95.jtill.javafxjtill;
  */
 public interface ProductListener {
 
+    /**
+     * Method which gets called when an item has been added to the sale.
+     *
+     * @param pe the ProductEvent.
+     */
     public void onProductAdd(ProductEvent pe);
 }
