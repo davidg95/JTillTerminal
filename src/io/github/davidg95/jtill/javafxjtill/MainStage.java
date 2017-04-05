@@ -246,7 +246,7 @@ public class MainStage extends Stage implements GUIInterface {
             twentyPounds.setText(symbol + "20");
             tenPounds.setText(symbol + "10");
             fivePounds.setText(symbol + "5");
-            List<Discount> discounts = dc.getAllDiscounts();
+            List<Discount> discounts = dc.getValidDiscounts();
             for (Discount d : discounts) {
                 try {
                     List<Trigger> triggers = dc.getDiscountTriggers(d.getId());

@@ -969,4 +969,9 @@ public class DummyData implements DataConnect {
     public void removeTrigger(int id) throws IOException, SQLException, JTillException {
     }
 
+    @Override
+    public List<Discount> getValidDiscounts() throws IOException, SQLException {
+        return null;
+    }
+
 }
