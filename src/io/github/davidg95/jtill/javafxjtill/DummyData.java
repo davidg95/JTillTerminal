@@ -955,4 +955,18 @@ public class DummyData implements DataConnect {
     public void clearClocks(int id) throws IOException, SQLException, StaffNotFoundException {
     }
 
+    @Override
+    public Trigger addTrigger(Trigger t) throws IOException, SQLException {
+        return null;
+    }
+
+    @Override
+    public List<Trigger> getDiscountTriggers(int id) throws IOException, SQLException, DiscountNotFoundException {
+        return null;
+    }
+
+    @Override
+    public void removeTrigger(int id) throws IOException, SQLException, JTillException {
+    }
+
 }

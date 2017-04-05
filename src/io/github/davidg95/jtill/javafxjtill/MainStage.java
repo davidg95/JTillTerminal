@@ -246,7 +246,16 @@ public class MainStage extends Stage implements GUIInterface {
             twentyPounds.setText(symbol + "20");
             tenPounds.setText(symbol + "10");
             fivePounds.setText(symbol + "5");
-            DiscountCache.getInstance().setDiscounts(dc.getAllDiscounts(), this);
+            List<Discount> discounts = dc.getAllDiscounts();
+            for (Discount d : discounts) {
+                try {
+                    List<Trigger> triggers = dc.getDiscountTriggers(d.getId());
+                    d.setTriggers(triggers);
+                } catch (DiscountNotFoundException ex) {
+                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            DiscountCache.getInstance().setDiscounts(discounts, this);
             LOG.log(Level.INFO, "Loading screen and button configurations from the server");
             List<Screen> screens = dc.getAllScreens();
             addScreens(screens, screenPane);
@@ -1372,7 +1381,11 @@ public class MainStage extends Stage implements GUIInterface {
             }
         } else { //If the item was a discount
             Discount d = (Discount) i;
-            d.setPrice(sale.getTotal().multiply(new BigDecimal(Double.toString(d.getPercentage() / 100)).negate()));
+            if (d.getAction() == Discount.PERCENTAGE_OFF) {
+                d.setPrice(sale.getTotal().multiply(new BigDecimal(Double.toString(d.getPercentage() / 100)).negate()));
+            } else{
+                d.setPrice(d.getPrice().negate());
+            }
         }
         boolean inSale = sale.addItem(i, itemQuantity); //Add the item to the sale
         if (!inSale) {

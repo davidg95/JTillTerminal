@@ -1,7 +1,170 @@
-JTill log Tue Apr 04 17:05:04 BST 2017
-[17:05:04] [INFO] Starting JTill Terminal
-[17:05:04] [INFO] Initalising
-[17:05:07] [INFO] Loading properties file
-[17:05:07] [INFO] Attempting connection to the server on IP address {0}
-[17:05:08] [WARNING] Error connecting to the server
-[17:05:09] [INFO] Stopping JTill Terminal
+JTill log Wed Apr 05 13:15:05 BST 2017
+[13:15:05] [INFO] Starting JTill Terminal
+[13:15:05] [INFO] Initalising
+[13:15:07] [INFO] Loading properties file
+[13:15:07] [INFO] Attempting connection to the server on IP address {0}
+[13:15:07] [INFO] Max sales set to {0}
+[13:15:07] [INFO] Set discounts in cache
+[13:15:07] [INFO] Loading screen and button configurations from the server
+[13:15:07] [INFO] Got {0} screens from the server
+[13:15:10] [INFO] Sale {0} sent to server
+[13:15:13] [INFO] Checking cache for {0}
+[13:15:13] [INFO] Product not found in cache
+[13:15:13] [INFO] Checking server for product {0}
+[13:15:13] [INFO] Product was found on server
+[13:15:13] [INFO] Adding product to cache
+[13:15:13] [INFO] Item has been added to a sale
+[13:15:13] [INFO] Item has been added to a sale
+[13:15:14] [INFO] Checking cache for {0}
+[13:15:14] [INFO] Checking cache for {0}
+[13:15:14] [INFO] Plu not found in cache
+[13:15:14] [INFO] Checking server for product {0}
+[13:15:14] [INFO] Product was found on server
+[13:15:14] [INFO] Adding product to cache
+[13:15:14] [INFO] Item has been added to a sale
+[13:15:14] [INFO] Item has been added to a sale
+[13:15:15] [INFO] Checking cache for {0}
+[13:15:15] [INFO] Checking cache for {0}
+[13:15:15] [INFO] Plu not found in cache
+[13:15:15] [INFO] Checking server for product {0}
+[13:15:15] [INFO] Product was found on server
+[13:15:15] [INFO] Adding product to cache
+[13:15:15] [INFO] Item has been added to a sale
+[13:15:15] [INFO] Item has been added to a sale
+[13:15:16] [INFO] Checking cache for {0}
+[13:15:16] [INFO] Checking cache for {0}
+[13:15:16] [INFO] Plu not found in cache
+[13:15:16] [INFO] Checking server for product {0}
+[13:15:16] [INFO] Product was found on server
+[13:15:16] [INFO] Adding product to cache
+[13:15:16] [INFO] Item has been added to a sale
+[13:15:16] [INFO] Item has been added to a sale
+[13:15:17] [INFO] Checking cache for {0}
+[13:15:17] [INFO] Checking cache for {0}
+[13:15:17] [INFO] Plu not found in cache
+[13:15:17] [INFO] Checking server for product {0}
+[13:15:17] [INFO] Product was found on server
+[13:15:17] [INFO] Adding product to cache
+[13:15:17] [INFO] Item has been added to a sale
+[13:15:17] [INFO] Item has been added to a sale
+[13:15:17] [INFO] Checking cache for {0}
+[13:15:17] [INFO] Checking cache for {0}
+[13:15:17] [INFO] Plu not found in cache
+[13:15:17] [INFO] Checking server for product {0}
+[13:15:17] [INFO] Product was found on server
+[13:15:17] [INFO] Adding product to cache
+[13:15:17] [INFO] Item has been added to a sale
+[13:15:17] [INFO] Item has been added to a sale
+[13:15:18] [INFO] Checking cache for {0}
+[13:15:18] [INFO] Checking cache for {0}
+[13:15:18] [INFO] Plu not found in cache
+[13:15:18] [INFO] Checking server for product {0}
+[13:15:18] [INFO] Product was found on server
+[13:15:18] [INFO] Adding product to cache
+[13:15:18] [INFO] Item has been added to a sale
+[13:15:18] [INFO] Item has been added to a sale
+[13:15:18] [INFO] Checking cache for {0}
+[13:15:18] [INFO] Checking cache for {0}
+[13:15:18] [INFO] Plu not found in cache
+[13:15:18] [INFO] Checking server for product {0}
+[13:15:18] [INFO] Product was found on server
+[13:15:18] [INFO] Adding product to cache
+[13:15:18] [INFO] Item has been added to a sale
+[13:15:18] [INFO] Item has been added to a sale
+[13:15:19] [INFO] Checking cache for {0}
+[13:15:19] [INFO] Checking cache for {0}
+[13:15:19] [INFO] Plu not found in cache
+[13:15:19] [INFO] Checking server for product {0}
+[13:15:19] [INFO] Product was found on server
+[13:15:19] [INFO] Adding product to cache
+[13:15:19] [INFO] Item has been added to a sale
+[13:15:19] [INFO] Item has been added to a sale
+[13:15:20] [INFO] Checking cache for {0}
+[13:15:20] [INFO] Checking cache for {0}
+[13:15:20] [INFO] Plu not found in cache
+[13:15:20] [INFO] Checking server for product {0}
+[13:15:20] [INFO] Product was found on server
+[13:15:20] [INFO] Adding product to cache
+[13:15:20] [INFO] Item has been added to a sale
+[13:15:20] [INFO] Item has been added to a sale
+[13:15:20] [INFO] Checking cache for {0}
+[13:15:20] [INFO] Checking cache for {0}
+[13:15:20] [INFO] Plu not found in cache
+[13:15:20] [INFO] Checking server for product {0}
+[13:15:20] [INFO] Product was found on server
+[13:15:20] [INFO] Adding product to cache
+[13:15:20] [INFO] Item has been added to a sale
+[13:15:20] [INFO] Item has been added to a sale
+[13:15:21] [INFO] Checking cache for {0}
+[13:15:21] [INFO] Checking cache for {0}
+[13:15:21] [INFO] Plu not found in cache
+[13:15:21] [INFO] Checking server for product {0}
+[13:15:21] [INFO] Product was found on server
+[13:15:21] [INFO] Adding product to cache
+[13:15:21] [INFO] Item has been added to a sale
+[13:15:21] [INFO] Item has been added to a sale
+[13:15:21] [INFO] Checking cache for {0}
+[13:15:21] [INFO] Checking cache for {0}
+[13:15:21] [INFO] Plu not found in cache
+[13:15:21] [INFO] Checking server for product {0}
+[13:15:21] [INFO] Product was found on server
+[13:15:21] [INFO] Adding product to cache
+[13:15:21] [INFO] Item has been added to a sale
+[13:15:21] [INFO] Item has been added to a sale
+[13:15:22] [INFO] Checking cache for {0}
+[13:15:22] [INFO] Checking cache for {0}
+[13:15:22] [INFO] Plu not found in cache
+[13:15:22] [INFO] Checking server for product {0}
+[13:15:22] [INFO] Product was found on server
+[13:15:22] [INFO] Adding product to cache
+[13:15:22] [INFO] Item has been added to a sale
+[13:15:22] [INFO] Item has been added to a sale
+[13:15:22] [INFO] Checking cache for {0}
+[13:15:22] [INFO] Checking cache for {0}
+[13:15:22] [INFO] Plu not found in cache
+[13:15:22] [INFO] Checking server for product {0}
+[13:15:22] [INFO] Product was found on server
+[13:15:22] [INFO] Adding product to cache
+[13:15:22] [INFO] Item has been added to a sale
+[13:15:22] [INFO] Item has been added to a sale
+[13:15:23] [INFO] Checking cache for {0}
+[13:15:23] [INFO] Checking cache for {0}
+[13:15:23] [INFO] Plu not found in cache
+[13:15:23] [INFO] Checking server for product {0}
+[13:15:23] [INFO] Product was found on server
+[13:15:23] [INFO] Adding product to cache
+[13:15:23] [INFO] Item has been added to a sale
+[13:15:23] [INFO] Item has been added to a sale
+[13:15:23] [INFO] Checking cache for {0}
+[13:15:23] [INFO] Checking cache for {0}
+[13:15:23] [INFO] Plu not found in cache
+[13:15:23] [INFO] Checking server for product {0}
+[13:15:23] [INFO] Product was found on server
+[13:15:23] [INFO] Adding product to cache
+[13:15:23] [INFO] Item has been added to a sale
+[13:15:23] [INFO] Item has been added to a sale
+[13:15:24] [INFO] Checking cache for {0}
+[13:15:24] [INFO] Checking cache for {0}
+[13:15:24] [INFO] Plu not found in cache
+[13:15:24] [INFO] Checking server for product {0}
+[13:15:24] [INFO] Product was found on server
+[13:15:24] [INFO] Adding product to cache
+[13:15:24] [INFO] Item has been added to a sale
+[13:15:24] [INFO] Item has been added to a sale
+[13:15:24] [INFO] Checking cache for {0}
+[13:15:24] [INFO] Checking cache for {0}
+[13:15:24] [INFO] Plu not found in cache
+[13:15:24] [INFO] Checking server for product {0}
+[13:15:24] [INFO] Product was found on server
+[13:15:24] [INFO] Adding product to cache
+[13:15:24] [INFO] Item has been added to a sale
+[13:15:24] [INFO] Item has been added to a sale
+[13:15:25] [INFO] Checking cache for {0}
+[13:15:25] [INFO] Checking cache for {0}
+[13:15:25] [INFO] Plu not found in cache
+[13:15:25] [INFO] Checking server for product {0}
+[13:15:25] [INFO] Product was found on server
+[13:15:25] [INFO] Adding product to cache
+[13:15:25] [INFO] Item has been added to a sale
+[13:15:25] [INFO] Item has been added to a sale
+[13:15:27] [INFO] Sale {0} sent to server

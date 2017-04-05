@@ -17,6 +17,8 @@ public class DiscountChecker implements ProductListener {
     private final MainStage ms;
     private final Discount d;
 
+    private int hits;
+
     public DiscountChecker(MainStage ms, Discount d) {
         this.ms = ms;
         this.d = d;
@@ -25,10 +27,30 @@ public class DiscountChecker implements ProductListener {
 
     @Override
     public void onProductAdd(ProductEvent pe) {
-        if (d.getTrigger() == pe.getProduct().getId()) {
-            Platform.runLater(() -> {
-                ms.addItemToSale(d);
-            });
+        for (Trigger t : d.getTriggers()) {
+            if (t.getProduct() == pe.getProduct().getId()) {
+                hits++;
+                break;
+            }
         }
+        if (d.getCondition() == 1) {
+            if ((d.getConditionValue() * d.getTriggers().size()) <= hits) {
+                reset();
+                Platform.runLater(() -> {
+                    ms.addItemToSale(d);
+                });
+            }
+        } else {
+            if (d.getConditionValue() <= hits) {
+                reset();
+                Platform.runLater(() -> {
+                    ms.addItemToSale(d);
+                });
+            }
+        }
+    }
+
+    public void reset() {
+        hits = 0;
     }
 }
