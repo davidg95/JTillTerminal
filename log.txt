@@ -1,55 +1,20 @@
-JTill log Thu Apr 06 15:30:00 BST 2017
-[15:30:00] [INFO] Starting JTill Terminal
-[15:30:00] [INFO] Initalising
-[15:30:03] [INFO] Loading properties file
-[15:30:03] [INFO] Attempting connection to the server on IP address {0}
-[15:30:03] [INFO] Max sales set to {0}
-[15:30:03] [INFO] Set discounts in cache
-[15:30:03] [INFO] Loading screen and button configurations from the server
-[15:30:03] [INFO] Got {0} screens from the server
-[15:30:07] [INFO] Checking cache for {0}
-[15:30:07] [INFO] Product not found in cache
-[15:30:07] [INFO] Checking server for product {0}
-[15:30:07] [INFO] Product was found on server
-[15:30:07] [INFO] Adding product to cache
-[15:30:07] [INFO] Item has been added to a sale
-[15:30:09] [INFO] Checking cache for {0}
-[15:30:09] [INFO] Checking cache for {0}
-[15:30:09] [INFO] Plu not found in cache
-[15:30:09] [INFO] Checking server for product {0}
-[15:30:09] [INFO] Product was found on server
-[15:30:09] [INFO] Adding product to cache
-[15:30:09] [INFO] Item has been added to a sale
-[15:30:09] [INFO] Item has been added to a sale
-[15:30:13] [INFO] Checking cache for {0}
-[15:30:13] [INFO] Checking cache for {0}
-[15:30:13] [INFO] Plu not found in cache
-[15:30:13] [INFO] Checking server for product {0}
-[15:30:13] [INFO] Product was found on server
-[15:30:13] [INFO] Adding product to cache
-[15:30:13] [INFO] Item has been added to a sale
-[15:30:14] [INFO] Checking cache for {0}
-[15:30:14] [INFO] Checking cache for {0}
-[15:30:14] [INFO] Plu not found in cache
-[15:30:14] [INFO] Checking server for product {0}
-[15:30:14] [INFO] Product was found on server
-[15:30:14] [INFO] Adding product to cache
-[15:30:14] [INFO] Item has been added to a sale
-[15:30:14] [INFO] Item has been added to a sale
-[15:30:14] [INFO] Item has been added to a sale
-[15:30:20] [INFO] Checking cache for {0}
-[15:30:20] [INFO] Checking cache for {0}
-[15:30:20] [INFO] Plu not found in cache
-[15:30:20] [INFO] Checking server for product {0}
-[15:30:20] [INFO] Product was found on server
-[15:30:20] [INFO] Adding product to cache
-[15:30:20] [INFO] Item has been added to a sale
-[15:30:22] [INFO] Checking cache for {0}
-[15:30:22] [INFO] Checking cache for {0}
-[15:30:22] [INFO] Plu not found in cache
-[15:30:22] [INFO] Checking server for product {0}
-[15:30:22] [INFO] Product was found on server
-[15:30:22] [INFO] Adding product to cache
-[15:30:22] [INFO] Item has been added to a sale
-[15:30:22] [INFO] Item has been added to a sale
-[15:30:54] [INFO] Sale {0} sent to server
+JTill log Thu Apr 06 16:26:35 BST 2017
+[16:26:35] [INFO] Starting JTill Terminal
+[16:26:35] [INFO] Initalising
+[16:26:37] [INFO] Loading properties file
+[16:26:37] [INFO] Attempting connection to the server on IP address {0}
+[16:26:37] [INFO] Max sales set to {0}
+[16:26:37] [INFO] Set discounts in cache
+[16:26:37] [INFO] Loading screen and button configurations from the server
+[16:26:37] [INFO] Got {0} screens from the server
+[16:26:37] [INFO] Getting buttons for {0} screen
+[16:26:37] [INFO] Got {0} buttons for this screen
+[16:26:40] [INFO] Item has been added to a sale
+[16:26:41] [INFO] Item has been added to a sale
+[16:26:41] [INFO] Item has been added to a sale
+[16:26:42] [INFO] Item has been added to a sale
+[16:26:43] [INFO] Item has been added to a sale
+[16:26:43] [INFO] Item has been added to a sale
+[16:26:44] [INFO] Item has been added to a sale
+[16:26:45] [INFO] Item has been added to a sale
+[16:26:45] [INFO] Item has been added to a sale
