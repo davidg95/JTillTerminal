@@ -18,8 +18,6 @@ public class DiscountChecker implements ProductListener {
     private final MainStage ms;
     private final Discount d;
 
-    private int hits;
-
     /**
      * Creates the new discount checker.
      *
@@ -34,33 +32,27 @@ public class DiscountChecker implements ProductListener {
 
     @Override
     public void onProductAdd(ProductEvent pe) {
-        for (Trigger t : d.getTriggers()) {
-            if (t.getProduct() == pe.getProduct().getId()) {
-                hits++;
-                break;
+        for (DiscountBucket b : d.getBuckets()) {
+            for (Trigger t : b.getTriggers()) {
+                if (t.getProduct() == pe.getProduct().getId()) {
+                    t.addHit();
+                    if(t.getCurrentQuantity() >= t.getQuantityRequired()){
+                        b.addHit();
+                        t.resetQuantity();
+                        if(b.getCurrentTriggers() >= b.getRequiredTriggers()){
+                            b.reset();
+                            d.addHit();
+                            if(d.getCurrentHits() >= d.getCondition()){
+                                d.reset();
+                                Platform.runLater(() ->{
+                                    ms.addItemToSale(d);
+                                });
+                            }
+                        }
+                    }
+                    break;
+                }
             }
         }
-        if (d.getCondition() == 1) {
-            if ((d.getConditionValue() * d.getTriggers().size()) <= hits) {
-                reset();
-                Platform.runLater(() -> {
-                    ms.addItemToSale(d);
-                });
-            }
-        } else {
-            if (d.getConditionValue() <= hits) {
-                reset();
-                Platform.runLater(() -> {
-                    ms.addItemToSale(d);
-                });
-            }
-        }
-    }
-
-    /**
-     * Resets this discount checker for a new sale or if the condition was met.
-     */
-    public void reset() {
-        hits = 0;
     }
 }

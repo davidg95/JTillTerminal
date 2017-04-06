@@ -249,9 +249,12 @@ public class MainStage extends Stage implements GUIInterface {
             List<Discount> discounts = dc.getValidDiscounts();
             for (Discount d : discounts) {
                 try {
-                    List<Trigger> triggers = dc.getDiscountTriggers(d.getId());
-                    d.setTriggers(triggers);
-                } catch (DiscountNotFoundException ex) {
+                    List<DiscountBucket> buckets = dc.getDiscountBuckets(d.getId());
+                    for (DiscountBucket b : buckets) {
+                        b.setTriggers(dc.getBucketTriggers(b.getId()));
+                    }
+                    d.setBuckets(buckets);
+                } catch (DiscountNotFoundException | JTillException ex) {
                     Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

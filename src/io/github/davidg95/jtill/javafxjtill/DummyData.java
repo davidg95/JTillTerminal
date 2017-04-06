@@ -961,16 +961,40 @@ public class DummyData implements DataConnect {
     }
 
     @Override
-    public List<Trigger> getDiscountTriggers(int id) throws IOException, SQLException, DiscountNotFoundException {
-        return null;
-    }
-
-    @Override
     public void removeTrigger(int id) throws IOException, SQLException, JTillException {
     }
 
     @Override
     public List<Discount> getValidDiscounts() throws IOException, SQLException {
+        return null;
+    }
+
+    @Override
+    public List<DiscountBucket> getDiscountBuckets(int id) throws IOException, SQLException, DiscountNotFoundException {
+        return null;
+    }
+
+    @Override
+    public DiscountBucket addBucket(DiscountBucket b) throws IOException, SQLException {
+        return null;
+    }
+
+    @Override
+    public void removeBucket(int id) throws IOException, SQLException, JTillException {
+    }
+
+    @Override
+    public List<Trigger> getBucketTriggers(int id) throws IOException, SQLException, JTillException {
+        return null;
+    }
+
+    @Override
+    public Trigger updateTrigger(Trigger t) throws IOException, SQLException, JTillException {
+        return null;
+    }
+
+    @Override
+    public DiscountBucket updateBucket(DiscountBucket b) throws IOException, SQLException, JTillException {
         return null;
     }
 
