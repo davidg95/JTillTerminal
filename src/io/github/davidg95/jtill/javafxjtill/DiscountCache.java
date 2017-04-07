@@ -21,12 +21,10 @@ public class DiscountCache {
     private static final Logger LOG = Logger.getGlobal();
 
     private List<Discount> discounts;
-    private final List<DiscountChecker> checkers;
     private final StampedLock lock;
 
     public DiscountCache() {
         discounts = new ArrayList<>();
-        checkers = new ArrayList<>();
         lock = new StampedLock();
     }
 
@@ -58,13 +56,9 @@ public class DiscountCache {
         throw new DiscountNotFoundException("");
     }
 
-    public void setDiscounts(List<Discount> discounts, MainStage ms) {
+    public void setDiscounts(List<Discount> discounts, MainStage ms, Sale s) {
         long stamp = lock.writeLock();
         this.discounts = discounts;
-        for (Discount d : discounts) {
-            DiscountChecker dc = new DiscountChecker(ms, d);
-            checkers.add(dc);
-        }
         LOG.log(Level.INFO, "Set discounts in cache");
         lock.unlockWrite(stamp);
     }

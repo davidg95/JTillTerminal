@@ -5,6 +5,8 @@
  */
 package io.github.davidg95.jtill.javafxjtill;
 
+import io.github.davidg95.JTill.jtill.ProductEvent;
+import io.github.davidg95.JTill.jtill.ProductListener;
 import io.github.davidg95.JTill.jtill.*;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -145,8 +147,6 @@ public class MainStage extends Stage implements GUIInterface {
     private final double SCREEN_WIDTH = javafx.stage.Screen.getPrimary().getBounds().getWidth();
     private final double SCREEN_HEIGHT = javafx.stage.Screen.getPrimary().getBounds().getHeight();
 
-    private final List<ProductListener> listeners;
-
     public MainStage(DataConnect dc) {
         super();
         this.dc = dc;
@@ -158,7 +158,6 @@ public class MainStage extends Stage implements GUIInterface {
         }
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
-        listeners = new ArrayList<>();
 
     }
 
@@ -258,7 +257,7 @@ public class MainStage extends Stage implements GUIInterface {
                     Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            DiscountCache.getInstance().setDiscounts(discounts, this);
+            DiscountCache.getInstance().setDiscounts(discounts, this, sale);
             LOG.log(Level.INFO, "Loading screen and button configurations from the server");
             List<Screen> screens = dc.getAllScreens();
             addScreens(screens, screenPane);
@@ -1204,6 +1203,7 @@ public class MainStage extends Stage implements GUIInterface {
         Thread th = new Thread(printRun);
         th.start();
         lastSale = sale.clone();
+        sale.complete();
         try {
             Sale s = dc.addSale(sale);
             LOG.log(Level.INFO, "Sale {0} sent to server", s.getId());
@@ -1305,6 +1305,11 @@ public class MainStage extends Stage implements GUIInterface {
             sale = new Sale(JavaFXJTill.NAME, staff.getId());
         }
         sale.setCustomer(1);
+        List<Discount> discounts = DiscountCache.getInstance().getAllDiscounts();
+        for (Discount d : discounts) {
+            DiscountChecker checker = new DiscountChecker(this, d);
+            sale.addListener(checker);
+        }
         obTable = FXCollections.observableArrayList();
         obPayments = FXCollections.observableArrayList();
         paymentsList.setItems(obPayments);
@@ -1344,7 +1349,7 @@ public class MainStage extends Stage implements GUIInterface {
     public void addItemToSale(Item i) {
         if (i instanceof Product) { //If the item is a product
             Product p = (Product) i;
-            notifyAllListeners(new ProductEvent(p), itemQuantity);
+            sale.notifyAllListeners(new ProductEvent(p), itemQuantity);
             try {
                 Category cat = dc.getCategory(p.getCategory());
                 if (cat.isTimeRestrict()) { //Check for time restrictions
@@ -1403,23 +1408,6 @@ public class MainStage extends Stage implements GUIInterface {
         setTotalLabel();
         itemQuantity = 1;
         quantity.setText("Quantity: 1");
-    }
-
-    public void addListener(ProductListener pl) {
-        listeners.add(pl);
-    }
-
-    private void notifyAllListeners(ProductEvent pe, int itemQuantity) {
-        listeners.forEach((pl) -> {
-            new Thread() {
-                @Override
-                public void run() {
-                    for (int i = 0; i < itemQuantity; i++) {
-                        pl.onProductAdd(pe);
-                    }
-                }
-            }.start();
-        });
     }
 
     private void setTotalLabel() {

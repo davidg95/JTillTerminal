@@ -5,6 +5,8 @@
  */
 package io.github.davidg95.jtill.javafxjtill;
 
+import io.github.davidg95.JTill.jtill.ProductEvent;
+import io.github.davidg95.JTill.jtill.ProductListener;
 import io.github.davidg95.JTill.jtill.*;
 import javafx.application.Platform;
 
@@ -27,7 +29,6 @@ public class DiscountChecker implements ProductListener {
     public DiscountChecker(MainStage ms, Discount d) {
         this.ms = ms;
         this.d = d;
-        ms.addListener(this);
     }
 
     @Override
@@ -36,17 +37,21 @@ public class DiscountChecker implements ProductListener {
             for (Trigger t : b.getTriggers()) {
                 if (t.getProduct() == pe.getProduct().getId()) { //Check if the product matches
                     t.addHit(); //Increase the trigger hit count
-                    if(t.getCurrentQuantity() >= t.getQuantityRequired()){ //Check if the trigger has been triggered
+                    if (t.getCurrentQuantity() >= t.getQuantityRequired()) { //Check if the trigger has been triggered
                         b.addHit(); //If so, increase the bucket hit count
-                        t.resetQuantity(); //Then reset the trigger hit counter
-                        if(b.getCurrentTriggers() >= b.getRequiredTriggers()){ //Check if the bucket has been triggered
-                            d.addHit(); //Add a hit to the discount
-                            b.reset(); //Then, reset the bucket hit count
-                            if(d.getCurrentHits() >= d.getCondition()){ //check if the discount has been triggered
-                                d.reset(); //If so, reset the discount hit count
-                                Platform.runLater(() ->{
-                                    ms.addItemToSale(d); //Add the discount to the sale.
-                                });
+                        //t.resetQuantity(); //Then reset the trigger hit counter
+                        if (b.getCurrentTriggers() >= b.getRequiredTriggers()) { //Check if the bucket has been triggered
+                            if (!b.isRequiredTrigger()) {
+                                d.addHit();
+                            }
+                            //b.reset(); //Then, reset the bucket hit count
+                            if (d.getCurrentHits() >= d.getCondition()) { //Check if the discount has been triggered
+                                if (d.checkRequiredTriggers()) { //Check if the required buckets have been activated.
+                                    d.reset(); //If so, reset the discount hit count
+                                    Platform.runLater(() -> {
+                                        ms.addItemToSale(d); //Add the discount to the sale.
+                                    });
+                                }
                             }
                         }
                     }
@@ -54,5 +59,17 @@ public class DiscountChecker implements ProductListener {
                 }
             }
         }
+    }
+
+    @Override
+    public void killListener() {
+        d.getBuckets().stream().map((b) -> {
+            b.reset();
+            return b;
+        }).forEachOrdered((b) -> {
+            b.getTriggers().forEach((t) -> {
+                t.resetQuantity();
+            });
+        });
     }
 }
