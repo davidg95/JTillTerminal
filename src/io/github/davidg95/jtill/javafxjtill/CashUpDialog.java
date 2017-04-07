@@ -25,7 +25,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import io.github.davidg95.JTill.jtill.DataConnect;
+import io.github.davidg95.JTill.jtill.*;
 
 /**
  *
@@ -36,6 +36,7 @@ public class CashUpDialog extends Stage {
     private static Stage dialog;
 
     private final DataConnect dc;
+    private final Till till;
 
     private Label cashLabel;
     private TextField cashValue;
@@ -46,16 +47,17 @@ public class CashUpDialog extends Stage {
     private TextField differenceField;
     private Button close;
 
-    public CashUpDialog(Window parent, DataConnect dc) {
+    public CashUpDialog(Window parent, DataConnect dc, Till t) {
         this.dc = dc;
+        this.till = t;
         init();
         setTitle("Cash Up");
         initOwner(parent);
         initModality(Modality.APPLICATION_MODAL);
     }
 
-    public static void showDialog(Window parent, DataConnect dc) {
-        dialog = new CashUpDialog(parent, dc);
+    public static void showDialog(Window parent, DataConnect dc, Till t) {
+        dialog = new CashUpDialog(parent, dc, t);
         dialog.showAndWait();
     }
 
@@ -174,7 +176,7 @@ public class CashUpDialog extends Stage {
         declare.setOnAction((ActionEvent event) -> {
             try {
                 cashValue.setDisable(true);
-                BigDecimal takings = dc.getTillTakings(JavaFXJTill.NAME);
+                BigDecimal takings = dc.getTillTakings(till.getId());
                 takings = takings.setScale(2);
                 BigDecimal valueCounted = new BigDecimal(cashValue.getText());
                 valueCounted = valueCounted.setScale(2);

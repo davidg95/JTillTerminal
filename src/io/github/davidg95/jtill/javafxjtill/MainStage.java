@@ -63,6 +63,7 @@ public class MainStage extends Stage implements GUIInterface {
     private static final Logger LOG = Logger.getGlobal();
 
     private Staff staff;
+    private Till till;
     private Sale sale;
     private Sale lastSale;
     private int age;
@@ -151,10 +152,9 @@ public class MainStage extends Stage implements GUIInterface {
         super();
         this.dc = dc;
         if (staff == null) {
-            this.sale = new Sale(JavaFXJTill.NAME, 0);
-
+            this.sale = new Sale(0, 0);
         } else {
-            this.sale = new Sale(JavaFXJTill.NAME, staff.getId());
+            this.sale = new Sale(0, staff.getId());
         }
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
@@ -206,7 +206,12 @@ public class MainStage extends Stage implements GUIInterface {
         if (dc instanceof ServerConnection) {
             ServerConnection sc = (ServerConnection) dc;
             LOG.log(Level.INFO, "Attempting connection to the server on IP address {0}", JavaFXJTill.SERVER);
-            sc.connect(JavaFXJTill.SERVER, JavaFXJTill.PORT, JavaFXJTill.NAME);
+            till = sc.connect(JavaFXJTill.SERVER, JavaFXJTill.PORT, JavaFXJTill.NAME);
+            if (staff == null) {
+                this.sale = new Sale(till.getId(), 0);
+            } else {
+                this.sale = new Sale(till.getId(), staff.getId());
+            }
         }
     }
 
@@ -880,7 +885,7 @@ public class MainStage extends Stage implements GUIInterface {
                 LOG.log(Level.INFO, "Submitting all sales to the server");
                 sendSalesToServer();
                 SaleCache.getInstance().clearAll();
-                CashUpDialog.showDialog(this, dc);
+                CashUpDialog.showDialog(this, dc, till);
                 clearLoginScreen();
                 logoff();
             } else {
@@ -1300,9 +1305,9 @@ public class MainStage extends Stage implements GUIInterface {
      */
     private void newSale() {
         if (staff == null) {
-            sale = new Sale(JavaFXJTill.NAME, 0);
+            sale = new Sale(till.getId(), 0);
         } else {
-            sale = new Sale(JavaFXJTill.NAME, staff.getId());
+            sale = new Sale(till.getId(), staff.getId());
         }
         sale.setCustomer(1);
         List<Discount> discounts = DiscountCache.getInstance().getAllDiscounts();

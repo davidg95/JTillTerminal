@@ -118,7 +118,7 @@ public class DummyData implements DataConnect {
     }
 
     @Override
-    public BigDecimal getTillTakings(String terminal) throws IOException, SQLException {
+    public BigDecimal getTillTakings(int terminal) throws IOException, SQLException {
         return BigDecimal.ZERO;
     }
 
@@ -995,6 +995,11 @@ public class DummyData implements DataConnect {
 
     @Override
     public DiscountBucket updateBucket(DiscountBucket b) throws IOException, SQLException, JTillException {
+        return null;
+    }
+
+    @Override
+    public List<Sale> getUncachedTillSales(int id) throws IOException, JTillException {
         return null;
     }
 
