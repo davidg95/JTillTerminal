@@ -95,8 +95,8 @@ public class DummyData implements DataConnect {
 
         screens.add(sc);
 
-        TillButton b1 = new TillButton("Cheese", p2, sc, 0, 1);
-        TillButton b2 = new TillButton("Open", p1, sc, 0, 2);
+        TillButton b1 = new TillButton("Cheese", 2, 1, 0, 1);
+        TillButton b2 = new TillButton("Open", 1, 1, 0, 2);
 
         buttons.add(b1);
         buttons.add(b2);
@@ -684,7 +684,7 @@ public class DummyData implements DataConnect {
     public List<TillButton> getButtonsOnScreen(Screen s) throws IOException, SQLException, ScreenNotFoundException {
         List<TillButton> bons = new ArrayList<>();
         for (TillButton b : buttons) {
-            if (b.getScreen().equals(s)) {
+            if (b.getScreen()== s.getId()) {
                 bons.add(b);
             }
         }

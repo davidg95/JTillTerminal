@@ -1478,10 +1478,14 @@ public class MainStage extends Stage implements GUIInterface {
                 button.prefWidthProperty().bind(grid.widthProperty().divide(5));
                 button.prefHeightProperty().bind(grid.heightProperty().divide(10));
                 button.setOnAction((ActionEvent e) -> {
-                    Item i = b.getItem().clone();
-                    Platform.runLater(() -> {
-                        onProductButton(i);
-                    });
+                    try {
+                        final Item i = dc.getProduct(b.getItem()); //Get the item for the product.
+                        Platform.runLater(() -> {
+                            onProductButton(i);
+                        });
+                    } catch (IOException | ProductNotFoundException | SQLException ex) {
+                        Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 });
                 grid.add(button, xPos, yPos);
             }
