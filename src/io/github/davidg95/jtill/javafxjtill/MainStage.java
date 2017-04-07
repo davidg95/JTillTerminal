@@ -257,7 +257,7 @@ public class MainStage extends Stage implements GUIInterface {
                     Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            DiscountCache.getInstance().setDiscounts(discounts, this, sale);
+            DiscountCache.getInstance().setDiscounts(discounts);
             LOG.log(Level.INFO, "Loading screen and button configurations from the server");
             List<Screen> screens = dc.getAllScreens();
             addScreens(screens, screenPane);
@@ -1338,6 +1338,12 @@ public class MainStage extends Stage implements GUIInterface {
                 p = dc.getProductByBarcode(barcode);
                 LOG.log(Level.INFO, "Product was found on server");
                 ProductCache.getInstance().addProductToCache(p);
+                try {
+                    final Plu pl = dc.getPlu(p.getPlu());
+                    ProductCache.getInstance().addPluToCache(pl);
+                } catch (JTillException ex1) {
+                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex1);
+                }
             }
             addItemToSale(p);
         } catch (IOException | ProductNotFoundException | SQLException ex) {
