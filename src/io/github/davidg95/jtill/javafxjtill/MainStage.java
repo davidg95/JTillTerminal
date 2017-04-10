@@ -6,7 +6,6 @@
 package io.github.davidg95.jtill.javafxjtill;
 
 import io.github.davidg95.JTill.jtill.ProductEvent;
-import io.github.davidg95.JTill.jtill.ProductListener;
 import io.github.davidg95.JTill.jtill.*;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -769,7 +768,7 @@ public class MainStage extends Stage implements GUIInterface {
         addCustomer.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
                 Platform.runLater(() -> {
-                    if (sale.getCustomer() != 0) {
+                    if (sale.getCustomer() != 1) {
                         setCustomer(null);
                         chargeAccount.setDisable(true);
                         addCustomer.setText("Add Customer");
@@ -1158,12 +1157,13 @@ public class MainStage extends Stage implements GUIInterface {
             saleCustomer.setText(c.getName());
             addCustomer.setText("Remove Customer");
             chargeAccount.setDisable(false);
+            sale.setCustomer(c.getId());
         } else {
             saleCustomer.setText("No Customer");
             addCustomer.setText("Add Customer");
             chargeAccount.setDisable(true);
+            sale.setCustomer(1);
         }
-        sale.setCustomer(c.getId());
     }
 
     private void addMoney(PaymentItem.PaymentType type, BigDecimal val) {
@@ -1212,17 +1212,19 @@ public class MainStage extends Stage implements GUIInterface {
         try {
             Sale s = dc.addSale(sale);
             LOG.log(Level.INFO, "Sale {0} sent to server", s.getId());
-            if (YesNoDialog.showDialog(this, "Email Receipt", "Email Customer Receipt?") == YesNoDialog.YES) {
-                if (sale.getCustomer() != 0) {
-                    try {
-                        final Customer c = dc.getCustomer(sale.getCustomer());
-                        dc.emailReceipt(c.getEmail(), sale);
-                    } catch (CustomerNotFoundException ex) {
-                        this.showMessage("Email", ex.getMessage());
+            if (dc.getSetting("ASK_EMAIL_RECEIPT").equals("TRUE")) {
+                if (YesNoDialog.showDialog(this, "Email Receipt", "Email Customer Receipt?") == YesNoDialog.YES) {
+                    if (sale.getCustomer() != 0) {
+                        try {
+                            final Customer c = dc.getCustomer(sale.getCustomer());
+                            dc.emailReceipt(c.getEmail(), sale);
+                        } catch (CustomerNotFoundException ex) {
+                            this.showMessage("Email", ex.getMessage());
+                        }
+                    } else {
+                        String email = EntryDialog.show(this, "Email Receipt", "Enter email");
+                        dc.emailReceipt(email, sale);
                     }
-                } else {
-                    String email = EntryDialog.show(this, "Email Receipt", "Enter email");
-                    dc.emailReceipt(email, sale);
                 }
             }
         } catch (IOException | SQLException ex) {
@@ -1311,10 +1313,10 @@ public class MainStage extends Stage implements GUIInterface {
         }
         sale.setCustomer(1);
         List<Discount> discounts = DiscountCache.getInstance().getAllDiscounts();
-        for (Discount d : discounts) {
-            DiscountChecker checker = new DiscountChecker(this, d);
+        //Create the discount checkers for the discounts.
+        discounts.stream().map((d) -> new DiscountChecker(this, d)).forEachOrdered((checker) -> {
             sale.addListener(checker);
-        }
+        });
         obTable = FXCollections.observableArrayList();
         obPayments = FXCollections.observableArrayList();
         paymentsList.setItems(obPayments);
@@ -1334,6 +1336,7 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     private void getProductByBarcode(String barcode) {
+        this.barcode.setText("");
         try {
             Product p;
             try {
@@ -1405,7 +1408,9 @@ public class MainStage extends Stage implements GUIInterface {
                 //If it is a percentage discounts then the price to take of must be calculated
                 d.setPrice(sale.getTotal().multiply(new BigDecimal(Double.toString(d.getPercentage() / 100)).negate()));
             } else {
-                d.setPrice(d.getPrice().negate());
+                if (d.getPrice().doubleValue() > 0) {
+                    d.setPrice(d.getPrice().negate());
+                }
             }
         }
         boolean inSale = sale.addItem(i, itemQuantity); //Add the item to the sale

@@ -38,12 +38,12 @@ public class DummyData implements DataConnect {
 
     private int products_id = 1;
     private int customers_id = 1;
-    private int categories_id = 1;
-    private int taxes_id = 1;
-    private int staff_id = 1;
+    private final int categories_id = 1;
+    private final int taxes_id = 1;
+    private final int staff_id = 1;
     private int plus_id = 1;
     private int sales_id = 1;
-    private int discount_id = 1;
+    private final int discount_id = 1;
 
     private final List<Staff> loggedIn;
 
@@ -238,11 +238,9 @@ public class DummyData implements DataConnect {
     @Override
     public List<Product> productLookup(String terms) throws IOException, SQLException {
         List<Product> pl = new ArrayList<>();
-        for (Product p : products) {
-            if (p.getName().toLowerCase().contains(terms.toLowerCase())) {
-                pl.add(p);
-            }
-        }
+        products.stream().filter((p) -> (p.getName().toLowerCase().contains(terms.toLowerCase()))).forEachOrdered((p) -> {
+            pl.add(p);
+        });
         return pl;
     }
 
@@ -343,11 +341,9 @@ public class DummyData implements DataConnect {
     @Override
     public List<Customer> getCustomerByName(String name) throws IOException, CustomerNotFoundException, SQLException {
         List<Customer> cl = new ArrayList<>();
-        for (Customer c : customers) {
-            if (c.getName().toLowerCase().contains(name.toLowerCase())) {
-                cl.add(c);
-            }
-        }
+        customers.stream().filter((c) -> (c.getName().toLowerCase().contains(name.toLowerCase()))).forEachOrdered((c) -> {
+            cl.add(c);
+        });
         return cl;
     }
 
@@ -370,11 +366,9 @@ public class DummyData implements DataConnect {
     @Override
     public List<Customer> customerLookup(String terms) throws IOException, SQLException {
         List<Customer> cl = new ArrayList<>();
-        for (Customer c : customers) {
-            if (c.getName().toLowerCase().contains(terms.toLowerCase())) {
-                cl.add(c);
-            }
-        }
+        customers.stream().filter((c) -> (c.getName().toLowerCase().contains(terms.toLowerCase()))).forEachOrdered((c) -> {
+            cl.add(c);
+        });
         return cl;
     }
 
@@ -683,11 +677,9 @@ public class DummyData implements DataConnect {
     @Override
     public List<TillButton> getButtonsOnScreen(Screen s) throws IOException, SQLException, ScreenNotFoundException {
         List<TillButton> bons = new ArrayList<>();
-        for (TillButton b : buttons) {
-            if (b.getScreen()== s.getId()) {
-                bons.add(b);
-            }
-        }
+        buttons.stream().filter((b) -> (b.getScreen()== s.getId())).forEachOrdered((b) -> {
+            bons.add(b);
+        });
         return bons;
     }
 
@@ -1000,6 +992,11 @@ public class DummyData implements DataConnect {
 
     @Override
     public List<Sale> getUncachedTillSales(int id) throws IOException, JTillException {
+        return null;
+    }
+
+    @Override
+    public Product addProductAndPlu(Product p, Plu pl) throws IOException, SQLException {
         return null;
     }
 
