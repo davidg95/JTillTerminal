@@ -73,6 +73,7 @@ public class MainStage extends Stage implements GUIInterface {
     private String symbol;
 
     public static boolean printOk;
+    private boolean refundMode;
 
     private final String stylesheet;
 
@@ -112,6 +113,7 @@ public class MainStage extends Stage implements GUIInterface {
     private Button assisstance;
     private Label mainVersion;
     private Label alertMessage;
+    private Label mainRefund;
 
     //Payment Scene Components
     private Scene paymentScene;
@@ -143,6 +145,8 @@ public class MainStage extends Stage implements GUIInterface {
     private Button paymentLogoff;
     private Button submitSales;
     private Button clockOff;
+    private Button refundButton;
+    private Label paymentRefund;
 
     private final double SCREEN_WIDTH = javafx.stage.Screen.getPrimary().getBounds().getWidth();
     private final double SCREEN_HEIGHT = javafx.stage.Screen.getPrimary().getBounds().getHeight();
@@ -446,6 +450,11 @@ public class MainStage extends Stage implements GUIInterface {
         alertMessage.setMinSize(0, 0);
         alertMessage.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
+        mainRefund = new Label();
+        mainRefund.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        mainRefund.setMinSize(0, 0);
+        mainRefund.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
         mainPane.add(staffLabel, 0, 0, 2, 1);
         mainPane.add(mainVersion, 3, 0, 3, 1);
         mainPane.add(time, 8, 0, 2, 1);
@@ -463,6 +472,7 @@ public class MainStage extends Stage implements GUIInterface {
         mainPane.add(lookup, 1, 14, 1, 2);
         mainPane.add(assisstance, 3, 14, 1, 2);
         mainPane.add(alertMessage, 4, 14, 4, 2);
+        mainPane.add(mainRefund, 7, 0);
 
         for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();
@@ -935,6 +945,18 @@ public class MainStage extends Stage implements GUIInterface {
             }
         });
 
+        refundButton = new Button("Refund");
+        refundButton.setId("paymentMethods");
+        refundButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        refundButton.setOnAction((ActionEvent event) -> {
+            setRefund(!refundMode);
+        });
+
+        paymentRefund = new Label();
+        paymentRefund.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        paymentRefund.setMinSize(0, 0);
+        paymentRefund.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
         paymentPane.add(paymentLoggedIn, 0, 0, 2, 1);
         paymentPane.add(paymentVersion, 3, 0, 3, 1);
         paymentPane.add(paymentTime, 8, 0, 2, 1);
@@ -961,6 +983,8 @@ public class MainStage extends Stage implements GUIInterface {
         paymentPane.add(paymentMessages, 4, 14, 4, 2);
         paymentPane.add(clockOff, 1, 14, 1, 2);
         paymentPane.add(paymentLogoff, 0, 14, 1, 2);
+        paymentPane.add(refundButton, 0, 10, 1, 2);
+        paymentPane.add(paymentRefund, 7, 0);
 
         for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();
@@ -1290,6 +1314,7 @@ public class MainStage extends Stage implements GUIInterface {
      */
     private void logoff() {
         try {
+            setRefund(false);
             dc.tillLogout(staff);
             if (!sale.getSaleItems().isEmpty()) {
                 dc.suspendSale(sale, staff);
@@ -1363,27 +1388,29 @@ public class MainStage extends Stage implements GUIInterface {
     public void addItemToSale(Item i) {
         if (i instanceof Product) { //If the item is a product
             Product p = (Product) i;
-            sale.notifyAllListeners(new ProductEvent(p), itemQuantity);
             try {
-                Category cat = dc.getCategory(p.getCategory());
-                if (cat.isTimeRestrict()) { //Check for time restrictions
-                    Calendar c = Calendar.getInstance();
-                    long now = c.getTimeInMillis();
-                    c.set(Calendar.HOUR_OF_DAY, 1);
-                    c.set(Calendar.MINUTE, 0);
-                    c.set(Calendar.SECOND, 0);
-                    c.set(Calendar.MILLISECOND, 0);
-                    long passed = now - c.getTimeInMillis();
-                    if (!cat.isSellTime(new Time(passed))) { //If the item can not be sold now due to the time
-                        MessageDialog.showMessage(this, "Time Restriction", "This item cannot be sold now");
-                        return;
+                if (!refundMode) {
+                    sale.notifyAllListeners(new ProductEvent(p), itemQuantity);
+                    Category cat = dc.getCategory(p.getCategory());
+                    if (cat.isTimeRestrict()) { //Check for time restrictions
+                        Calendar c = Calendar.getInstance();
+                        long now = c.getTimeInMillis();
+                        c.set(Calendar.HOUR_OF_DAY, 1);
+                        c.set(Calendar.MINUTE, 0);
+                        c.set(Calendar.SECOND, 0);
+                        c.set(Calendar.MILLISECOND, 0);
+                        long passed = now - c.getTimeInMillis();
+                        if (!cat.isSellTime(new Time(passed))) { //If the item can not be sold now due to the time
+                            MessageDialog.showMessage(this, "Time Restriction", "This item cannot be sold now");
+                            return;
+                        }
                     }
-                }
-                if (cat.getMinAge() > age) { //Check for age restrictions
-                    if (YesNoDialog.showDialog(this, "Age Restriction", "Is customer over " + cat.getMinAge() + "?") == YesNoDialog.NO) {
-                        return;
+                    if (cat.getMinAge() > age) { //Check for age restrictions
+                        if (YesNoDialog.showDialog(this, "Age Restriction", "Is customer over " + cat.getMinAge() + "?") == YesNoDialog.NO) {
+                            return;
+                        }
+                        age = cat.getMinAge();
                     }
-                    age = cat.getMinAge();
                 }
                 if (p.isOpen()) { //Check if the product is open price
                     int value;
@@ -1397,6 +1424,10 @@ public class MainStage extends Stage implements GUIInterface {
                         return; //Exit the method if nothing was entered
                     }
                     p.setPrice(new BigDecimal(Double.toString((double) value / 100)));
+                }
+
+                if (refundMode) {
+                    p.setPrice(p.getPrice().negate());
                 }
             } catch (IOException | SQLException | CategoryNotFoundException ex) {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
@@ -1424,6 +1455,7 @@ public class MainStage extends Stage implements GUIInterface {
         setTotalLabel();
         itemQuantity = 1;
         quantity.setText("Quantity: 1");
+        setRefund(false);
     }
 
     private void setTotalLabel() {
@@ -1436,6 +1468,17 @@ public class MainStage extends Stage implements GUIInterface {
         total.setText("Total: " + symbol + df.format(sale.getTotal()));
         paymentTotal.setText("Total: " + symbol + df.format(sale.getTotal()));
         amountDue = sale.getTotal();
+    }
+
+    private void setRefund(boolean set) {
+        refundMode = set;
+        if (refundMode) {
+            mainRefund.setText("REFUND");
+            paymentRefund.setText("REFUND");
+        } else {
+            mainRefund.setText("");
+            paymentRefund.setText("");
+        }
     }
 
     private void addScreens(List<Screen> screens, GridPane pane) {
