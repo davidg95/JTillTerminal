@@ -50,6 +50,11 @@ and open the template in the editor.
 
 #productButton{
     -fx-background-color: #2a5be7;
+    -fx-text-fill: white;
+}
+
+#productsgrid{
+    -fx-background-color: transparent;
 }
 
 #productButton:pressed{

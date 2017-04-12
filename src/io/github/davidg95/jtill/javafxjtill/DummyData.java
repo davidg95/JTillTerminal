@@ -91,12 +91,12 @@ public class DummyData implements DataConnect {
 
         staff.add(s);
 
-        Screen sc = new Screen("Main", 1, 0, 1);
+        Screen sc = new Screen("Main", 1, 0, 1, 5, 10);
 
         screens.add(sc);
 
-        TillButton b1 = new TillButton("Cheese", 2, 1, 0, 1);
-        TillButton b2 = new TillButton("Open", 1, 1, 0, 2);
+        TillButton b1 = new TillButton("Cheese", 2, 1, 0, 1, 1, 1, 1, 1);
+        TillButton b2 = new TillButton("Open", 1, 1, 0, 2, 1, 1, 2, 1);
 
         buttons.add(b1);
         buttons.add(b2);

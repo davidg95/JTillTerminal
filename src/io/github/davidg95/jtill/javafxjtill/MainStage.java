@@ -267,8 +267,8 @@ public class MainStage extends Stage implements GUIInterface {
             }
             DiscountCache.getInstance().setDiscounts(discounts);
             LOG.log(Level.INFO, "Loading screen and button configurations from the server");
-            List<Screen> screens = dc.getAllScreens();
-            addScreens(screens, screenPane);
+            List<Screen> screens = dc.getAllScreens(); //Get all the screens from the server.
+            addScreens(screens, screenPane); //Add the screens to the main interface.
         } catch (IOException | SQLException ex) {
             MessageDialog.showMessage(this, "Error", ex.getMessage());
         }
@@ -293,6 +293,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         buttonPanes = new ArrayList<>();
         buttonPane = new StackPane();
+        buttonPane.setId("productsrid");
         screenPane = new GridPane();
         screenButtonGroup = new ToggleGroup();
         buttonPane.getChildren().clear();
@@ -1488,15 +1489,14 @@ public class MainStage extends Stage implements GUIInterface {
         LOG.log(Level.INFO, "Got {0} screens from the server", screens.size());
 
         for (Screen s : screens) {
-            GridPane grid = new GridPane();
-            ToggleButton button = new ToggleButton(s.getName());
-            button.setToggleGroup(screenButtonGroup);
+            ToggleButton button = new ToggleButton(s.getName()); //Create a new toggle button for the screen.
+            button.setToggleGroup(screenButtonGroup); //Add the toggle button to the screens button group.
             button.setId("screenButton");
             button.prefWidthProperty().bind(pane.widthProperty().divide(4));
             button.prefHeightProperty().bind(pane.heightProperty().divide(2));
-            pane.add(button, xPos, yPos);
-            setScreenButtons(s, grid);
-            buttonPanes.add(grid);
+            pane.add(button, xPos, yPos); //Add the toggle button the the screen buttons pane.
+            GridPane grid = setScreenButtons(s); //Set the buttons for that screen onto a new grid pane.
+            buttonPanes.add(grid); //Add the new grid pane to the main grid pane container.
             button.setOnAction((ActionEvent event) -> {
                 buttonPane.getChildren().clear();
                 buttonPane.getChildren().add(grid);
@@ -1509,51 +1509,73 @@ public class MainStage extends Stage implements GUIInterface {
         }
     }
 
-    private void setScreenButtons(Screen s, GridPane pane) {
+    private GridPane setScreenButtons(Screen s) {
+        GridPane grid = new GridPane(); //Create a new GridPane for this screen.
+        grid.setId("productsgrid");
         try {
             LOG.log(Level.INFO, "Getting buttons for {0} screen", s.getName());
-            List<TillButton> buttons = dc.getButtonsOnScreen(s);
-            addButtons(buttons, pane);
-        } catch (IOException | SQLException | ScreenNotFoundException ex) {
-            showErrorAlert(ex);
-        }
-    }
+            List<TillButton> buttons = dc.getButtonsOnScreen(s); //Get all the buttons for this screen.
 
-    private void addButtons(List<TillButton> buttons, GridPane grid) {
-        int xPos = 0;
-        int yPos = 0;
+            LOG.log(Level.INFO, "Got {0} buttons for this screen", buttons.size());
 
-        LOG.log(Level.INFO, "Got {0} buttons for this screen", buttons.size());
-
-        for (TillButton b : buttons) {
-            if (b.getName().equals("[SPACE]")) {
-                Box box = new Box();
-                box.widthProperty().bind(grid.widthProperty().divide(5));
-                box.heightProperty().bind(grid.heightProperty().divide(10));
-                grid.add(box, xPos, yPos);
-            } else {
-                Button button = new Button(b.getName());
-                button.setId("productButton");
-                button.prefWidthProperty().bind(grid.widthProperty().divide(5));
-                button.prefHeightProperty().bind(grid.heightProperty().divide(10));
-                button.setOnAction((ActionEvent e) -> {
+            for (TillButton b : buttons) {
+                if (b.getName().equals("[SPACE]")) { //If the button is a space, add en empty box.
+                    Pane box = new Pane();
+                    box.setId("productsgrid");
+                    box.minWidthProperty().bind(grid.widthProperty().divide(s.getWidth()).multiply(b.getWidth()));
+                    box.minHeightProperty().bind(grid.heightProperty().divide(s.getHeight()).multiply(b.getHeight()));
+                    box.maxWidthProperty().bind(grid.widthProperty().divide(s.getWidth()).multiply(b.getWidth()));
+                    box.maxHeightProperty().bind(grid.heightProperty().divide(s.getHeight()).multiply(b.getHeight()));
+                    grid.add(box, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight());
+                } else { //If it is a button add a button.
+//                    Button button = new Button(b.getName()); //Create the button for this button.
+//                    button.setId("productButton");
+//                    button.prefWidthProperty().bind(grid.widthProperty().divide(s.getWidth()).multiply(b.getWidth()));
+//                    button.prefHeightProperty().bind(grid.heightProperty().divide(s.getHeight()).multiply(b.getHeight()));
+//                    int id = b.getItem();
+//                    try {
+//                        final Item i = dc.getProduct(id); //Get the item associated with this product.
+//                        button.setOnAction((ActionEvent e) -> {
+//                            Platform.runLater(() -> {
+//                                onProductButton(i); //When clicked, add the item to the sale.
+//                            });
+//                        });
+//                        grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
+//                    } catch (IOException | ProductNotFoundException | SQLException ex) {
+//                        Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+                }
+            }
+            for (TillButton b : buttons) {
+                if (b.getName().equals("[SPACE]")) { //If the button is a space, add en empty box.
+//                    Pane box = new Pane();
+//                    box.setId("productsgrid");
+//                    box.minWidthProperty().bind(grid.widthProperty().divide(s.getWidth()).multiply(b.getWidth()));
+//                    box.minHeightProperty().bind(grid.heightProperty().divide(s.getHeight()).multiply(b.getHeight()));
+//                    box.maxWidthProperty().bind(grid.widthProperty().divide(s.getWidth()).multiply(b.getWidth()));
+//                    box.maxHeightProperty().bind(grid.heightProperty().divide(s.getHeight()).multiply(b.getHeight()));
+//                    grid.add(box, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight());
+                } else { //If it is a button add a button.
+                    Button button = new Button(b.getName()); //Create the button for this button.
+                    button.setId("productButton");
+                    button.prefWidthProperty().bind(grid.widthProperty().divide(s.getWidth()).multiply(b.getWidth()));
+                    button.prefHeightProperty().bind(grid.heightProperty().divide(s.getHeight()).multiply(b.getHeight()));
+                    int id = b.getItem();
                     try {
-                        final Item i = dc.getProduct(b.getItem()); //Get the item for the product.
-                        Platform.runLater(() -> {
-                            onProductButton(i);
+                        final Item i = dc.getProduct(id); //Get the item associated with this product.
+                        button.setOnAction((ActionEvent e) -> {
+                            Platform.runLater(() -> {
+                                onProductButton(i); //When clicked, add the item to the sale.
+                            });
                         });
+                        grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
                     } catch (IOException | ProductNotFoundException | SQLException ex) {
                         Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                });
-                grid.add(button, xPos, yPos);
+                }
             }
-
-            xPos++;
-            if (xPos == 5) {
-                xPos = 0;
-                yPos++;
-            }
+        } catch (IOException | SQLException | ScreenNotFoundException ex) {
+            showErrorAlert(ex);
         }
 
         for (int i = 1; i <= 5; i++) {
@@ -1569,6 +1591,7 @@ public class MainStage extends Stage implements GUIInterface {
             row.setVgrow(Priority.ALWAYS);
             mainPane.getRowConstraints().add(row);
         }
+        return grid;
     }
 
     private void onProductButton(Item i) {
