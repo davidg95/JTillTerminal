@@ -1518,6 +1518,7 @@ public class MainStage extends Stage implements GUIInterface {
 
             LOG.log(Level.INFO, "Got {0} buttons for this screen", buttons.size());
 
+            //Add the spaces first.
             for (TillButton b : buttons) {
                 if (b.getName().equals("[SPACE]")) { //If the button is a space, add en empty box.
                     Pane box = new Pane();
@@ -1528,33 +1529,11 @@ public class MainStage extends Stage implements GUIInterface {
                     box.maxHeightProperty().bind(grid.heightProperty().divide(s.getHeight()).multiply(b.getHeight()));
                     grid.add(box, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight());
                 } else { //If it is a button add a button.
-//                    Button button = new Button(b.getName()); //Create the button for this button.
-//                    button.setId("productButton");
-//                    button.prefWidthProperty().bind(grid.widthProperty().divide(s.getWidth()).multiply(b.getWidth()));
-//                    button.prefHeightProperty().bind(grid.heightProperty().divide(s.getHeight()).multiply(b.getHeight()));
-//                    int id = b.getItem();
-//                    try {
-//                        final Item i = dc.getProduct(id); //Get the item associated with this product.
-//                        button.setOnAction((ActionEvent e) -> {
-//                            Platform.runLater(() -> {
-//                                onProductButton(i); //When clicked, add the item to the sale.
-//                            });
-//                        });
-//                        grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
-//                    } catch (IOException | ProductNotFoundException | SQLException ex) {
-//                        Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
                 }
             }
+            //Add the buttons on top.
             for (TillButton b : buttons) {
                 if (b.getName().equals("[SPACE]")) { //If the button is a space, add en empty box.
-//                    Pane box = new Pane();
-//                    box.setId("productsgrid");
-//                    box.minWidthProperty().bind(grid.widthProperty().divide(s.getWidth()).multiply(b.getWidth()));
-//                    box.minHeightProperty().bind(grid.heightProperty().divide(s.getHeight()).multiply(b.getHeight()));
-//                    box.maxWidthProperty().bind(grid.widthProperty().divide(s.getWidth()).multiply(b.getWidth()));
-//                    box.maxHeightProperty().bind(grid.heightProperty().divide(s.getHeight()).multiply(b.getHeight()));
-//                    grid.add(box, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight());
                 } else { //If it is a button add a button.
                     Button button = new Button(b.getName()); //Create the button for this button.
                     button.setId("productButton");

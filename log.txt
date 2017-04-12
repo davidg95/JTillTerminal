@@ -1,24 +1,20 @@
-JTill log Wed Apr 12 16:41:15 BST 2017
-[16:41:15] [INFO] Starting JTill Terminal
-[16:41:15] [INFO] Initalising
-[16:41:17] [INFO] Loading properties file
-[16:41:17] [INFO] Attempting connection to the server on IP address {0}
-[16:41:17] [INFO] Max sales set to {0}
-[16:41:17] [INFO] Set discounts in cache
-[16:41:17] [INFO] Loading screen and button configurations from the server
-[16:41:17] [INFO] Got {0} screens from the server
-[16:41:18] [INFO] Getting buttons for {0} screen
-[16:41:18] [INFO] Got {0} buttons for this screen
-[16:41:18] [INFO] Getting buttons for {0} screen
-[16:41:18] [INFO] Got {0} buttons for this screen
-[16:41:20] [INFO] Getting all discounts from cache
-[16:41:33] [INFO] Item has been added to a sale
-[16:41:35] [INFO] Item has been added to a sale
-[16:41:38] [INFO] Item has been added to a sale
-[16:41:39] [INFO] Sale {0} sent to server
-[16:41:39] [INFO] Getting all discounts from cache
-[16:41:42] [INFO] Item has been added to a sale
-[16:41:43] [INFO] Sale {0} sent to server
-[16:41:43] [INFO] Getting all discounts from cache
-[16:42:02] [INFO] Item has been added to a sale
-[16:42:19] [INFO] Getting all discounts from cache
+JTill log Wed Apr 12 17:02:47 BST 2017
+[17:02:47] [INFO] Starting JTill Terminal
+[17:02:47] [INFO] Initalising
+[17:02:50] [INFO] Loading properties file
+[17:02:50] [INFO] Attempting connection to the server on IP address {0}
+[17:02:50] [INFO] Max sales set to {0}
+[17:02:50] [INFO] Set discounts in cache
+[17:02:50] [INFO] Loading screen and button configurations from the server
+[17:02:50] [INFO] Got {0} screens from the server
+[17:02:50] [INFO] Getting buttons for {0} screen
+[17:02:50] [INFO] Got {0} buttons for this screen
+[17:02:50] [INFO] Getting buttons for {0} screen
+[17:02:50] [INFO] Got {0} buttons for this screen
+[17:02:51] [INFO] Getting all discounts from cache
+[17:02:54] [INFO] Item has been added to a sale
+[17:02:54] [INFO] Item has been added to a sale
+[17:02:58] [INFO] Item has been added to a sale
+[17:03:01] [INFO] Item has been added to a sale
+[17:03:04] [INFO] Item has been added to a sale
+[17:03:07] [INFO] Item has been added to a sale

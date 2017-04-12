@@ -130,7 +130,7 @@ and open the template in the editor.
 
 .table-view .table-cell{
     -fx-font-family: "Tahoma";
-    -fx-font-size:20px;
+    -fx-font-size: 20px;
     -fx-font-color: black;
 }
 
@@ -151,14 +151,14 @@ and open the template in the editor.
 .table-row-cell:selected {
     -fx-border-color: lightblue;
     -fx-border-width:2.0;
-    -fx-font-color: black;
+    -fx-font-fill: black;
+    -fx-background-color: darkgrey;
 }
-
 .table-row-cell:hover {
     -fx-background-color: gray;
-    -fx-font-color: black;
+    -fx-font-fill: black;
 }
 
 .table-row-cell:focused {
-    -fx-font-color: black;
+    -fx-font-fill: black;
 }
