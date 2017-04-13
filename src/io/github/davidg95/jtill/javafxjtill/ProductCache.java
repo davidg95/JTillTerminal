@@ -132,6 +132,23 @@ public class ProductCache {
         throw new JTillException("Plu " + id + " not found");
     }
 
+    public Plu getPluByProduct(int id) throws JTillException {
+        LOG.log(Level.INFO, "Checking for Plu for product {0}", id);
+        long stamp = pLock.readLock();
+        try {
+            for (Plu p : plus) {
+                if (p.getId() == id) {
+                    LOG.log(Level.INFO, "Plu found in cache");
+                    return p;
+                }
+            }
+        } finally {
+            pLock.unlockRead(stamp);
+        }
+        LOG.log(Level.INFO, "Plu not found for product");
+        throw new JTillException("Plu " + id + " not found");
+    }
+
     /**
      * Searches the cache for a product matching the barcode. Will throw a
      * ProductNotfoundException if none was fonud.
@@ -147,10 +164,14 @@ public class ProductCache {
         try {
             LOG.log(Level.INFO, "Checking cache for {0}", barcode);
             for (Product p : products) {
-                final Plu plu = getPlu(p.getPlu());
-                if (plu.getCode().equals(barcode)) {
-                    LOG.log(Level.INFO, "Product found in cache");
-                    return p;
+                try {
+                    final Plu plu = getPluByProduct(p.getId());
+                    if (plu.getCode().equals(barcode)) {
+                        LOG.log(Level.INFO, "Product found in cache");
+                        return p;
+                    }
+                } catch (JTillException ex) {
+
                 }
             }
         } finally {

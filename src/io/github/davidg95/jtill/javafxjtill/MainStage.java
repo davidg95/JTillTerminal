@@ -1373,7 +1373,7 @@ public class MainStage extends Stage implements GUIInterface {
                 LOG.log(Level.INFO, "Product was found on server");
                 ProductCache.getInstance().addProductToCache(p);
                 try {
-                    final Plu pl = dc.getPlu(p.getPlu());
+                    final Plu pl = dc.getPluByProduct(p.getId());
                     ProductCache.getInstance().addPluToCache(pl);
                 } catch (JTillException ex1) {
                     Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex1);

@@ -67,8 +67,8 @@ public class DummyData implements DataConnect {
     }
 
     private void createData() {
-        Plu plu1 = new Plu(1, "124234");
-        Plu plu2 = new Plu(2, "4230348");
+        Plu plu1 = new Plu(1, "124234", 0);
+        Plu plu2 = new Plu(2, "4230348", 0);
 
         plus.add(plu1);
         plus.add(plu2);
@@ -81,8 +81,8 @@ public class DummyData implements DataConnect {
 
         taxes.add(t1);
 
-        Product p1 = new Product("Open", "Open", 0, 1, 1, "None", 1, 1, true, 1);
-        Product p2 = new Product("Cheese", "Cheese", 0, 1, 1, "None", 1, false, new BigDecimal("5.00"), new BigDecimal("3.00"), 5, 2, 10, 2, 2);
+        Product p1 = new Product("Open", "Open", 0, 1, 1, "None", 1, true, 1);
+        Product p2 = new Product("Cheese", "Cheese", 0, 1, 1, "None", 1, false, new BigDecimal("5.00"), new BigDecimal("3.00"), 5, 10, 2, 2);
 
         products.add(p1);
         products.add(p2);
@@ -206,7 +206,7 @@ public class DummyData implements DataConnect {
     public boolean checkBarcode(String barcode) throws IOException, SQLException {
         for (Product p : products) {
             try {
-                if (getPlu(p.getPlu()).getCode().equals(barcode)) {
+                if (getPluByProduct(p.getId()).getCode().equals(barcode)) {
                     return true;
                 }
             } catch (JTillException ex) {
@@ -220,7 +220,7 @@ public class DummyData implements DataConnect {
     public Product getProductByBarcode(String barcode) throws IOException, ProductNotFoundException, SQLException {
         for (Product p : products) {
             try {
-                if (getPlu(p.getPlu()).getCode().equals(barcode)) {
+                if (getPluByProduct(p.getId()).getCode().equals(barcode)) {
                     return p;
                 }
             } catch (JTillException ex) {
@@ -677,7 +677,7 @@ public class DummyData implements DataConnect {
     @Override
     public List<TillButton> getButtonsOnScreen(Screen s) throws IOException, SQLException, ScreenNotFoundException {
         List<TillButton> bons = new ArrayList<>();
-        buttons.stream().filter((b) -> (b.getScreen()== s.getId())).forEachOrdered((b) -> {
+        buttons.stream().filter((b) -> (b.getScreen() == s.getId())).forEachOrdered((b) -> {
             bons.add(b);
         });
         return bons;
@@ -997,6 +997,11 @@ public class DummyData implements DataConnect {
 
     @Override
     public Product addProductAndPlu(Product p, Plu pl) throws IOException, SQLException {
+        return null;
+    }
+
+    @Override
+    public Plu getPluByProduct(int id) throws IOException, JTillException {
         return null;
     }
 
