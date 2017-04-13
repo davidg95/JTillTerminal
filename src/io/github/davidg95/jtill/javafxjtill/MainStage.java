@@ -1428,7 +1428,7 @@ public class MainStage extends Stage implements GUIInterface {
                 }
 
                 if (refundMode) {
-                    p.setPrice(p.getPrice().negate());
+                    itemQuantity = -itemQuantity; //If in refund mode, set the quantity to negative.
                 }
             } catch (IOException | SQLException | CategoryNotFoundException ex) {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
