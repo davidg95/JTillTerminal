@@ -1005,4 +1005,9 @@ public class DummyData implements DataConnect {
         return null;
     }
 
+    @Override
+    public List<SaleItem> searchSaleItems(int department, int category, boolean both, Date start, Date end) throws IOException, SQLException, JTillException {
+        return null;
+    }
+
 }
