@@ -9,7 +9,7 @@ and open the template in the editor.
 */
 
 .root{
-    /*-fx-background-color: #343434;*/
+    /*-fx-background-color: #a6a6a6;*/
 }
 
 .button{
@@ -36,12 +36,12 @@ and open the template in the editor.
     -fx-text-fill: black;
     -fx-font-family: "Tahoma";
     -fx-font-size: 20px;
-    -fx-background-color: linear-gradient(#999, #999);
+    -fx-background-color: linear-gradient(#e2e2e2, #bcbcbc);
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 
 #screenButton:selected{
-    -fx-background-color: linear-gradient(#777, #777);
+    -fx-background-color: linear-gradient(#bcbcbc, #e2e2e2);
 }
 
 .togglebutton:hover{
@@ -50,6 +50,46 @@ and open the template in the editor.
 
 #productButton{
     -fx-background-color: #2a5be7;
+    -fx-text-fill: white;
+}
+
+#cBlue{
+    -fx-background-color: #2a5be7;
+    -fx-text-fill: white;
+}
+
+#cRed{
+    -fx-background-color: #ff6666;
+    -fx-text-fill: white;
+}
+
+#cGreen{
+    -fx-background-color: #66ff66;
+    -fx-text-fill: black;
+}
+
+#cYellow{
+    -fx-background-color: #ffff66;
+    -fx-text-fill: black;
+}
+
+#cOrange{
+    -fx-background-color: orange;
+    -fx-text-fill: black;
+}
+
+#cPurple{
+    -fx-background-color: purple;
+    -fx-text-fill: white;
+}
+
+#cWhite{
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+#cBlack{
+    -fx-background-color: black;
     -fx-text-fill: white;
 }
 
@@ -71,6 +111,7 @@ and open the template in the editor.
 
 #red{
     -fx-background-color: red;
+    -fx-text-fill: white;
 }
 
 #red:pressed{
@@ -90,6 +131,7 @@ and open the template in the editor.
 #total{
     -fx-font-size: 28px;
     -fx-font-family: "Tahoma";
+    -fx-background-color: white;
 }
 
 #toplabel{

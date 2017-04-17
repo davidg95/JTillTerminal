@@ -41,6 +41,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import io.github.davidg95.JTill.jtill.DataConnect;
+import java.awt.Color;
 import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
 import java.text.SimpleDateFormat;
@@ -50,6 +51,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Paint;
 import javax.mail.MessagingException;
 
 /**
@@ -75,6 +77,7 @@ public class MainStage extends Stage implements GUIInterface {
     private boolean refundMode;
 
     private final String stylesheet;
+    private String backgroundStyle;
 
     //Login Scene Components
     private Scene loginScene;
@@ -161,7 +164,6 @@ public class MainStage extends Stage implements GUIInterface {
         }
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
-
     }
 
     public void initalise() {
@@ -265,6 +267,7 @@ public class MainStage extends Stage implements GUIInterface {
                     Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            backgroundStyle = dc.getSetting("TERMINAL_BACKGROUND");
             DiscountCache.getInstance().setDiscounts(discounts);
             LOG.log(Level.INFO, "Loading screen and button configurations from the server");
             List<Screen> screens = dc.getAllScreens(); //Get all the screens from the server.
@@ -510,7 +513,13 @@ public class MainStage extends Stage implements GUIInterface {
             row.setVgrow(Priority.ALWAYS);
             mainPane.getRowConstraints().add(row);
         }
-
+//        Color c = Color.decode(backgroundStyle);
+//        int r = c.getRed();
+//        int g = c.getGreen();
+//        int b = c.getBlue();
+//        int a = c.getAlpha();
+//        double opacity = a / 255.0;
+//        javafx.scene.paint.Color fxColor = javafx.scene.paint.Color.rgb(r, g, b, opacity);
         mainScene = new Scene(mainPane, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
@@ -1574,7 +1583,35 @@ public class MainStage extends Stage implements GUIInterface {
                 if (b.getName().equals("[SPACE]")) { //If the button is a space, add en empty box.
                 } else { //If it is a button add a button.
                     Button button = new Button(b.getName()); //Create the button for this button.
-                    button.setId("productButton");
+                    switch (b.getColorValue()) {
+                        case TillButton.BLUE:
+                            button.setId("cBlue");
+                            break;
+                        case TillButton.RED:
+                            button.setId("cRed");
+                            break;
+                        case TillButton.GREEN:
+                            button.setId("cGreen");
+                            break;
+                        case TillButton.YELLOW:
+                            button.setId("cYellow");
+                            break;
+                        case TillButton.ORANGE:
+                            button.setId("cOrange");
+                            break;
+                        case TillButton.PURPLE:
+                            button.setId("cPurple");
+                            break;
+                        case TillButton.WHITE:
+                            button.setId("cWhite");
+                            break;
+                        case TillButton.BLACK:
+                            button.setId("cBlack");
+                            break;
+                        default:
+                            button.setId("productButton");
+                            break;
+                    }
                     button.prefWidthProperty().bind(grid.widthProperty().divide(s.getWidth()).multiply(b.getWidth()));
                     button.prefHeightProperty().bind(grid.heightProperty().divide(s.getHeight()).multiply(b.getHeight()));
                     int id = b.getItem();

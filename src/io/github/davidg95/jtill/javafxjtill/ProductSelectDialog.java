@@ -106,6 +106,7 @@ public class ProductSelectDialog extends Stage {
         
         searchBarcode.setMinSize(100, 100);
         searchBarcode.setMaxSize(100, 100);
+        searchBarcode.setId("blue");
         HBox hSearchBarcode = new HBox(0);
         hSearchBarcode.getChildren().add(searchBarcode);
         searchBarcode.setOnAction((ActionEvent event) -> {
@@ -123,6 +124,7 @@ public class ProductSelectDialog extends Stage {
         
         searchTerms.setMinSize(100, 100);
         searchTerms.setMaxSize(100, 100);
+        searchTerms.setId("blue");
         HBox hSearchTerms = new HBox(0);
         hSearchTerms.getChildren().add(searchTerms);
         searchTerms.setOnAction((ActionEvent event) -> {
@@ -138,6 +140,7 @@ public class ProductSelectDialog extends Stage {
         
         close.setMinSize(100, 100);
         close.setMaxSize(100, 100);
+        close.setId("blue");
         HBox hClose = new HBox(0);
         hClose.getChildren().add(close);
         close.setOnAction((ActionEvent event) -> {

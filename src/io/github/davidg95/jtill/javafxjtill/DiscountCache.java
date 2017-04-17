@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class which models the DiscountCache. It stores the discounts in an ArrayList
+ * Class which models the DiscountCache. It stores the discounts in an LinkedList
  * and uses a StampedLock for concurrency control.
  *
  * @author David
@@ -29,7 +29,7 @@ public class DiscountCache {
      * Default constructor.
      */
     public DiscountCache() {
-        discounts = new ArrayList<>();
+        discounts = new LinkedList<>();
         lock = new StampedLock();
     }
 

@@ -12,8 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class which models the till cache. This class uses an ArrayList to store the
- * Products and an ArrayList to store the Plus. It uses StampedLocks for
+ * Class which models the till cache. This class uses an LinkedList to store the
+ * Products and an LinkedList to store the Plus. It uses StampedLocks for
  * concurrency control for the the ArrayLists.
  *
  * @author David
@@ -33,8 +33,8 @@ public class ProductCache {
      * Default constructor.
      */
     public ProductCache() {
-        products = new ArrayList<>();
-        plus = new ArrayList<>();
+        products = new LinkedList<>();
+        plus = new LinkedList<>();
         lock = new StampedLock();
         pLock = new StampedLock();
     }
