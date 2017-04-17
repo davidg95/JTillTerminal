@@ -80,6 +80,7 @@ and open the template in the editor.
 
 #paymentMethods{
     -fx-background-color: #2a5be7;
+    -fx-text-fill: white;
 }
 
 #paymentMethods:pressed{
@@ -100,6 +101,27 @@ and open the template in the editor.
     -fx-text-fill: white;
     -fx-font-family: "Tahoma";
     -fx-font-size: 28;
+}
+
+#blue{
+    -fx-background-color: #2a5be7;
+    -fx-text-fill: white;
+}
+
+#number{
+    -fx-background-color: #2a5be7;
+    -fx-text-fill: white;
+}
+
+#keyboard{
+    -fx-background-color: #2a5be7;
+    -fx-text-fill: white;
+    -fx-font-family: "Tahoma";
+    -fx-font-size: 28;
+}
+
+#keyboard:pressed{
+    -fx-background-color: #1a27ac;
 }
 
 .table-view{

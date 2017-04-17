@@ -17,7 +17,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Box;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
@@ -158,6 +157,7 @@ public class NumberEntry extends Stage {
         }
 
         Button seven = new Button("7");
+        seven.setId("number");
         seven.setMaxSize(100, 100);
         seven.setMinSize(100, 100);
         HBox hSeven = new HBox(0);
@@ -174,6 +174,7 @@ public class NumberEntry extends Stage {
         });
 
         Button eight = new Button("8");
+        eight.setId("number");
         eight.setMaxSize(100, 100);
         eight.setMinSize(100, 100);
         HBox hEight = new HBox(0);
@@ -190,6 +191,7 @@ public class NumberEntry extends Stage {
         });
 
         Button nine = new Button("9");
+        nine.setId("number");
         nine.setMaxSize(100, 100);
         nine.setMinSize(100, 100);
         HBox hNine = new HBox(0);
@@ -206,6 +208,7 @@ public class NumberEntry extends Stage {
         });
 
         Button four = new Button("4");
+        four.setId("number");
         four.setMaxSize(100, 100);
         four.setMinSize(100, 100);
         HBox hFour = new HBox(0);
@@ -222,6 +225,7 @@ public class NumberEntry extends Stage {
         });
 
         Button five = new Button("5");
+        five.setId("number");
         five.setMaxSize(100, 100);
         five.setMinSize(100, 100);
         HBox hFive = new HBox(0);
@@ -238,6 +242,7 @@ public class NumberEntry extends Stage {
         });
 
         Button six = new Button("6");
+        six.setId("number");
         six.setMaxSize(100, 100);
         six.setMinSize(100, 100);
         HBox hSix = new HBox(0);
@@ -254,6 +259,7 @@ public class NumberEntry extends Stage {
         });
 
         Button one = new Button("1");
+        one.setId("number");
         one.setMaxSize(100, 100);
         one.setMinSize(100, 100);
         HBox hOne = new HBox(0);
@@ -270,6 +276,7 @@ public class NumberEntry extends Stage {
         });
 
         Button two = new Button("2");
+        two.setId("number");
         two.setMaxSize(100, 100);
         two.setMinSize(100, 100);
         HBox hTwo = new HBox(0);
@@ -286,6 +293,7 @@ public class NumberEntry extends Stage {
         });
 
         Button three = new Button("3");
+        three.setId("number");
         three.setMaxSize(100, 100);
         three.setMinSize(100, 100);
         HBox hThree = new HBox(0);
@@ -302,6 +310,7 @@ public class NumberEntry extends Stage {
         });
 
         Button zero = new Button("0");
+        zero.setId("number");
         zero.setMaxSize(200, 100);
         zero.setMinSize(200, 100);
         HBox hZero = new HBox(0);
@@ -317,6 +326,7 @@ public class NumberEntry extends Stage {
         });
 
         Button dZero = new Button("00");
+        dZero.setId("number");
         dZero.setMaxSize(100, 100);
         dZero.setMinSize(100, 100);
         HBox hDzero = new HBox(0);
@@ -332,6 +342,7 @@ public class NumberEntry extends Stage {
         });
 
         Button clear = new Button("Clear");
+        clear.setId("number");
         clear.setMaxSize(100, 200);
         clear.setMinSize(100, 200);
         HBox hClear = new HBox(0);
@@ -343,6 +354,7 @@ public class NumberEntry extends Stage {
         });
 
         Button enter = new Button("Enter");
+        enter.setId("number");
         enter.setMaxSize(100, 200);
         enter.setMinSize(100, 200);
         HBox hEnter = new HBox(0);

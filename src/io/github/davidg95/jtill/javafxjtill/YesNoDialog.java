@@ -55,6 +55,7 @@ public class YesNoDialog extends Stage {
         pane.add(label, 0, 0, 2, 1);
 
         Button yes = new Button("Yes");
+        yes.setId("blue");
         yes.setMinSize(300, 100);
         yes.setMaxSize(300, 100);
         HBox hYes = new HBox(0);
@@ -66,6 +67,7 @@ public class YesNoDialog extends Stage {
         pane.add(hYes, 0, 1);
 
         Button no = new Button("No");
+        no.setId("blue");
         no.setMinSize(300, 100);
         no.setMaxSize(300, 100);
         HBox hNo = new HBox(0);

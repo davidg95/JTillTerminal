@@ -27,7 +27,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -47,10 +46,10 @@ import java.awt.print.PrinterException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import javafx.scene.control.TableRow;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.shape.Box;
 import javax.mail.MessagingException;
 
 /**
@@ -114,6 +113,7 @@ public class MainStage extends Stage implements GUIInterface {
     private Label mainVersion;
     private Label alertMessage;
     private Label mainRefund;
+    private Button voidLast;
 
     //Payment Scene Components
     private Scene paymentScene;
@@ -333,7 +333,6 @@ public class MainStage extends Stage implements GUIInterface {
             });
             return row;
         });
-
         updateList();
 
         total = new Label("Total: " + symbol + "0.00");
@@ -435,7 +434,8 @@ public class MainStage extends Stage implements GUIInterface {
         assisstance.setMinSize(0, 0);
         assisstance.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         assisstance.setOnAction((ActionEvent event) -> {
-            String message = EntryDialog.show(this, "Assisstance", "Enter message");
+//            String message = EntryDialog.show(this, "Assisstance", "Enter message");
+            String message = Keyboard.show(this, "Enter message to send");
             try {
                 dc.assisstance(message);
                 LOG.log(Level.INFO, "Assisstance message sent to server");
@@ -456,24 +456,44 @@ public class MainStage extends Stage implements GUIInterface {
         mainRefund.setMinSize(0, 0);
         mainRefund.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
+        voidLast = new Button("Void Last");
+        voidLast.setId("red");
+        voidLast.setMinSize(0, 0);
+        voidLast.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        voidLast.setOnAction((ActionEvent event) -> {
+            SaleItem last = sale.getLastAdded();
+            for (SaleItem i : sale.getSaleItems()) {
+                if (i.getItem() == last.getItem()) {
+                    if (i.getQuantity() == last.getQuantity()) {
+                        obTable.remove(last);
+                    } else {
+                        i.decreaseQuantity(last.getQuantity());
+                    }
+                }
+            }
+            sale.voidLastItem();
+            setTotalLabel();
+        });
+
         mainPane.add(staffLabel, 0, 0, 2, 1);
-        mainPane.add(mainVersion, 3, 0, 3, 1);
-        mainPane.add(time, 8, 0, 2, 1);
-        mainPane.add(buttonPane, 0, 1, 8, 11);
-        mainPane.add(screenPane, 0, 12, 8, 2);
-        mainPane.add(itemsTable, 8, 1, 2, 5);
-        mainPane.add(total, 8, 6, 2, 1);
-        mainPane.add(quantity, 8, 7);
+        mainPane.add(mainVersion, 2, 0, 4, 1);
+        mainPane.add(time, 7, 0, 3, 1);
+        mainPane.add(buttonPane, 0, 1, 7, 11);
+        mainPane.add(screenPane, 0, 12, 7, 2);
+        mainPane.add(itemsTable, 7, 1, 3, 5);
+        mainPane.add(total, 7, 6, 3, 1);
+        mainPane.add(quantity, 7, 7);
         mainPane.add(voidSelected, 9, 7);
-        mainPane.add(barcode, 8, 8, 2, 1);
-        mainPane.add(numbers, 8, 9, 2, 5);
-        mainPane.add(payment, 8, 14, 2, 2);
+        mainPane.add(voidLast, 8, 7);
+        mainPane.add(barcode, 7, 8, 3, 1);
+        mainPane.add(numbers, 7, 9, 3, 5);
+        mainPane.add(payment, 7, 14, 3, 2);
         mainPane.add(halfPrice, 2, 14, 1, 2);
         mainPane.add(logoff, 0, 14, 1, 2);
         mainPane.add(lookup, 1, 14, 1, 2);
         mainPane.add(assisstance, 3, 14, 1, 2);
-        mainPane.add(alertMessage, 4, 14, 4, 2);
-        mainPane.add(mainRefund, 7, 0);
+        mainPane.add(alertMessage, 4, 14, 3, 2);
+        mainPane.add(mainRefund, 6, 0);
 
         for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();
@@ -498,6 +518,7 @@ public class MainStage extends Stage implements GUIInterface {
         GridPane grid = new GridPane();
 
         Button clear = new Button("clr");
+        clear.setId("number");
         clear.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         HBox hClear = new HBox(0);
         hClear.getChildren().add(clear);
@@ -506,6 +527,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         Button seven = new Button("7");
+        seven.setId("number");
         HBox hSeven = new HBox(0);
         seven.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hSeven.getChildren().add(seven);
@@ -519,6 +541,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         Button eight = new Button("8");
+        eight.setId("number");
         HBox hEight = new HBox(0);
         eight.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hEight.getChildren().add(eight);
@@ -532,6 +555,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         Button nine = new Button("9");
+        nine.setId("number");
         HBox hNine = new HBox(0);
         nine.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hNine.getChildren().add(nine);
@@ -545,6 +569,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         Button four = new Button("4");
+        four.setId("number");
         HBox hFour = new HBox(0);
         four.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hFour.getChildren().add(four);
@@ -558,6 +583,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         Button five = new Button("5");
+        five.setId("number");
         HBox hFive = new HBox(0);
         five.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hFive.getChildren().add(five);
@@ -571,6 +597,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         Button six = new Button("6");
+        six.setId("number");
         HBox hSix = new HBox(0);
         six.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hSix.getChildren().add(six);
@@ -584,6 +611,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         Button one = new Button("1");
+        one.setId("number");
         HBox hOne = new HBox(0);
         one.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hOne.getChildren().add(one);
@@ -597,6 +625,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         Button two = new Button("2");
+        two.setId("number");
         HBox hTwo = new HBox(0);
         two.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hTwo.getChildren().add(two);
@@ -610,6 +639,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         Button three = new Button("3");
+        three.setId("number");
         HBox hThree = new HBox(0);
         three.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hThree.getChildren().add(three);
@@ -623,6 +653,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         Button zero = new Button("0");
+        zero.setId("number");
         HBox hZero = new HBox(0);
         zero.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hZero.getChildren().add(zero);
@@ -636,6 +667,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         Button dZero = new Button("00");
+        dZero.setId("number");
         HBox hDzero = new HBox(0);
         dZero.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hDzero.getChildren().add(dZero);
@@ -649,6 +681,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         Button enter = new Button("Ent");
+        enter.setId("number");
         HBox hEnter = new HBox(0);
         enter.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         hEnter.getChildren().add(enter);
@@ -837,6 +870,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentsList.setId("PAYMENT_LIST");
 
         paymentTotal = new Label("Total: " + symbol + sale.getTotal().toString());
+        paymentTotal.setId("total");
         paymentTotal.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         paymentTotal.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -959,8 +993,8 @@ public class MainStage extends Stage implements GUIInterface {
         paymentRefund.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
         paymentPane.add(paymentLoggedIn, 0, 0, 2, 1);
-        paymentPane.add(paymentVersion, 3, 0, 3, 1);
-        paymentPane.add(paymentTime, 8, 0, 2, 1);
+        paymentPane.add(paymentVersion, 2, 0, 4, 1);
+        paymentPane.add(paymentTime, 7, 0, 3, 1);
         paymentPane.add(fivePounds, 0, 1, 1, 2);
         paymentPane.add(tenPounds, 1, 1, 1, 2);
         paymentPane.add(twentyPounds, 2, 1, 1, 2);
@@ -971,21 +1005,21 @@ public class MainStage extends Stage implements GUIInterface {
         paymentPane.add(chargeAccount, 1, 5, 1, 2);
         paymentPane.add(cheque, 2, 5, 1, 2);
         paymentPane.add(saleCustomer, 8, 7, 2, 1);
-        paymentPane.add(back, 8, 14, 2, 2);
-        paymentPane.add(paymentsList, 8, 1, 2, 5);
-        paymentPane.add(paymentTotal, 8, 6, 2, 1);
-        paymentPane.add(voidItem, 7, 1, 1, 2);
-        paymentPane.add(voidSale, 6, 1, 1, 2);
-        paymentPane.add(discount, 5, 1, 1, 2);
-        paymentPane.add(settings, 7, 3, 1, 2);
-        paymentPane.add(cashUp, 6, 3, 1, 2);
-        paymentPane.add(clearLogins, 5, 3, 1, 2);
-        paymentPane.add(submitSales, 5, 5, 1, 2);
-        paymentPane.add(paymentMessages, 4, 14, 4, 2);
+        paymentPane.add(back, 7, 14, 3, 2);
+        paymentPane.add(paymentsList, 7, 1, 3, 5);
+        paymentPane.add(paymentTotal, 7, 6, 3, 1);
+        paymentPane.add(voidItem, 6, 1, 1, 2);
+        paymentPane.add(voidSale, 5, 1, 1, 2);
+        paymentPane.add(discount, 4, 1, 1, 2);
+        paymentPane.add(settings, 6, 3, 1, 2);
+        paymentPane.add(cashUp, 5, 3, 1, 2);
+        paymentPane.add(clearLogins, 4, 3, 1, 2);
+        paymentPane.add(submitSales, 4, 5, 1, 2);
+        paymentPane.add(paymentMessages, 4, 14, 3, 2);
         paymentPane.add(clockOff, 1, 14, 1, 2);
         paymentPane.add(paymentLogoff, 0, 14, 1, 2);
         paymentPane.add(refundButton, 0, 10, 1, 2);
-        paymentPane.add(paymentRefund, 7, 0);
+        paymentPane.add(paymentRefund, 6, 0);
 
         for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();
@@ -1060,6 +1094,7 @@ public class MainStage extends Stage implements GUIInterface {
         ClockThread.setFormat(ClockThread.DATE_TIME_FORMAT);
 
         exit = new Button("Exit JTill");
+        exit.setId("blue");
         exit.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         HBox hExit = new HBox(0);
         hExit.getChildren().add(exit);
@@ -1077,6 +1112,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         login = new Button("Login");
+        login.setId("blue");
         login.setDisable(true);
         login.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         HBox hLogin = new HBox(0);
@@ -1091,6 +1127,7 @@ public class MainStage extends Stage implements GUIInterface {
                     Staff s = dc.getStaff(val);
                     dc.clockOn(s.getId());
                     Button button = new Button(s.getName());
+                    button.setId("blue");
                     button.prefWidthProperty().bind(staffLayout.widthProperty().divide(4));
                     button.prefHeightProperty().bind(staffLayout.heightProperty().divide(2));
                     button.setOnAction((ActionEvent evt) -> {
@@ -1140,6 +1177,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         print = new Button("Print Last");
+        print.setId("blue");
         print.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         print.setOnAction((ActionEvent event) -> {
             if (lastSale == null) {
@@ -1163,10 +1201,10 @@ public class MainStage extends Stage implements GUIInterface {
         loginPane.add(exit, 0, 14, 1, 2);
         loginPane.add(login, 1, 14, 1, 2);
         loginPane.add(print, 2, 14, 1, 2);
-        loginPane.add(loginMessage, 4, 14, 4, 2);
-        loginPane.add(loginTime, 8, 0, 2, 1);
+        loginPane.add(loginMessage, 4, 14, 3, 2);
+        loginPane.add(loginTime, 7, 0, 3, 1);
         loginPane.add(notLoggedIn, 0, 0, 2, 1);
-        loginPane.add(loginVersion, 3, 0, 3, 1);
+        loginPane.add(loginVersion, 2, 0, 4, 1);
 
         loginScene = new Scene(loginPane, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
@@ -1247,7 +1285,7 @@ public class MainStage extends Stage implements GUIInterface {
                             this.showMessage("Email", ex.getMessage());
                         }
                     } else {
-                        String email = EntryDialog.show(this, "Email Receipt", "Enter email");
+                        String email = Keyboard.show(this, "Enter email");
                         dc.emailReceipt(email, sale);
                     }
                 }

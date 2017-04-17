@@ -58,6 +58,7 @@ public class MessageDialog extends Stage {
         pane.add(label, 0, 0);
 
         Button button = new Button("Ok");
+        button.setId("blue");
         button.setMaxSize(WIDTH, 100);
         button.setMinSize(WIDTH, 100);
         button.setFont(Font.font("Tahoma", FontWeight.NORMAL, 40));

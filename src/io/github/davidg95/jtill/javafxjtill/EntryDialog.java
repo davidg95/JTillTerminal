@@ -13,10 +13,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
 /**
@@ -57,6 +55,7 @@ public class EntryDialog extends Stage {
         });
 
         Button enter = new Button("Enter");
+        enter.setId("blue");
         HBox hEnter = new HBox(10);
         enter.setMaxSize(400, 70);
         enter.setMinSize(400, 70);
