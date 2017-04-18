@@ -63,8 +63,11 @@ public class ProductCache {
     public void addProductToCache(Product p) {
         long stamp = lock.writeLock();
         LOG.log(Level.INFO, "Adding product to cache");
-        products.add(p);
-        lock.unlockWrite(stamp);
+        try {
+            products.add(p);
+        } finally {
+            lock.unlockWrite(stamp);
+        }
     }
 
     /**
@@ -79,6 +82,25 @@ public class ProductCache {
             plus.add(p);
         } finally {
             pLock.unlockWrite(stamp);
+        }
+    }
+
+    /**
+     * Method to add a product and plu to the cache.
+     *
+     * @param p the product to add.
+     * @param pl the plu to add.
+     */
+    public void addProductAndPlu(Product p, Plu pl) {
+        LOG.log(Level.INFO, "Adding Product and Plu to cache");
+        long stampP = lock.writeLock();
+        long stampPl = pLock.writeLock();
+        try {
+            products.add(p);
+            plus.add(pl);
+        } finally {
+            lock.unlockWrite(stampP);
+            pLock.unlockWrite(stampPl);
         }
     }
 

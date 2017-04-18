@@ -41,7 +41,6 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import io.github.davidg95.JTill.jtill.DataConnect;
-import java.awt.Color;
 import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
 import java.text.SimpleDateFormat;
@@ -51,7 +50,6 @@ import javafx.scene.control.TableRow;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.paint.Paint;
 import javax.mail.MessagingException;
 
 /**
@@ -1418,10 +1416,9 @@ public class MainStage extends Stage implements GUIInterface {
                 LOG.log(Level.INFO, "Checking server for product {0}", barcode);
                 p = dc.getProductByBarcode(barcode);
                 LOG.log(Level.INFO, "Product was found on server");
-                ProductCache.getInstance().addProductToCache(p);
                 try {
                     final Plu pl = dc.getPluByProduct(p.getId());
-                    ProductCache.getInstance().addPluToCache(pl);
+                    ProductCache.getInstance().addProductAndPlu(p, pl);
                 } catch (JTillException ex1) {
                     Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex1);
                 }
