@@ -70,20 +70,44 @@ public class ReceiptPrinter implements Printable {
         g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
 
         Font oldFont = graphics.getFont();
+        
+        final int x = 70;
+        int y = 60;
 
         g2.setFont(new Font("Arial", Font.BOLD, 20)); //Use a differnt font for the header.
-        g2.drawString(header, 70, 60);
+        g2.drawString(header, x, y);
         g2.setFont(oldFont); //Chagne back to the old font.
+        
+        y += 30;
+        
+        try {
+            if(dc.getSetting("SHOW_RECEIPT_ADDRESS").equals("TRUE")){
+                y += 30;
+            }
+            if(dc.getSetting("SHOW_RECEIPT_STAFF").equals("TRUE")){
+                final Staff s = dc.getStaff(sale.getStaff());
+                g2.drawString("You were served by: " + s.getName(), x, y);
+                y += 30;
+            }
+            if(dc.getSetting("SHOW_RECEIPT_TERMINAL").equals("TRUE")){
+                g2.drawString("Terminal " + sale.getTerminal(), x, y);
+                y += 30;
+            }
+        } catch (IOException | StaffNotFoundException | SQLException ex) {
+            Logger.getLogger(ReceiptPrinter.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         //Print sale info.
-        g2.drawString("Receipt for sale: " + sale.getId(), 70, 90);
-        g2.drawString("Time: " + sale.getDate(), 70, 110);
-        g2.drawString("Served by " + sale.getStaff(), 70, 130);
+        g2.drawString("Receipt for sale: " + sale.getId(), x, y);
+        y += 20;
+        g2.drawString("Time: " + sale.getDate(), x, y);
+        y += 20;
+        g2.drawString("Served by " + sale.getStaff(), x, y);
 
-        final int item = 100;
-        final int quantity = 300;
-        final int total = 420;
-        int y = 170;
+        final int item = x + 30;
+        final int quantity = x + 230;
+        final int total = x + 350;
+        y += 50;
 
         //Print collumn headers.
         g2.drawString("Item", item, y);
