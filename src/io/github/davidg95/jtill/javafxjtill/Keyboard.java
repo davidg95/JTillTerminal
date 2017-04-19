@@ -35,14 +35,16 @@ public class Keyboard extends Stage {
 
     private boolean caps;
     private boolean shift;
-    
-    private final int width = 1500;
-    private final int height = 800;
 
-    LinkedList<Button> list;
+    private final int width;
+    private final int height;
+
+    private final LinkedList<Button> list;
 
     public Keyboard(Window parent, String title) {
         super();
+        width = (int) parent.getWidth() / 6 * 5;
+        height = (int) parent.getHeight() / 6 * 5;
         list = new LinkedList<>();
         init();
         setTitle(title);
@@ -64,7 +66,7 @@ public class Keyboard extends Stage {
         field.setMaxHeight(50);
         field.setMinHeight(50);
         field.setMaxHeight(400);
-        field.setFont(Font.font("Tahoma", FontWeight.NORMAL, 24));
+        field.setFont(Font.font("Tahoma", FontWeight.NORMAL, 40));
         field.setOnAction((ActionEvent event) -> {
             onEnter();
         });
@@ -73,47 +75,47 @@ public class Keyboard extends Stage {
         one.setId("keyboard");
         one.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         one.setOnAction(new MyActionEvent());
-        
+
         Button two = new Button("2");
         two.setId("keyboard");
         two.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         two.setOnAction(new MyActionEvent());
-        
+
         Button three = new Button("3");
         three.setId("keyboard");
         three.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         three.setOnAction(new MyActionEvent());
-        
+
         Button four = new Button("4");
         four.setId("keyboard");
         four.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         four.setOnAction(new MyActionEvent());
-        
+
         Button five = new Button("5");
         five.setId("keyboard");
         five.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         five.setOnAction(new MyActionEvent());
-        
+
         Button six = new Button("6");
         six.setId("keyboard");
         six.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         six.setOnAction(new MyActionEvent());
-        
+
         Button seven = new Button("7");
         seven.setId("keyboard");
         seven.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         seven.setOnAction(new MyActionEvent());
-        
+
         Button eight = new Button("8");
         eight.setId("keyboard");
         eight.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         eight.setOnAction(new MyActionEvent());
-        
+
         Button nine = new Button("9");
         nine.setId("keyboard");
         nine.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         nine.setOnAction(new MyActionEvent());
-        
+
         Button zero = new Button("0");
         zero.setId("keyboard");
         zero.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -124,55 +126,55 @@ public class Keyboard extends Stage {
         q.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         q.setOnAction(new MyActionEvent());
         list.add(q);
-        
+
         Button w = new Button("w");
         w.setId("keyboard");
         w.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         w.setOnAction(new MyActionEvent());
         list.add(w);
-        
+
         Button e = new Button("e");
         e.setId("keyboard");
         e.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         e.setOnAction(new MyActionEvent());
         list.add(e);
-        
+
         Button r = new Button("r");
         r.setId("keyboard");
         r.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         r.setOnAction(new MyActionEvent());
         list.add(r);
-        
+
         Button t = new Button("t");
         t.setId("keyboard");
         t.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         t.setOnAction(new MyActionEvent());
         list.add(t);
-        
+
         Button y = new Button("y");
         y.setId("keyboard");
         y.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         y.setOnAction(new MyActionEvent());
         list.add(y);
-        
+
         Button u = new Button("u");
         u.setId("keyboard");
         u.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         u.setOnAction(new MyActionEvent());
         list.add(u);
-        
+
         Button i = new Button("i");
         i.setId("keyboard");
         i.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         i.setOnAction(new MyActionEvent());
         list.add(i);
-        
+
         Button o = new Button("o");
         o.setId("keyboard");
         o.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         o.setOnAction(new MyActionEvent());
         list.add(o);
-        
+
         Button p = new Button("p");
         p.setId("keyboard");
         p.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -183,91 +185,91 @@ public class Keyboard extends Stage {
         a.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         a.setOnAction(new MyActionEvent());
         list.add(a);
-        
+
         Button s = new Button("s");
         s.setId("keyboard");
         s.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         s.setOnAction(new MyActionEvent());
         list.add(s);
-        
+
         Button d = new Button("d");
         d.setId("keyboard");
         d.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         d.setOnAction(new MyActionEvent());
         list.add(d);
-        
+
         Button f = new Button("f");
         f.setId("keyboard");
         f.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         f.setOnAction(new MyActionEvent());
         list.add(f);
-        
+
         Button g = new Button("g");
         g.setId("keyboard");
         g.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         g.setOnAction(new MyActionEvent());
         list.add(g);
-        
+
         Button h = new Button("h");
         h.setId("keyboard");
         h.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         h.setOnAction(new MyActionEvent());
         list.add(h);
-        
+
         Button j = new Button("j");
         j.setId("keyboard");
         j.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         j.setOnAction(new MyActionEvent());
         list.add(j);
-        
+
         Button k = new Button("k");
         k.setId("keyboard");
         k.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         k.setOnAction(new MyActionEvent());
         list.add(k);
-        
+
         Button l = new Button("l");
         l.setId("keyboard");
         l.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         l.setOnAction(new MyActionEvent());
         list.add(l);
-        
+
         Button z = new Button("z");
         z.setId("keyboard");
         z.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         z.setOnAction(new MyActionEvent());
         list.add(z);
-        
+
         Button x = new Button("x");
         x.setId("keyboard");
         x.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         x.setOnAction(new MyActionEvent());
         list.add(x);
-        
+
         Button c = new Button("c");
         c.setId("keyboard");
         c.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         c.setOnAction(new MyActionEvent());
         list.add(c);
-        
+
         Button v = new Button("v");
         v.setId("keyboard");
         v.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         v.setOnAction(new MyActionEvent());
         list.add(v);
-        
+
         Button b = new Button("b");
         b.setId("keyboard");
         b.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         b.setOnAction(new MyActionEvent());
         list.add(b);
-        
+
         Button n = new Button("n");
         n.setId("keyboard");
         n.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         n.setOnAction(new MyActionEvent());
         list.add(n);
-        
+
         Button m = new Button("m");
         m.setId("keyboard");
         m.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -278,7 +280,7 @@ public class Keyboard extends Stage {
         comma.setId("keyboard");
         comma.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         comma.setOnAction(new MyActionEvent());
-        
+
         Button dot = new Button(".");
         dot.setId("keyboard");
         dot.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -316,7 +318,7 @@ public class Keyboard extends Stage {
         back.setId("keyboard");
         back.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         back.setOnAction((ActionEvent event) -> {
-            if(field.getText().length() > 0);
+            if (field.getText().length() > 0);
             field.setText(field.getText().substring(0, field.getText().length() - 1));
         });
 

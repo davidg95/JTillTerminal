@@ -47,12 +47,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javafx.scene.control.TableRow;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
@@ -441,7 +435,6 @@ public class MainStage extends Stage implements GUIInterface {
         assisstance.setMinSize(0, 0);
         assisstance.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         assisstance.setOnAction((ActionEvent event) -> {
-//            String message = EntryDialog.show(this, "Assisstance", "Enter message");
             String message = Keyboard.show(this, "Enter message to send");
             try {
                 dc.assisstance(message);
@@ -517,13 +510,6 @@ public class MainStage extends Stage implements GUIInterface {
             row.setVgrow(Priority.ALWAYS);
             mainPane.getRowConstraints().add(row);
         }
-//        Color c = Color.decode(backgroundStyle);
-//        int r = c.getRed();
-//        int g = c.getGreen();
-//        int b = c.getBlue();
-//        int a = c.getAlpha();
-//        double opacity = a / 255.0;
-//        javafx.scene.paint.Color fxColor = javafx.scene.paint.Color.rgb(r, g, b, opacity);
         mainScene = new Scene(mainPane, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
