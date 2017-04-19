@@ -47,6 +47,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javafx.scene.control.TableRow;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
@@ -1204,7 +1210,7 @@ public class MainStage extends Stage implements GUIInterface {
         loginMessage.setMinSize(0, 0);
         loginMessage.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
-        loginPane.add(staffLayout, 2, 2, 8, 12);
+        loginPane.add(staffLayout, 1, 1, 8, 12);
         loginPane.add(exit, 0, 14, 1, 2);
         loginPane.add(login, 1, 14, 1, 2);
         loginPane.add(print, 2, 14, 1, 2);
