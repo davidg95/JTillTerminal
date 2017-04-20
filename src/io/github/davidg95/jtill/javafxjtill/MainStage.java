@@ -75,7 +75,6 @@ public class MainStage extends Stage implements GUIInterface {
     private boolean refundMode;
 
     private final String stylesheet;
-    private String backgroundStyle;
 
     //Login Scene Components
     private Scene loginScene;
@@ -103,6 +102,7 @@ public class MainStage extends Stage implements GUIInterface {
     private Label staffLabel;
     private Label time;
     private Label total;
+    private Label totalItems;
     private Button logoff;
     private Button quantity;
     private Button voidSelected;
@@ -208,8 +208,10 @@ public class MainStage extends Stage implements GUIInterface {
         dc.setGUI(MainStage.this);
         if (dc instanceof ServerConnection) {
             ServerConnection sc = (ServerConnection) dc;
-            LOG.log(Level.INFO, "Attempting connection to the server on IP address {0}", JavaFXJTill.SERVER);
-            till = sc.connect(JavaFXJTill.SERVER, JavaFXJTill.PORT, JavaFXJTill.NAME);
+            LOG.log(Level.INFO, "Attempting connection to the server on IP address " + JavaFXJTill.SERVER);
+            till = sc.connect(JavaFXJTill.SERVER, JavaFXJTill.PORT, JavaFXJTill.NAME, JavaFXJTill.uuid);
+            JavaFXJTill.uuid = till.getUuid();
+            JavaFXJTill.saveProperties();
             if (staff == null) {
                 this.sale = new Sale(till.getId(), 0);
             } else {
@@ -265,7 +267,6 @@ public class MainStage extends Stage implements GUIInterface {
                     Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            backgroundStyle = dc.getSetting("TERMINAL_BACKGROUND");
             DiscountCache.getInstance().setDiscounts(discounts);
             LOG.log(Level.INFO, "Loading screen and button configurations from the server");
             List<Screen> screens = dc.getAllScreens(); //Get all the screens from the server.
@@ -338,6 +339,11 @@ public class MainStage extends Stage implements GUIInterface {
 
         total = new Label("Total: " + symbol + "0.00");
         total.setId("total");
+        total.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        total.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        
+        totalItems = new Label("Items: 0");
+        totalItems.setId("total");
         total.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         total.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
@@ -481,7 +487,8 @@ public class MainStage extends Stage implements GUIInterface {
         mainPane.add(buttonPane, 0, 1, 7, 11);
         mainPane.add(screenPane, 0, 12, 7, 2);
         mainPane.add(itemsTable, 7, 1, 3, 5);
-        mainPane.add(total, 7, 6, 3, 1);
+        mainPane.add(total, 7, 6, 2, 1);
+        mainPane.add(totalItems, 9, 6);
         mainPane.add(quantity, 7, 7);
         mainPane.add(voidSelected, 9, 7);
         mainPane.add(voidLast, 8, 7);
@@ -1385,6 +1392,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentsList.setItems(obPayments);
         updateList();
         total.setText("Total: " + symbol + "0.00");
+        totalItems.setText("Items: 0");
         paymentTotal.setText("Total: " + symbol + "0.00");
         itemQuantity = 1;
         quantity.setText("Quantity: 1");
@@ -1505,6 +1513,7 @@ public class MainStage extends Stage implements GUIInterface {
         total.setText("Total: " + symbol + df.format(sale.getTotal()));
         paymentTotal.setText("Total: " + symbol + df.format(sale.getTotal()));
         amountDue = sale.getTotal();
+        totalItems.setText("Items: " + sale.getTotalItemCount());
     }
 
     private void setRefund(boolean set) {
