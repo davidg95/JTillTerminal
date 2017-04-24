@@ -148,6 +148,7 @@ public class MainStage extends Stage implements GUIInterface {
     private Button clockOff;
     private Button refundButton;
     private Label paymentRefund;
+    private Button loyaltyButton;
 
     private final double SCREEN_WIDTH = javafx.stage.Screen.getPrimary().getBounds().getWidth();
     private final double SCREEN_HEIGHT = javafx.stage.Screen.getPrimary().getBounds().getHeight();
@@ -821,6 +822,7 @@ public class MainStage extends Stage implements GUIInterface {
                     if (sale.getCustomer() != 1) {
                         setCustomer(null);
                         chargeAccount.setDisable(true);
+                        loyaltyButton.setDisable(true);
                         addCustomer.setText("Add Customer");
                         return;
                     }
@@ -828,6 +830,7 @@ public class MainStage extends Stage implements GUIInterface {
                     if (c != null) {
                         setCustomer(c);
                         chargeAccount.setDisable(false);
+                        loyaltyButton.setDisable(false);
                         addCustomer.setText("Remove Customer");
                     }
                 });
@@ -997,6 +1000,34 @@ public class MainStage extends Stage implements GUIInterface {
         paymentRefund.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         paymentRefund.setMinSize(0, 0);
         paymentRefund.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        
+        loyaltyButton = new Button("Spend Points");
+        loyaltyButton.setId("paymentMethods");
+        loyaltyButton.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        loyaltyButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        loyaltyButton.setDisable(true);
+        loyaltyButton.setOnAction((ActionEvent event) -> {
+            try {
+                final Customer c = dc.getCustomer(sale.getCustomer());
+                int maxSpend = sale.getTotal().divide(new BigDecimal(dc.getSetting("TOTAL_SPEND_VALE"))).intValue();
+                if(c.getLoyaltyPoints() < maxSpend){
+                    maxSpend = c.getLoyaltyPoints();
+                }
+                final int toSpend = NumberEntry.showNumberEntryDialog(this, "Points remaining: " + c.getLoyaltyPoints() + ". Max for sale: " + maxSpend + ".", maxSpend);
+                final int res = c.removeLoyaltyPoints(toSpend);
+                if(res == -1){
+                    MessageDialog.showMessage(this, "Error", "Not Enough Points");
+                    return;
+                }
+                double value = Double.parseDouble(dc.getSetting("LOYALTY_VALUE"));
+                BigDecimal roRemove = new BigDecimal(Double.toString(toSpend * value));
+                sale.setTotal(sale.getTotal().subtract(roRemove));
+                setTotalLabel();
+                dc.updateCustomer(c);
+            } catch (IOException | CustomerNotFoundException | SQLException ex) {
+                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
 
         paymentPane.add(paymentLoggedIn, 0, 0, 2, 1);
         paymentPane.add(paymentVersion, 2, 0, 4, 1);
@@ -1026,6 +1057,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentPane.add(paymentLogoff, 0, 14, 1, 2);
         paymentPane.add(refundButton, 0, 10, 1, 2);
         paymentPane.add(paymentRefund, 6, 0);
+        paymentPane.add(loyaltyButton, 0, 7, 1, 2);
 
         for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();
@@ -1399,6 +1431,7 @@ public class MainStage extends Stage implements GUIInterface {
         saleCustomer.setText("No Customer");
         addCustomer.setText("Add Customer");
         chargeAccount.setDisable(true);
+        loyaltyButton.setDisable(true);
         age = 0;
     }
 
