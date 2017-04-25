@@ -342,7 +342,7 @@ public class MainStage extends Stage implements GUIInterface {
         total.setId("total");
         total.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         total.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        
+
         totalItems = new Label("Items: 0");
         totalItems.setId("total");
         total.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -364,7 +364,9 @@ public class MainStage extends Stage implements GUIInterface {
                 barcode.setText("");
             }
             quantity.setText("Quantity: " + itemQuantity);
-            barcode.requestFocus();
+            if (!barcode.isFocused()) {
+                barcode.requestFocus();
+            }
         });
 
         voidSelected = new Button("Void Selected");
@@ -377,7 +379,9 @@ public class MainStage extends Stage implements GUIInterface {
                 obTable.remove((SaleItem) itemsTable.getSelectionModel().getSelectedItem());
                 setTotalLabel();
             }
-            barcode.requestFocus();
+            if (!barcode.isFocused()) {
+                barcode.requestFocus();
+            }
         });
 
         barcode = new TextField();
@@ -437,7 +441,9 @@ public class MainStage extends Stage implements GUIInterface {
                     showMessageAlert("Item not discountable", 2000);
                 }
             }
-            barcode.requestFocus();
+            if (!barcode.isFocused()) {
+                barcode.requestFocus();
+            }
         });
 
         assisstance = new Button("Assisstance");
@@ -453,7 +459,9 @@ public class MainStage extends Stage implements GUIInterface {
             } catch (IOException ex) {
                 MessageDialog.showMessage(this, "Assisstance", ex.getMessage());
             }
-            barcode.requestFocus();
+            if (!barcode.isFocused()) {
+                barcode.requestFocus();
+            }
         });
 
         alertMessage = new Label();
@@ -484,7 +492,9 @@ public class MainStage extends Stage implements GUIInterface {
             }
             sale.voidLastItem();
             setTotalLabel();
-            barcode.requestFocus();
+            if (!barcode.isFocused()) {
+                barcode.requestFocus();
+            }
         });
 
         mainPane.add(staffLabel, 0, 0, 2, 1);
@@ -702,7 +712,9 @@ public class MainStage extends Stage implements GUIInterface {
             if (!barcode.getText().equals("")) {
                 getProductByBarcode(barcode.getText());
                 barcode.setText("");
+            if (!barcode.isFocused()) {
                 barcode.requestFocus();
+            }
             }
         });
 
@@ -1006,7 +1018,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentRefund.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         paymentRefund.setMinSize(0, 0);
         paymentRefund.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        
+
         loyaltyButton = new Button("Spend Points");
         loyaltyButton.setId("paymentMethods");
         loyaltyButton.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -1016,12 +1028,12 @@ public class MainStage extends Stage implements GUIInterface {
             try {
                 final Customer c = dc.getCustomer(sale.getCustomer());
                 int maxSpend = sale.getTotal().divide(new BigDecimal(dc.getSetting("TOTAL_SPEND_VALE"))).intValue();
-                if(c.getLoyaltyPoints() < maxSpend){
+                if (c.getLoyaltyPoints() < maxSpend) {
                     maxSpend = c.getLoyaltyPoints();
                 }
                 final int toSpend = NumberEntry.showNumberEntryDialog(this, "Points remaining: " + c.getLoyaltyPoints() + ". Max for sale: " + maxSpend + ".", maxSpend);
                 final int res = c.removeLoyaltyPoints(toSpend);
-                if(res == -1){
+                if (res == -1) {
                     MessageDialog.showMessage(this, "Error", "Not Enough Points");
                     return;
                 }
@@ -1584,7 +1596,9 @@ public class MainStage extends Stage implements GUIInterface {
             button.setOnAction((ActionEvent event) -> {
                 buttonPane.getChildren().clear();
                 buttonPane.getChildren().add(grid);
+            if (!barcode.isFocused()) {
                 barcode.requestFocus();
+            }
             });
             xPos++;
             if (xPos == 4) {
@@ -1659,7 +1673,9 @@ public class MainStage extends Stage implements GUIInterface {
                             Platform.runLater(() -> {
                                 onProductButton(i); //When clicked, add the item to the sale.
                                 barcode.setText("");
-                                barcode.requestFocus();
+            if (!barcode.isFocused()) {
+                barcode.requestFocus();
+            }
                             });
                         });
                         grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
