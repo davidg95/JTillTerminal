@@ -364,6 +364,7 @@ public class MainStage extends Stage implements GUIInterface {
                 barcode.setText("");
             }
             quantity.setText("Quantity: " + itemQuantity);
+            barcode.requestFocus();
         });
 
         voidSelected = new Button("Void Selected");
@@ -376,6 +377,7 @@ public class MainStage extends Stage implements GUIInterface {
                 obTable.remove((SaleItem) itemsTable.getSelectionModel().getSelectedItem());
                 setTotalLabel();
             }
+            barcode.requestFocus();
         });
 
         barcode = new TextField();
@@ -435,6 +437,7 @@ public class MainStage extends Stage implements GUIInterface {
                     showMessageAlert("Item not discountable", 2000);
                 }
             }
+            barcode.requestFocus();
         });
 
         assisstance = new Button("Assisstance");
@@ -450,6 +453,7 @@ public class MainStage extends Stage implements GUIInterface {
             } catch (IOException ex) {
                 MessageDialog.showMessage(this, "Assisstance", ex.getMessage());
             }
+            barcode.requestFocus();
         });
 
         alertMessage = new Label();
@@ -480,6 +484,7 @@ public class MainStage extends Stage implements GUIInterface {
             }
             sale.voidLastItem();
             setTotalLabel();
+            barcode.requestFocus();
         });
 
         mainPane.add(staffLabel, 0, 0, 2, 1);
@@ -697,6 +702,7 @@ public class MainStage extends Stage implements GUIInterface {
             if (!barcode.getText().equals("")) {
                 getProductByBarcode(barcode.getText());
                 barcode.setText("");
+                barcode.requestFocus();
             }
         });
 
@@ -1578,6 +1584,7 @@ public class MainStage extends Stage implements GUIInterface {
             button.setOnAction((ActionEvent event) -> {
                 buttonPane.getChildren().clear();
                 buttonPane.getChildren().add(grid);
+                barcode.requestFocus();
             });
             xPos++;
             if (xPos == 4) {
@@ -1651,6 +1658,8 @@ public class MainStage extends Stage implements GUIInterface {
                         button.setOnAction((ActionEvent e) -> {
                             Platform.runLater(() -> {
                                 onProductButton(i); //When clicked, add the item to the sale.
+                                barcode.setText("");
+                                barcode.requestFocus();
                             });
                         });
                         grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
