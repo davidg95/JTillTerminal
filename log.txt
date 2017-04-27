@@ -1,89 +1,26 @@
-JTill log Wed Apr 26 15:41:38 BST 2017
-[15:41:38] [INFO] Starting JTill Terminal
-[15:41:38] [INFO] Initalising
-[15:41:41] [INFO] Loading properties file
-[15:41:41] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[15:41:41] [INFO] Max sales set to {0}
-[15:41:41] [INFO] Set discounts in cache
-[15:41:41] [INFO] Loading screen and button configurations from the server
-[15:41:41] [INFO] Got {0} screens from the server
-[15:41:41] [INFO] Getting buttons for {0} screen
-[15:41:41] [INFO] Got {0} buttons for this screen
-[15:41:41] [INFO] Getting buttons for {0} screen
-[15:41:41] [INFO] Got {0} buttons for this screen
-[15:41:41] [INFO] Getting buttons for {0} screen
-[15:41:41] [INFO] Got {0} buttons for this screen
-[15:41:41] [INFO] Getting buttons for {0} screen
-[15:41:41] [INFO] Got {0} buttons for this screen
-[15:41:41] [INFO] Saving properties file
-[15:41:42] [INFO] Getting all discounts from cache
-[15:42:10] [INFO] Item has been added to a sale
-[15:42:11] [INFO] Item has been added to a sale
-[15:42:11] [INFO] Item has been added to a sale
-[15:42:12] [INFO] Item has been added to a sale
-[15:42:13] [INFO] Item has been added to a sale
-[15:42:13] [INFO] Item has been added to a sale
-[15:42:15] [INFO] Sale {0} sent to server
-[15:42:15] [INFO] Getting all discounts from cache
-[15:42:18] [INFO] Item has been added to a sale
-[15:42:18] [INFO] Item has been added to a sale
-[15:42:21] [INFO] Sale {0} sent to server
-[15:42:21] [INFO] Getting all discounts from cache
-[15:42:22] [INFO] Item has been added to a sale
-[15:42:22] [INFO] Item has been added to a sale
-[15:42:22] [INFO] Item has been added to a sale
-[15:42:22] [INFO] Item has been added to a sale
-[15:42:23] [INFO] Item has been added to a sale
-[15:42:23] [INFO] Item has been added to a sale
-[15:42:23] [INFO] Item has been added to a sale
-[15:42:23] [INFO] Item has been added to a sale
-[15:42:23] [INFO] Item has been added to a sale
-[15:42:24] [INFO] Item has been added to a sale
-[15:42:24] [INFO] Item has been added to a sale
-[15:42:24] [INFO] Item has been added to a sale
-[15:42:24] [INFO] Item has been added to a sale
-[15:42:24] [INFO] Item has been added to a sale
-[15:42:25] [INFO] Item has been added to a sale
-[15:42:25] [INFO] Item has been added to a sale
-[15:42:25] [INFO] Item has been added to a sale
-[15:42:25] [INFO] Item has been added to a sale
-[15:42:25] [INFO] Item has been added to a sale
-[15:42:25] [INFO] Item has been added to a sale
-[15:42:26] [INFO] Item has been added to a sale
-[15:42:26] [INFO] Item has been added to a sale
-[15:42:26] [INFO] Item has been added to a sale
-[15:42:26] [INFO] Item has been added to a sale
-[15:42:26] [INFO] Item has been added to a sale
-[15:42:27] [INFO] Item has been added to a sale
-[15:42:27] [INFO] Item has been added to a sale
-[15:42:27] [INFO] Item has been added to a sale
-[15:42:28] [INFO] Item has been added to a sale
-[15:42:28] [INFO] Item has been added to a sale
-[15:42:28] [INFO] Item has been added to a sale
-[15:42:28] [INFO] Item has been added to a sale
-[15:42:29] [INFO] Item has been added to a sale
-[15:42:29] [INFO] Item has been added to a sale
-[15:42:29] [INFO] Item has been added to a sale
-[15:42:29] [INFO] Item has been added to a sale
-[15:42:29] [INFO] Item has been added to a sale
-[15:42:30] [INFO] Item has been added to a sale
-[15:42:30] [INFO] Item has been added to a sale
-[15:42:30] [INFO] Item has been added to a sale
-[15:42:31] [INFO] Item has been added to a sale
-[15:42:31] [INFO] Item has been added to a sale
-[15:42:33] [INFO] Item has been added to a sale
-[15:42:33] [INFO] Item has been added to a sale
-[15:42:33] [INFO] Item has been added to a sale
-[15:42:33] [INFO] Item has been added to a sale
-[15:42:34] [INFO] Item has been added to a sale
-[15:42:34] [INFO] Item has been added to a sale
-[15:42:34] [INFO] Item has been added to a sale
-[15:42:35] [INFO] Item has been added to a sale
-[15:42:35] [INFO] Item has been added to a sale
-[15:42:35] [INFO] Item has been added to a sale
-[15:42:36] [INFO] Item has been added to a sale
-[15:42:36] [INFO] Item has been added to a sale
-[15:42:36] [INFO] Item has been added to a sale
-[15:42:39] [INFO] Sale {0} sent to server
-[15:42:39] [INFO] Getting all discounts from cache
-[15:43:01] [INFO] Assisstance message sent to server
+JTill log Thu Apr 27 14:10:09 BST 2017
+[14:10:09] [INFO] Starting JTill Terminal
+[14:10:09] [INFO] Initalising
+[14:10:11] [INFO] Loading properties file
+[14:10:11] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[14:10:11] [INFO] Max sales set to {0}
+[14:10:11] [INFO] Set discounts in cache
+[14:10:11] [INFO] Loading screen and button configurations from the server
+[14:10:11] [INFO] Got {0} screens from the server
+[14:10:11] [INFO] Getting buttons for {0} screen
+[14:10:11] [INFO] Got {0} buttons for this screen
+[14:10:11] [INFO] Getting buttons for {0} screen
+[14:10:11] [INFO] Got {0} buttons for this screen
+[14:10:11] [INFO] Getting buttons for {0} screen
+[14:10:11] [INFO] Got {0} buttons for this screen
+[14:10:11] [INFO] Getting buttons for {0} screen
+[14:10:11] [INFO] Got {0} buttons for this screen
+[14:10:11] [INFO] Getting buttons for {0} screen
+[14:10:11] [INFO] Got {0} buttons for this screen
+[14:10:11] [INFO] Saving properties file
+[14:10:12] [INFO] Getting all discounts from cache
+[14:10:14] [INFO] Item has been added to a sale
+[14:10:18] [INFO] Item has been added to a sale
+[14:10:20] [INFO] Sale {0} sent to server
+[14:10:20] [INFO] Getting all discounts from cache
+[14:10:21] [INFO] Getting all discounts from cache
