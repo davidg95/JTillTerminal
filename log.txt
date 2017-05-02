@@ -1,26 +1,14 @@
-JTill log Mon May 01 13:38:52 BST 2017
-[13:38:52] [INFO] Starting JTill Terminal
-[13:38:52] [INFO] Initalising
-[13:38:54] [INFO] Loading properties file
-[13:38:54] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[13:38:54] [INFO] Max sales set to {0}
-[13:38:55] [INFO] Set discounts in cache
-[13:38:55] [INFO] Loading screen and button configurations from the server
-[13:38:55] [INFO] Got {0} screens from the server
-[13:38:55] [INFO] Getting buttons for {0} screen
-[13:38:55] [INFO] Got {0} buttons for this screen
-[13:39:51] [INFO] Getting buttons for {0} screen
-[13:39:51] [INFO] Got {0} buttons for this screen
-[13:39:53] [INFO] Getting buttons for {0} screen
-[13:39:53] [INFO] Got {0} buttons for this screen
-[13:39:55] [INFO] Getting buttons for {0} screen
-[13:39:55] [INFO] Got {0} buttons for this screen
-[13:39:56] [INFO] Getting buttons for {0} screen
-[13:39:56] [INFO] Got {0} buttons for this screen
-[13:39:59] [INFO] Saving properties file
-[13:40:05] [INFO] Getting all discounts from cache
-[13:40:12] [INFO] Item has been added to a sale
-[13:40:54] [WARNING] Error connecting to server
-[13:40:54] [INFO] Adding sale
-[13:40:54] [SEVERE] java.net.SocketException: Connection reset by peer: socket write error
-[13:40:54] [INFO] Getting all discounts from cache
+JTill log Tue May 02 12:36:49 BST 2017
+[12:36:49] [INFO] Starting JTill Terminal
+[12:36:49] [INFO] Initalising
+[12:36:52] [INFO] Loading properties file
+[12:36:52] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[12:36:52] [INFO] Max sales set to {0}
+[12:36:52] [INFO] Set discounts in cache
+[12:36:52] [INFO] Loading screen and button configurations from the server
+[12:36:52] [INFO] Got {0} screens from the server
+[12:36:52] [INFO] Getting buttons for {0} screen
+[12:36:52] [INFO] Got {0} buttons for this screen
+[12:36:52] [INFO] Saving properties file
+[12:36:55] [INFO] Getting all discounts from cache
+[12:36:59] [INFO] Getting all discounts from cache

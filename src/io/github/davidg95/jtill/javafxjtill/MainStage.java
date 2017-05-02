@@ -1525,7 +1525,7 @@ public class MainStage extends Stage implements GUIInterface {
                 if (refundMode) {
                     itemQuantity = -itemQuantity; //If in refund mode, set the quantity to negative.
                 }
-            } catch (IOException | SQLException | CategoryNotFoundException ex) {
+            } catch (IOException | SQLException | JTillException ex) {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else { //If the item was a discount
@@ -1618,7 +1618,7 @@ public class MainStage extends Stage implements GUIInterface {
             LOG.log(Level.INFO, "Got {0} buttons for this screen", buttons.size());
 
             //Add the spaces first.
-            for (TillButton b : buttons) {
+            buttons.forEach((b) -> {
                 if (b.getName().equals("[SPACE]")) { //If the button is a space, add en empty box.
                     Pane box = new Pane();
                     box.setId("productsgrid");
@@ -1629,7 +1629,7 @@ public class MainStage extends Stage implements GUIInterface {
                     grid.add(box, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight());
                 } else { //If it is a button add a button.
                 }
-            }
+            });
             //Add the buttons on top.
             for (TillButton b : buttons) {
                 if (b.getName().equals("[SPACE]")) { //If the button is a space, add en empty box.
