@@ -28,6 +28,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import io.github.davidg95.JTill.jtill.DataConnect;
+import io.github.davidg95.JTill.jtill.Utilities;
 
 /**
  *
@@ -110,7 +111,18 @@ public class ProductSelectDialog extends Stage {
         HBox hSearchBarcode = new HBox(0);
         hSearchBarcode.getChildren().add(searchBarcode);
         searchBarcode.setOnAction((ActionEvent event) -> {
-            String barcode = EntryDialog.show(this, "Product Search", "Enter or scan barcode");
+            String barcode = EntryDialog.show(this, "Product Lookup", "Enter or scan barcode");
+            if(barcode == null){
+                return;
+            }
+            if(barcode.length() == 0){
+                MessageDialog.showMessage(this,  "Product Lookup", "A barcode must be entered");
+                return;
+            }
+            if(!Utilities.isNumber(barcode)){
+                MessageDialog.showMessage(this, "Product Lookup", "Only numbers must be entered");
+                return;
+            }
             try {
                 Product p = dc.getProductByBarcode(barcode);
                 List<Product> res = new ArrayList<>();

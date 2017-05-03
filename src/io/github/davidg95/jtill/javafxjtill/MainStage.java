@@ -356,11 +356,22 @@ public class MainStage extends Stage implements GUIInterface {
         quantity.setOnAction((ActionEvent event) -> {
             if (barcode.getText().equals("")) {
                 int val = NumberEntry.showNumberEntryDialog(this, "Enter Quantity", itemQuantity);
-                if (val != 0) {
+                if (val > 0) {
                     itemQuantity = val;
+                } else {
+                    MessageDialog.showMessage(this, "Quantity", "Quantity must be greater than zero");
                 }
             } else {
-                itemQuantity = Integer.parseInt(barcode.getText());
+                if (Utilities.isNumber(barcode.getText())) {
+                    int val = Integer.parseInt(barcode.getText());
+                    if (val > 0) {
+                        itemQuantity = Integer.parseInt(barcode.getText());
+                    } else {
+                        MessageDialog.showMessage(this, "Quantity", "Quantity must be greater than zero");
+                    }
+                } else{
+                    MessageDialog.showMessage(this, "Quantity", "A number must be entered");
+                }
                 barcode.setText("");
             }
             quantity.setText("Quantity: " + itemQuantity);
@@ -390,7 +401,9 @@ public class MainStage extends Stage implements GUIInterface {
         barcode.setOnAction((ActionEvent event) -> {
             Platform.runLater(() -> {
                 if (!barcode.getText().equals("")) {
-                    getProductByBarcode(barcode.getText());
+                    if (Utilities.isNumber(barcode.getText())) {
+                        getProductByBarcode(barcode.getText());
+                    }
                     barcode.setText("");
                 }
             });
@@ -452,6 +465,10 @@ public class MainStage extends Stage implements GUIInterface {
         assisstance.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         assisstance.setOnAction((ActionEvent event) -> {
             String message = Keyboard.show(this, "Enter message to send");
+            if(message == null || message.length() == 0){
+                showMessageAlert("Message Cancelled", 2000);
+                return;
+            }
             try {
                 dc.assisstance(message);
                 LOG.log(Level.INFO, "Assisstance message sent to server");
@@ -712,9 +729,9 @@ public class MainStage extends Stage implements GUIInterface {
             if (!barcode.getText().equals("")) {
                 getProductByBarcode(barcode.getText());
                 barcode.setText("");
-            if (!barcode.isFocused()) {
-                barcode.requestFocus();
-            }
+                if (!barcode.isFocused()) {
+                    barcode.requestFocus();
+                }
             }
         });
 
@@ -1596,9 +1613,9 @@ public class MainStage extends Stage implements GUIInterface {
             button.setOnAction((ActionEvent event) -> {
                 buttonPane.getChildren().clear();
                 buttonPane.getChildren().add(grid);
-            if (!barcode.isFocused()) {
-                barcode.requestFocus();
-            }
+                if (!barcode.isFocused()) {
+                    barcode.requestFocus();
+                }
             });
             xPos++;
             if (xPos == 4) {
@@ -1673,9 +1690,9 @@ public class MainStage extends Stage implements GUIInterface {
                             Platform.runLater(() -> {
                                 onProductButton(i); //When clicked, add the item to the sale.
                                 barcode.setText("");
-            if (!barcode.isFocused()) {
-                barcode.requestFocus();
-            }
+                                if (!barcode.isFocused()) {
+                                    barcode.requestFocus();
+                                }
                             });
                         });
                         grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.

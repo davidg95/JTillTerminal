@@ -5,6 +5,7 @@
  */
 package io.github.davidg95.jtill.javafxjtill;
 
+import io.github.davidg95.JTill.jtill.Utilities;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -138,6 +139,22 @@ public class SetupDialog extends Stage {
         HBox hEnter = new HBox(10);
         hEnter.getChildren().add(enter);
         enter.setOnAction((ActionEvent event) -> {
+            String name = terminalName.getText();
+            String address = serverAddress.getText();
+            String port = serverPort.getText();
+            if(name.length() == 0 || address.length() == 0 || port.length() == 0){
+                MessageDialog.showMessage(this, "Settings", "Fill out all fields");
+                return;
+            }
+            if(!Utilities.isNumber(port)){
+                MessageDialog.showMessage(this, "Settings", "A number must be entered for port");
+                return;
+            }
+            int portVal = Integer.parseInt(port);
+            if(portVal < 1 || portVal > 65535){
+                MessageDialog.showMessage(this, "Settings", "Port must been in range 1-65535");
+                return;
+            }
             JavaFXJTill.NAME = terminalName.getText();
             JavaFXJTill.SERVER = serverAddress.getText();
             JavaFXJTill.PORT = Integer.parseInt(serverPort.getText());

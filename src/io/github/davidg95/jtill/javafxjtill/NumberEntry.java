@@ -5,6 +5,7 @@
  */
 package io.github.davidg95.jtill.javafxjtill;
 
+import io.github.davidg95.JTill.jtill.Utilities;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -36,9 +37,9 @@ public class NumberEntry extends Stage {
 
     private int initValue;
     private boolean init;
-    
+
     private final String title;
-    
+
     private Pane canvas;
 
     public NumberEntry(Window parent, String title) {
@@ -382,8 +383,10 @@ public class NumberEntry extends Stage {
 
     private void onEnter(TextField number) {
         if (!number.getText().equals("")) {
-            value = Integer.parseInt(number.getText());
+            if (Utilities.isNumber(number.getText())) {
+                value = Integer.parseInt(number.getText());
+                hide();
+            }
         }
-        hide();
     }
 }
