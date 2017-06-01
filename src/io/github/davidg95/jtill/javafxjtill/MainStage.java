@@ -877,7 +877,7 @@ public class MainStage extends Stage implements GUIInterface {
         chargeAccount.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         chargeAccount.setDisable(true);
         chargeAccount.setOnAction((ActionEvent event) -> {
-            sale.setChargeAccount(true);
+            sale.setMOP(Sale.MOP_CHARGEACCOUNT);
             Platform.runLater(() -> {
                 addMoney(PaymentItem.PaymentType.ACCOUNT, amountDue);
             });
