@@ -369,7 +369,7 @@ public class MainStage extends Stage implements GUIInterface {
                     } else {
                         MessageDialog.showMessage(this, "Quantity", "Quantity must be greater than zero");
                     }
-                } else{
+                } else {
                     MessageDialog.showMessage(this, "Quantity", "A number must be entered");
                 }
                 barcode.setText("");
@@ -386,8 +386,18 @@ public class MainStage extends Stage implements GUIInterface {
         voidSelected.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         voidSelected.setOnAction((ActionEvent event) -> {
             if (itemsTable.getSelectionModel().getSelectedIndex() > -1) {
-                sale.voidItem((SaleItem) itemsTable.getSelectionModel().getSelectedItem());
-                obTable.remove((SaleItem) itemsTable.getSelectionModel().getSelectedItem());
+                final SaleItem item = (SaleItem) itemsTable.getSelectionModel().getSelectedItem();
+                sale.voidItem(item);
+                obTable.remove(item);
+                try {
+                    final Tax t = dc.getTax(dc.getProduct(item.getItem()).getTax());
+                    double taxP = t.getValue() / 100;
+                    final BigDecimal tax = item.getPrice().multiply(new BigDecimal(Double.toString(taxP)));
+                    tax.negate();
+                    sale.addTax(tax);
+                } catch (IOException | ProductNotFoundException | SQLException | JTillException ex) {
+                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 setTotalLabel();
             }
             if (!barcode.isFocused()) {
@@ -465,7 +475,7 @@ public class MainStage extends Stage implements GUIInterface {
         assisstance.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         assisstance.setOnAction((ActionEvent event) -> {
             String message = Keyboard.show(this, "Enter message to send");
-            if(message == null || message.length() == 0){
+            if (message == null || message.length() == 0) {
                 showMessageAlert("Message Cancelled", 2000);
                 return;
             }
@@ -877,7 +887,7 @@ public class MainStage extends Stage implements GUIInterface {
         chargeAccount.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         chargeAccount.setDisable(true);
         chargeAccount.setOnAction((ActionEvent event) -> {
-            sale.setMOP(Sale.MOP_CHARGEACCOUNT);
+            sale.setMop(Sale.MOP_CHARGEACCOUNT);
             Platform.runLater(() -> {
                 addMoney(PaymentItem.PaymentType.ACCOUNT, amountDue);
             });
@@ -1558,6 +1568,14 @@ public class MainStage extends Stage implements GUIInterface {
             }
         }
         boolean inSale = sale.addItem(i, itemQuantity); //Add the item to the sale
+        try {
+            final Tax t = dc.getTax(((Product) i).getTax());
+            final double taxP = t.getValue() / 100;
+            final BigDecimal tax = i.getPrice().multiply(new BigDecimal(itemQuantity)).multiply(new BigDecimal(Double.toString(taxP)));
+            sale.addTax(tax);
+        } catch (IOException | SQLException | JTillException ex) {
+            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (!inSale) {
             obTable.add(sale.getLastAdded());
             itemsTable.scrollTo(obTable.size() - 1);
