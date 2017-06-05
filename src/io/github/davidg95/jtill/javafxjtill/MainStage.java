@@ -390,12 +390,9 @@ public class MainStage extends Stage implements GUIInterface {
                 sale.voidItem(item);
                 obTable.remove(item);
                 try {
-                    final Tax t = dc.getTax(dc.getProduct(item.getItem()).getTax());
-                    double taxP = t.getValue() / 100;
-                    final BigDecimal tax = item.getPrice().multiply(new BigDecimal(Double.toString(taxP)));
-                    tax.negate();
-                    sale.addTax(tax);
-                } catch (IOException | ProductNotFoundException | SQLException | JTillException ex) {
+                    final Product p = dc.getProduct((item.getItem()));
+                    double taxP = p.getTax().getValue() / 100;
+                } catch (IOException | ProductNotFoundException | SQLException ex) {
                     Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 setTotalLabel();
@@ -1514,7 +1511,7 @@ public class MainStage extends Stage implements GUIInterface {
             try {
                 if (!refundMode) {
                     sale.notifyAllListeners(new ProductEvent(p), itemQuantity);
-                    Category cat = dc.getCategory(p.getCategory());
+                    Category cat = dc.getCategory(p.getCategoryID());
                     if (cat.isTimeRestrict()) { //Check for time restrictions
                         Calendar c = Calendar.getInstance();
                         long now = c.getTimeInMillis();
@@ -1568,14 +1565,6 @@ public class MainStage extends Stage implements GUIInterface {
             }
         }
         boolean inSale = sale.addItem(i, itemQuantity); //Add the item to the sale
-        try {
-            final Tax t = dc.getTax(((Product) i).getTax());
-            final double taxP = t.getValue() / 100;
-            final BigDecimal tax = i.getPrice().multiply(new BigDecimal(itemQuantity)).multiply(new BigDecimal(Double.toString(taxP)));
-            sale.addTax(tax);
-        } catch (IOException | SQLException | JTillException ex) {
-            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-        }
         if (!inSale) {
             obTable.add(sale.getLastAdded());
             itemsTable.scrollTo(obTable.size() - 1);
