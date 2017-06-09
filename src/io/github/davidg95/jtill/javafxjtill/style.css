@@ -63,7 +63,7 @@ and open the template in the editor.
 }
 
 #cRed{
-    -fx-background-color: #ff3333;
+    -fx-background-color: red;
     -fx-text-fill: white;
 }
 

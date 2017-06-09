@@ -190,7 +190,6 @@ public class MainStage extends Stage implements GUIInterface {
             while (tryCon) {
                 try {
                     tryConnect();
-                    MessageScreen.hideWindow();
                     tryCon = false;
                 } catch (IOException ex) {
                     MessageScreen.hideWindow();
@@ -205,19 +204,23 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     private void tryConnect() throws IOException {
-        JavaFXJTill.loadProperties();
-        dc.setGUI(MainStage.this);
-        if (dc instanceof ServerConnection) {
-            ServerConnection sc = (ServerConnection) dc;
-            LOG.log(Level.INFO, "Attempting connection to the server on IP address " + JavaFXJTill.SERVER);
-            till = sc.connect(JavaFXJTill.SERVER, JavaFXJTill.PORT, JavaFXJTill.NAME, JavaFXJTill.uuid);
-            JavaFXJTill.uuid = till.getUuid();
-            JavaFXJTill.saveProperties();
-            if (staff == null) {
-                this.sale = new Sale(till.getId(), 0);
-            } else {
-                this.sale = new Sale(till.getId(), staff.getId());
+        try {
+            JavaFXJTill.loadProperties();
+            dc.setGUI(MainStage.this);
+            if (dc instanceof ServerConnection) {
+                ServerConnection sc = (ServerConnection) dc;
+                LOG.log(Level.INFO, "Attempting connection to the server on IP address " + JavaFXJTill.SERVER);
+                till = sc.connect(JavaFXJTill.SERVER, JavaFXJTill.PORT, JavaFXJTill.NAME, JavaFXJTill.uuid);
+                JavaFXJTill.uuid = till.getUuid();
+                JavaFXJTill.saveProperties();
+                if (staff == null) {
+                    this.sale = new Sale(till.getId(), 0);
+                } else {
+                    this.sale = new Sale(till.getId(), staff.getId());
+                }
             }
+        } finally {
+            MessageScreen.hideWindow();
         }
     }
 
@@ -1507,19 +1510,19 @@ public class MainStage extends Stage implements GUIInterface {
 
     public void addItemToSale(Item i) {
         if (i instanceof Product) { //If the item is a product
-            Product p = (Product) i;
+            final Product p = (Product) i;
             try {
                 if (!refundMode) {
                     sale.notifyAllListeners(new ProductEvent(p), itemQuantity);
                     Category cat = dc.getCategory(p.getCategoryID());
                     if (cat.isTimeRestrict()) { //Check for time restrictions
-                        Calendar c = Calendar.getInstance();
-                        long now = c.getTimeInMillis();
+                        final Calendar c = Calendar.getInstance();
+                        final long now = c.getTimeInMillis();
                         c.set(Calendar.HOUR_OF_DAY, 1);
                         c.set(Calendar.MINUTE, 0);
                         c.set(Calendar.SECOND, 0);
                         c.set(Calendar.MILLISECOND, 0);
-                        long passed = now - c.getTimeInMillis();
+                        final long passed = now - c.getTimeInMillis();
                         if (!cat.isSellTime(new Time(passed))) { //If the item can not be sold now due to the time
                             MessageDialog.showMessage(this, "Time Restriction", "This item cannot be sold now");
                             return;
@@ -1537,7 +1540,12 @@ public class MainStage extends Stage implements GUIInterface {
                     if (barcode.getText().equals("")) {
                         value = NumberEntry.showNumberEntryDialog(this, "Enter price"); //Show the dialog asking for the price
                     } else {
-                        value = Integer.parseInt(barcode.getText()); //Get the price value from the input field
+                        final String bc = barcode.getText();
+                        if (bc.contains(".") || !Utilities.isNumber(bc)) {
+                            showMessageAlert("Illegal character", 2000L);
+                            return;
+                        }
+                        value = Integer.parseInt(bc); //Get the price value from the input field
                         barcode.setText("");
                     }
                     if (value == 0) {
@@ -1553,7 +1561,7 @@ public class MainStage extends Stage implements GUIInterface {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else { //If the item was a discount
-            Discount d = (Discount) i;
+            final Discount d = (Discount) i;
             //Check to see if it is a percentage discount for a price discount
             if (d.getAction() == Discount.PERCENTAGE_OFF) {
                 //If it is a percentage discounts then the price to take of must be calculated
@@ -1564,7 +1572,7 @@ public class MainStage extends Stage implements GUIInterface {
                 }
             }
         }
-        boolean inSale = sale.addItem(i, itemQuantity); //Add the item to the sale
+        final boolean inSale = sale.addItem(i, itemQuantity); //Add the item to the sale
         if (!inSale) {
             obTable.add(sale.getLastAdded());
             itemsTable.scrollTo(obTable.size() - 1);
