@@ -1,19 +1,26 @@
-JTill log Fri Jun 16 15:17:37 BST 2017
-[15:17:37] [INFO] Starting JTill Terminal
-[15:17:37] [INFO] Initalising
-[15:17:40] [INFO] Loading properties file
-[15:17:40] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[15:17:40] [INFO] Max sales set to {0}
-[15:17:40] [INFO] Set discounts in cache
-[15:17:40] [INFO] Loading screen and button configurations from the server
-[15:17:40] [INFO] Got {0} screens from the server
-[15:17:40] [INFO] Getting buttons for {0} screen
-[15:17:40] [INFO] Got {0} buttons for this screen
-[15:17:40] [INFO] Saving properties file
-[15:17:41] [INFO] Getting all discounts from cache
-[15:17:43] [INFO] Item has been added to a sale
-[15:17:44] [INFO] Item has been added to a sale
-[15:17:44] [INFO] Item has been added to a sale
-[15:17:46] [INFO] Sale {0} sent to server
-[15:17:46] [INFO] Getting all discounts from cache
-[15:17:47] [INFO] Getting all discounts from cache
+JTill log Fri Jun 16 15:34:21 BST 2017
+[15:34:21] [INFO] Starting JTill Terminal
+[15:34:21] [INFO] Initalising
+[15:34:23] [INFO] Loading properties file
+[15:34:23] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[15:34:23] [INFO] Max sales set to {0}
+[15:34:23] [INFO] Set discounts in cache
+[15:34:23] [INFO] Loading screen and button configurations from the server
+[15:34:23] [INFO] Got {0} screens from the server
+[15:34:23] [INFO] Getting buttons for {0} screen
+[15:34:23] [INFO] Got {0} buttons for this screen
+[15:34:23] [INFO] Saving properties file
+[15:34:26] [INFO] Getting all discounts from cache
+[15:34:27] [INFO] Item has been added to a sale
+[15:34:28] [INFO] Item has been added to a sale
+[15:34:29] [INFO] Sale {0} sent to server
+[15:34:29] [INFO] Getting all discounts from cache
+[15:34:31] [INFO] Item has been added to a sale
+[15:34:31] [INFO] Item has been added to a sale
+[15:34:32] [INFO] Item has been added to a sale
+[15:34:33] [INFO] Checking cache for {0}
+[15:34:33] [INFO] Product not found in cache
+[15:34:33] [INFO] Checking server for product {0}
+[15:34:33] [WARNING] Product not found on server
+[15:34:34] [INFO] Sale {0} sent to server
+[15:34:34] [INFO] Getting all discounts from cache
