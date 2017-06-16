@@ -1,23 +1,19 @@
-JTill log Thu Jun 15 16:44:27 BST 2017
-[16:44:27] [INFO] Starting JTill Terminal
-[16:44:27] [INFO] Initalising
-[16:44:29] [INFO] Loading properties file
-[16:44:29] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[16:44:29] [INFO] Max sales set to {0}
-[16:44:29] [INFO] Set discounts in cache
-[16:44:29] [INFO] Loading screen and button configurations from the server
-[16:44:29] [INFO] Got {0} screens from the server
-[16:44:29] [INFO] Getting buttons for {0} screen
-[16:44:29] [INFO] Got {0} buttons for this screen
-[16:44:29] [INFO] Saving properties file
-[16:44:31] [INFO] Getting all discounts from cache
-[16:44:33] [INFO] Item has been added to a sale
-[16:44:34] [INFO] Item has been added to a sale
-[16:44:35] [INFO] Item has been added to a sale
-[16:44:35] [INFO] Checking cache for {0}
-[16:44:35] [INFO] Product not found in cache
-[16:44:35] [INFO] Checking server for product {0}
-[16:44:35] [WARNING] Product not found on server
-[16:44:37] [INFO] Sale {0} sent to server
-[16:44:37] [INFO] Getting all discounts from cache
-[16:44:38] [INFO] Getting all discounts from cache
+JTill log Fri Jun 16 15:17:37 BST 2017
+[15:17:37] [INFO] Starting JTill Terminal
+[15:17:37] [INFO] Initalising
+[15:17:40] [INFO] Loading properties file
+[15:17:40] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[15:17:40] [INFO] Max sales set to {0}
+[15:17:40] [INFO] Set discounts in cache
+[15:17:40] [INFO] Loading screen and button configurations from the server
+[15:17:40] [INFO] Got {0} screens from the server
+[15:17:40] [INFO] Getting buttons for {0} screen
+[15:17:40] [INFO] Got {0} buttons for this screen
+[15:17:40] [INFO] Saving properties file
+[15:17:41] [INFO] Getting all discounts from cache
+[15:17:43] [INFO] Item has been added to a sale
+[15:17:44] [INFO] Item has been added to a sale
+[15:17:44] [INFO] Item has been added to a sale
+[15:17:46] [INFO] Sale {0} sent to server
+[15:17:46] [INFO] Getting all discounts from cache
+[15:17:47] [INFO] Getting all discounts from cache
