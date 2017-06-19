@@ -1,14 +1,30 @@
-JTill log Fri Jun 16 16:59:18 BST 2017
-[16:59:18] [INFO] Starting JTill Terminal
-[16:59:18] [INFO] Initalising
-[16:59:21] [INFO] Loading properties file
-[16:59:21] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[16:59:21] [INFO] Max sales set to {0}
-[16:59:21] [INFO] Set discounts in cache
-[16:59:21] [INFO] Loading screen and button configurations from the server
-[16:59:21] [INFO] Got {0} screens from the server
-[16:59:21] [INFO] Getting buttons for {0} screen
-[16:59:21] [INFO] Got {0} buttons for this screen
-[16:59:21] [INFO] Saving properties file
-[16:59:22] [INFO] Getting all discounts from cache
-[16:59:25] [INFO] Getting all discounts from cache
+JTill log Mon Jun 19 13:19:10 BST 2017
+[13:19:10] [INFO] Starting JTill Terminal
+[13:19:10] [INFO] Initalising
+[13:19:12] [INFO] Loading properties file
+[13:19:12] [INFO] Attempting connection to the server on IP address 192.168.1.78
+[13:19:12] [INFO] Max sales set to {0}
+[13:19:13] [INFO] Set discounts in cache
+[13:19:13] [INFO] Loading screen and button configurations from the server
+[13:19:14] [INFO] Got {0} screens from the server
+[13:19:14] [INFO] Getting buttons for {0} screen
+[13:19:14] [INFO] Got {0} buttons for this screen
+[13:19:14] [INFO] Getting buttons for {0} screen
+[13:19:14] [INFO] Got {0} buttons for this screen
+[13:19:16] [INFO] Getting buttons for {0} screen
+[13:19:16] [INFO] Got {0} buttons for this screen
+[13:19:16] [INFO] Getting buttons for {0} screen
+[13:19:16] [INFO] Got {0} buttons for this screen
+[13:19:17] [INFO] Getting buttons for {0} screen
+[13:19:17] [INFO] Got {0} buttons for this screen
+[13:19:18] [INFO] Getting buttons for {0} screen
+[13:19:18] [INFO] Got {0} buttons for this screen
+[13:19:19] [INFO] Getting buttons for {0} screen
+[13:19:19] [INFO] Got {0} buttons for this screen
+[13:19:21] [INFO] Getting buttons for {0} screen
+[13:19:21] [INFO] Got {0} buttons for this screen
+[13:19:21] [INFO] Saving properties file
+[13:19:24] [INFO] Getting all discounts from cache
+[13:19:32] [INFO] Assisstance message sent to server
+[13:19:40] [INFO] Assisstance message sent to server
+[13:19:41] [INFO] Getting all discounts from cache
