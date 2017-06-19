@@ -864,7 +864,7 @@ public class MainStage extends Stage implements GUIInterface {
         addCustomer.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
                 Platform.runLater(() -> {
-                    if (sale.getCustomer() != 1) {
+                    if (sale.getCustomerID() != 1) {
                         setCustomer(null);
                         chargeAccount.setDisable(true);
                         loyaltyButton.setDisable(true);
@@ -1053,7 +1053,7 @@ public class MainStage extends Stage implements GUIInterface {
         loyaltyButton.setDisable(true);
         loyaltyButton.setOnAction((ActionEvent event) -> {
             try {
-                final Customer c = dc.getCustomer(sale.getCustomer());
+                final Customer c = dc.getCustomer(sale.getCustomerID());
                 int maxSpend = sale.getTotal().divide(new BigDecimal(dc.getSetting("TOTAL_SPEND_VALE"))).intValue();
                 if (c.getLoyaltyPoints() < maxSpend) {
                     maxSpend = c.getLoyaltyPoints();
@@ -1223,7 +1223,7 @@ public class MainStage extends Stage implements GUIInterface {
                                 obTable.setAll(rs.getSaleItems());
                                 setTotalLabel();
                                 try {
-                                    final Customer c = dc.getCustomer(rs.getCustomer());
+                                    final Customer c = dc.getCustomer(rs.getCustomerID());
                                     setCustomer(c);
                                 } catch (CustomerNotFoundException ex) {
                                     Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
@@ -1303,12 +1303,12 @@ public class MainStage extends Stage implements GUIInterface {
             saleCustomer.setText(c.getName());
             addCustomer.setText("Remove Customer");
             chargeAccount.setDisable(false);
-            sale.setCustomer(c.getId());
+            sale.setCustomerID(c.getId());
         } else {
             saleCustomer.setText("No Customer");
             addCustomer.setText("Add Customer");
             chargeAccount.setDisable(true);
-            sale.setCustomer(1);
+            sale.setCustomerID(1);
         }
     }
 
@@ -1360,9 +1360,9 @@ public class MainStage extends Stage implements GUIInterface {
             LOG.log(Level.INFO, "Sale {0} sent to server", s.getId());
             if (dc.getSetting("ASK_EMAIL_RECEIPT").equals("TRUE")) {
                 if (YesNoDialog.showDialog(this, "Email Receipt", "Email Customer Receipt?") == YesNoDialog.YES) {
-                    if (sale.getCustomer() != 0) {
+                    if (sale.getCustomerID() != 0) {
                         try {
-                            final Customer c = dc.getCustomer(sale.getCustomer());
+                            final Customer c = dc.getCustomer(sale.getCustomerID());
                             dc.emailReceipt(c.getEmail(), sale);
                         } catch (CustomerNotFoundException ex) {
                             this.showMessage("Email", ex.getMessage());
@@ -1458,7 +1458,7 @@ public class MainStage extends Stage implements GUIInterface {
         } else {
             sale = new Sale(till.getId(), staff.getId());
         }
-        sale.setCustomer(1);
+        sale.setCustomerID(1);
         List<Discount> discounts = DiscountCache.getInstance().getAllDiscounts();
         //Create the discount checkers for the discounts.
         discounts.stream().map((d) -> new DiscountChecker(this, d)).forEachOrdered((checker) -> {
