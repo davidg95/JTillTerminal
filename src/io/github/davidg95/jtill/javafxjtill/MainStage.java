@@ -393,7 +393,7 @@ public class MainStage extends Stage implements GUIInterface {
                 sale.voidItem(item);
                 obTable.remove(item);
                 try {
-                    final Product p = dc.getProduct((item.getItem()));
+                    final Product p = dc.getProduct((item.getItemId()));
                     double taxP = p.getTax().getValue() / 100;
                 } catch (IOException | ProductNotFoundException | SQLException ex) {
                     Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
@@ -509,7 +509,7 @@ public class MainStage extends Stage implements GUIInterface {
         voidLast.setOnAction((ActionEvent event) -> {
             SaleItem last = sale.getLastAdded();
             for (SaleItem i : sale.getSaleItems()) {
-                if (i.getItem() == last.getItem()) {
+                if (i.getItemId() == last.getItemId()) {
                     if (i.getQuantity() == last.getQuantity()) {
                         obTable.remove(last);
                     } else {
