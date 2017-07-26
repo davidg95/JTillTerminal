@@ -153,6 +153,8 @@ public class MainStage extends Stage implements GUIInterface {
     private final double SCREEN_WIDTH = javafx.stage.Screen.getPrimary().getBounds().getWidth();
     private final double SCREEN_HEIGHT = javafx.stage.Screen.getPrimary().getBounds().getHeight();
 
+    private String siteName;
+
     public MainStage(DataConnect dc) {
         super();
         this.dc = dc;
@@ -248,7 +250,7 @@ public class MainStage extends Stage implements GUIInterface {
                 symbol = "£";
             }
             try {
-                String siteName = "JTill Terminal - " + dc.getSetting("SITE_NAME");
+                siteName = "JTill Terminal - " + dc.getSetting("SITE_NAME");
                 loginVersion.setText(siteName);
                 mainVersion.setText(siteName);
                 paymentVersion.setText(siteName);
@@ -1787,5 +1789,24 @@ public class MainStage extends Stage implements GUIInterface {
 
     @Override
     public void updateTills() {
+    }
+
+    @Override
+    public void connectionDrop() {
+        Platform.runLater(() -> {
+            final String temp = siteName + " (Offline)";
+            MainStage.this.mainVersion.setText(temp);
+            MainStage.this.paymentVersion.setText(temp);
+            MainStage.this.loginVersion.setText(temp);
+        });
+    }
+
+    @Override
+    public void connectionReestablish() {
+        Platform.runLater(() -> {
+            MainStage.this.mainVersion.setText(siteName);
+            MainStage.this.paymentVersion.setText(siteName);
+            MainStage.this.loginMessage.setText(siteName);
+        });
     }
 }
