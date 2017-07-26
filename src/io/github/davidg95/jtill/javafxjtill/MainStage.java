@@ -1183,12 +1183,9 @@ public class MainStage extends Stage implements GUIInterface {
         hExit.getChildren().add(exit);
         exit.setOnAction((ActionEvent event) -> {
             Platform.runLater(() -> {
-                if (dc.isConnected()) {
-                    try {
-                        dc.close();
-                    } catch (IOException ex) {
-
-                    }
+                try {
+                    dc.close();
+                } catch (IOException ex) {
                 }
                 System.exit(0);
             });
