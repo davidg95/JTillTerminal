@@ -70,26 +70,26 @@ public class ReceiptPrinter implements Printable {
         g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
 
         Font oldFont = graphics.getFont();
-        
+
         final int x = 70;
         int y = 60;
 
         g2.setFont(new Font("Arial", Font.BOLD, 20)); //Use a differnt font for the header.
         g2.drawString(header, x, y);
         g2.setFont(oldFont); //Chagne back to the old font.
-        
+
         y += 30;
-        
+
         try {
-            if(dc.getSetting("SHOW_RECEIPT_ADDRESS").equals("TRUE")){
+            if (dc.getSetting("SHOW_RECEIPT_ADDRESS").equals("TRUE")) {
                 y += 30;
             }
-            if(dc.getSetting("SHOW_RECEIPT_STAFF").equals("TRUE")){
+            if (dc.getSetting("SHOW_RECEIPT_STAFF").equals("TRUE")) {
                 final Staff s = dc.getStaff(sale.getStaffID());
                 g2.drawString("You were served by: " + s.getName(), x, y);
                 y += 30;
             }
-            if(dc.getSetting("SHOW_RECEIPT_TERMINAL").equals("TRUE")){
+            if (dc.getSetting("SHOW_RECEIPT_TERMINAL").equals("TRUE")) {
                 g2.drawString("Terminal " + sale.getTerminalID(), x, y);
                 y += 30;
             }
@@ -119,20 +119,16 @@ public class ReceiptPrinter implements Printable {
 
         //Print the sale items.
         for (SaleItem it : sale.getSaleItems()) {
-            try {
-                if (it.getType() == SaleItem.PRODUCT) {
-                    final Product p = dc.getProduct(it.getItemId());
-                    g2.drawString(p.getName(), item, y);
-                } else {
-                    final Discount d = dc.getDiscount(it.getItemId());
-                    g2.drawString(d.getName(), item, y);
-                }
-                g2.drawString("" + it.getQuantity(), quantity, y);
-                g2.drawString("£" + it.getPrice(), total, y);
-                y += 30;
-            } catch (IOException | ProductNotFoundException | SQLException | DiscountNotFoundException ex) {
-                Logger.getLogger(ReceiptPrinter.class.getName()).log(Level.SEVERE, null, ex);
+            if (it.getType() == SaleItem.PRODUCT) {
+                final Product p = (Product) it.getItem();
+                g2.drawString(p.getName(), item, y);
+            } else {
+                final Discount d = (Discount) it.getItem();
+                g2.drawString(d.getName(), item, y);
             }
+            g2.drawString("" + it.getQuantity(), quantity, y);
+            g2.drawString("£" + it.getPrice(), total, y);
+            y += 30;
         }
         g2.drawLine(item - 30, y - 20, total + 100, y - 20);
         g2.drawString("Total: £" + sale.getTotal(), total, y);

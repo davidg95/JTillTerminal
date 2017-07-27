@@ -228,35 +228,22 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void getServerData() {
         try {
-            try {
-                MAX_SALES = Integer.parseInt(dc.getSetting("MAX_CACHE_SALES"));
-                LOG.log(Level.INFO, "Max sales set to {0}", MAX_SALES);
-            } catch (IOException ex) {
-                LOG.log(Level.SEVERE, null, ex);
-            }
+            MAX_SALES = Integer.parseInt(dc.getSetting("MAX_CACHE_SALES"));
+            LOG.log(Level.INFO, "Max sales set to {0}", MAX_SALES);
             try {
                 if (dc.getSetting("SEND_PRODUCTS_START").equals("TRUE")) {
                     LOG.log(Level.INFO, "Downloading products list from server");
                     ProductCache.getInstance().setProducts(dc.getAllProducts());
                     LOG.log(Level.INFO, "Products list downloaded from server");
                 }
-            } catch (IOException | SQLException ex) {
+            } catch (SQLException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
-            try {
-                symbol = dc.getSetting("CURRENCY_SYMBOL");
-            } catch (IOException ex) {
-                LOG.log(Level.WARNING, "Could not get currency symbol from server", ex);
-                symbol = "£";
-            }
-            try {
-                siteName = "JTill Terminal - " + dc.getSetting("SITE_NAME");
-                loginVersion.setText(siteName);
-                mainVersion.setText(siteName);
-                paymentVersion.setText(siteName);
-            } catch (IOException ex) {
-                LOG.log(Level.WARNING, "Could not get site name", ex);
-            }
+            symbol = dc.getSetting("CURRENCY_SYMBOL");
+            siteName = "JTill Terminal - " + dc.getSetting("SITE_NAME");
+            loginVersion.setText(siteName);
+            mainVersion.setText(siteName);
+            paymentVersion.setText(siteName);
             ((TableColumn) itemsTable.getColumns().get(2)).setText(symbol);
             twentyPounds.setText(symbol + "20");
             tenPounds.setText(symbol + "10");
@@ -394,12 +381,8 @@ public class MainStage extends Stage implements GUIInterface {
                 final SaleItem item = (SaleItem) itemsTable.getSelectionModel().getSelectedItem();
                 sale.voidItem(item);
                 obTable.remove(item);
-                try {
-                    final Product p = dc.getProduct((item.getItemId()));
-                    double taxP = p.getTax().getValue() / 100;
-                } catch (IOException | ProductNotFoundException | SQLException ex) {
-                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                final Product p = (Product) item.getItem();
+                double taxP = p.getTax().getValue() / 100;
                 setTotalLabel();
             }
             if (!barcode.isFocused()) {
@@ -486,7 +469,7 @@ public class MainStage extends Stage implements GUIInterface {
                 LOG.log(Level.INFO, "Assisstance message sent to server");
                 showMessageAlert("Message Sent", 2000);
             } catch (IOException ex) {
-                MessageDialog.showMessage(this, "Assisstance", ex.getMessage());
+                MessageDialog.showMessage(this, "Assisstance", "No contact with server");
             }
             if (!barcode.isFocused()) {
                 barcode.requestFocus();
@@ -511,7 +494,7 @@ public class MainStage extends Stage implements GUIInterface {
         voidLast.setOnAction((ActionEvent event) -> {
             SaleItem last = sale.getLastAdded();
             for (SaleItem i : sale.getSaleItems()) {
-                if (i.getItemId() == last.getItemId()) {
+                if (i.getItem() == last.getItem()) {
                     if (i.getQuantity() == last.getQuantity()) {
                         obTable.remove(last);
                     } else {
