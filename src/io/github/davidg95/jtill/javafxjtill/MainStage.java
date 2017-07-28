@@ -176,7 +176,9 @@ public class MainStage extends Stage implements GUIInterface {
         paymentScene.getStylesheets().add(stylesheet);
         loginScene.getStylesheets().add(stylesheet);
         setScene(loginScene); //Show the login scene first
-        initStyle(StageStyle.UNDECORATED);
+        if (!this.isShowing()) {
+            initStyle(StageStyle.UNDECORATED);
+        }
         show();
         MessageScreen.changeMessage("Initialising");
         MessageScreen.showWindow();
@@ -198,34 +200,35 @@ public class MainStage extends Stage implements GUIInterface {
                         LOG.log(Level.INFO, "Stopping JTill Terminal");
                         System.exit(0);
                     }
+                } finally {
+//                    MessageScreen.hideWindow();
                 }
             }
         });
     }
 
     private void tryConnect() throws IOException {
-        try {
-            JavaFXJTill.loadProperties();
-            dc.setGUI(MainStage.this);
-            if (dc instanceof ServerConnection) {
-                ServerConnection sc = (ServerConnection) dc;
-                LOG.log(Level.INFO, "Attempting connection to the server on IP address " + JavaFXJTill.SERVER);
-                till = sc.connect(JavaFXJTill.SERVER, JavaFXJTill.PORT, JavaFXJTill.NAME, JavaFXJTill.uuid);
-                JavaFXJTill.uuid = till.getUuid();
-                JavaFXJTill.saveProperties();
-                if (staff == null) {
-                    this.sale = new Sale(till.getId(), 0);
-                } else {
-                    this.sale = new Sale(till.getId(), staff.getId());
-                }
+        JavaFXJTill.loadProperties();
+        dc.setGUI(MainStage.this);
+        if (dc instanceof ServerConnection) {
+            ServerConnection sc = (ServerConnection) dc;
+            MessageScreen.changeMessage("Connecting to server");
+            LOG.log(Level.INFO, "Attempting connection to the server on IP address " + JavaFXJTill.SERVER);
+            till = sc.connect(JavaFXJTill.SERVER, JavaFXJTill.PORT, JavaFXJTill.NAME, JavaFXJTill.uuid);
+            JavaFXJTill.uuid = till.getUuid();
+            JavaFXJTill.saveProperties();
+            if (staff == null) {
+                this.sale = new Sale(till.getId(), 0);
+            } else {
+                this.sale = new Sale(till.getId(), staff.getId());
             }
-        } finally {
-            MessageScreen.hideWindow();
         }
     }
 
     private void getServerData() {
         try {
+            MessageScreen.changeMessage("Getting configuration");
+            JavaFXJTill.settings = null;
             JavaFXJTill.settings = dc.getSettings();
             MAX_SALES = Integer.parseInt(JavaFXJTill.settings.getProperty("MAX_CACHE_SALES"));
             LOG.log(Level.INFO, "Max sales set to {0}", MAX_SALES);
@@ -262,6 +265,13 @@ public class MainStage extends Stage implements GUIInterface {
             DiscountCache.getInstance().setDiscounts(discounts);
             LOG.log(Level.INFO, "Loading screen and button configurations from the server");
             List<Screen> screens = dc.getAllScreens(); //Get all the screens from the server.
+            screenPane = new GridPane();
+            screenButtonGroup = new ToggleGroup();
+            buttonPane.getChildren().clear();
+            if (!buttonPanes.isEmpty()) {
+                buttonPane.getChildren().clear();
+                buttonPane.getChildren().add(buttonPanes.get(0));
+            }
             addScreens(screens, screenPane); //Add the screens to the main interface.
         } catch (IOException | SQLException ex) {
             MessageDialog.showMessage(this, "Error", ex.getMessage());
@@ -1177,7 +1187,6 @@ public class MainStage extends Stage implements GUIInterface {
 
         login = new Button("Login");
         login.setId("blue");
-        login.setDisable(true);
         login.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         HBox hLogin = new HBox(0);
         hLogin.getChildren().add(login);
@@ -1746,6 +1755,7 @@ public class MainStage extends Stage implements GUIInterface {
     public void allow() {
         login.setDisable(false);
         this.getServerData();
+        MessageScreen.hideWindow();
     }
 
     @Override
@@ -1756,7 +1766,6 @@ public class MainStage extends Stage implements GUIInterface {
     @Override
     public void showModalMessage(String title, String message) {
         MessageScreen.changeMessage(message);
-        MessageScreen.showWindow();
     }
 
     @Override
@@ -1790,6 +1799,16 @@ public class MainStage extends Stage implements GUIInterface {
 
     @Override
     public void initTill() {
-        this.logoff();
+        Platform.runLater(() -> {
+            MessageScreen.changeMessage("Initialising");
+            MessageScreen.showWindow();
+        });
+        Platform.runLater(() -> {
+            MainStage.this.logoff();
+            MainStage.this.getServerData();
+            Platform.runLater(() -> {
+                MessageScreen.hideWindow();
+            });
+        });
     }
 }

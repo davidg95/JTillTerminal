@@ -78,4 +78,8 @@ public class MessageScreen extends Stage {
         label.setText(this.message);
     }
 
+    public static boolean isVisible() {
+        return SCREEN.isShowing();
+    }
+
 }
