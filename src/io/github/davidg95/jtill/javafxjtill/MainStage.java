@@ -1789,7 +1789,7 @@ public class MainStage extends Stage implements GUIInterface {
         Platform.runLater(() -> {
             MainStage.this.mainVersion.setText(siteName);
             MainStage.this.paymentVersion.setText(siteName);
-            MainStage.this.loginMessage.setText(siteName);
+            MainStage.this.loginVersion.setText(siteName);
         });
     }
 }
