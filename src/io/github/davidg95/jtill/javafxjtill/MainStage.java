@@ -196,7 +196,7 @@ public class MainStage extends Stage implements GUIInterface {
                 } catch (IOException ex) {
                     MessageScreen.hideWindow();
                     LOG.log(Level.WARNING, "Error connecting to the server");
-                    if (YesNoDialog.showDialog(this, "Try Again?", "Do you want to try connect again?") == YesNoDialog.NO) {
+                    if (YesNoDialog.showDialog(this, "Could not connect to server", "A connection could not be established to the server, do you want to try again?") == YesNoDialog.NO) {
                         LOG.log(Level.INFO, "Stopping JTill Terminal");
                         System.exit(0);
                     }
@@ -236,7 +236,10 @@ public class MainStage extends Stage implements GUIInterface {
                 if (JavaFXJTill.settings.getProperty("SEND_PRODUCTS_START").equals("TRUE")) {
                     LOG.log(Level.INFO, "Downloading products list from server");
                     ProductCache.getInstance().setProducts(dc.getAllProducts());
-                    LOG.log(Level.INFO, "Products list downloaded from server");
+                    LOG.log(Level.INFO, "Downloaded " + ProductCache.getInstance().getAllProducts().size() + " products from the server");
+                    LOG.log(Level.INFO, "Downloading plu list from server");
+                    ProductCache.getInstance().setPlus(dc.getAllPlus());
+                    LOG.log(Level.INFO, "Downloaded " + ProductCache.getInstance().getAllProducts().size() + " plus from the server");
                 }
             } catch (SQLException ex) {
                 LOG.log(Level.SEVERE, null, ex);
@@ -1197,7 +1200,7 @@ public class MainStage extends Stage implements GUIInterface {
             }
             Platform.runLater(() -> {
                 try {
-                    Staff s = dc.getStaff(val);
+                    final Staff s = dc.getStaff(val);
                     dc.clockOn(s.getId());
                     Button button = new Button(s.getName());
                     button.setId("blue");
@@ -1206,19 +1209,23 @@ public class MainStage extends Stage implements GUIInterface {
                     button.setOnAction((ActionEvent evt) -> {
                         try {
                             MainStage.this.staff = s;
-                            dc.tillLogin(s.getId());
-                            Sale rs = dc.resumeSale(s);
-                            if (rs != null) {
-                                MainStage.this.sale = rs;
-                                obTable.setAll(rs.getSaleItems());
-                                setTotalLabel();
-                                try {
-                                    final Customer c = dc.getCustomer(rs.getCustomerID());
-                                    setCustomer(c);
-                                } catch (CustomerNotFoundException ex) {
-                                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                            try {
+                                dc.tillLogin(s.getId());
+                                Sale rs = dc.resumeSale(s);
+                                if (rs != null) {
+                                    MainStage.this.sale = rs;
+                                    obTable.setAll(rs.getSaleItems());
+                                    setTotalLabel();
+                                    try {
+                                        final Customer c = dc.getCustomer(rs.getCustomerID());
+                                        setCustomer(c);
+                                    } catch (CustomerNotFoundException ex) {
+                                        Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                } else {
+                                    newSale();
                                 }
-                            } else {
+                            } catch (IOException ex) {
                                 newSale();
                             }
                             staffLabel.setText("Staff: " + s.getName());
@@ -1230,8 +1237,6 @@ public class MainStage extends Stage implements GUIInterface {
                             setScene(mainScene);
                         } catch (LoginException | SQLException ex) {
                             MessageDialog.showMessage(MainStage.this, "Log on", ex.getMessage());
-                        } catch (IOException ex) {
-                            MessageDialog.showMessage(MainStage.this, "Error", "Server offline");
                         }
                     });
                     staffLayout.add(button, x, y);
@@ -1318,9 +1323,11 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     private void sendSalesToServer() {
+        LOG.log(Level.INFO, "Sending sales data to the server");
         final List<Sale> sales = SaleCache.getInstance().getAllSales();
         try {
             dc.sendSales(sales);
+            LOG.log(Level.INFO, "Sales data has been sent to the server");
             SaleCache.getInstance().clearAll();
         } catch (Exception ex) {
             this.showMessageAlert("Error sending sales to Server", 5000);

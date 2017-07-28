@@ -78,7 +78,7 @@ public class YesNoDialog extends Stage {
         });
         pane.add(hNo, 1, 1);
 
-        Scene scene = new Scene(pane, 600, 150);
+        Scene scene = new Scene(pane);
         String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
         scene.getStylesheets().add(stylesheet);
         setScene(scene);
