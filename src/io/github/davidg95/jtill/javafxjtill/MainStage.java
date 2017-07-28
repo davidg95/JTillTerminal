@@ -40,7 +40,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import io.github.davidg95.JTill.jtill.DataConnect;
 import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
 import java.text.SimpleDateFormat;
@@ -50,7 +49,6 @@ import javafx.scene.control.TableRow;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
-import javax.mail.MessagingException;
 
 /**
  *
@@ -67,7 +65,7 @@ public class MainStage extends Stage implements GUIInterface {
     private int age;
     private int itemQuantity;
     private BigDecimal amountDue;
-    private final DataConnect dc;
+    private final ServerConnection dc;
     private int MAX_SALES;
     private String symbol;
 
@@ -133,7 +131,7 @@ public class MainStage extends Stage implements GUIInterface {
     private ObservableList<PaymentItem> obPayments;
     private Button discount;
     private Button chargeAccount;
-    private Button settings;
+    private Button settingsButton;
     private Button voidItem;
     private Button voidSale;
     private Button cashUp;
@@ -155,7 +153,7 @@ public class MainStage extends Stage implements GUIInterface {
 
     private String siteName;
 
-    public MainStage(DataConnect dc) {
+    public MainStage(ServerConnection dc) {
         super();
         this.dc = dc;
         if (staff == null) {
@@ -228,10 +226,11 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void getServerData() {
         try {
-            MAX_SALES = Integer.parseInt(dc.getSetting("MAX_CACHE_SALES"));
+            JavaFXJTill.settings = dc.getSettings();
+            MAX_SALES = Integer.parseInt(JavaFXJTill.settings.getProperty("MAX_CACHE_SALES"));
             LOG.log(Level.INFO, "Max sales set to {0}", MAX_SALES);
             try {
-                if (dc.getSetting("SEND_PRODUCTS_START").equals("TRUE")) {
+                if (JavaFXJTill.settings.getProperty("SEND_PRODUCTS_START").equals("TRUE")) {
                     LOG.log(Level.INFO, "Downloading products list from server");
                     ProductCache.getInstance().setProducts(dc.getAllProducts());
                     LOG.log(Level.INFO, "Products list downloaded from server");
@@ -239,8 +238,8 @@ public class MainStage extends Stage implements GUIInterface {
             } catch (SQLException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
-            symbol = dc.getSetting("CURRENCY_SYMBOL");
-            siteName = "JTill Terminal - " + dc.getSetting("SITE_NAME");
+            symbol = JavaFXJTill.settings.getProperty("CURRENCY_SYMBOL");
+            siteName = "JTill Terminal - " + JavaFXJTill.settings.getProperty("SITE_NAME");
             loginVersion.setText(siteName);
             mainVersion.setText(siteName);
             paymentVersion.setText(siteName);
@@ -950,9 +949,9 @@ public class MainStage extends Stage implements GUIInterface {
             }
         });
 
-        settings = new Button("Settings");
-        settings.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        settings.setOnAction((ActionEvent event) -> {
+        settingsButton = new Button("Settings");
+        settingsButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        settingsButton.setOnAction((ActionEvent event) -> {
             if (staff.getPosition() >= 3) {
                 SetupDialog.showDialog(MainStage.this);
                 MessageDialog.showMessage(this, "Settings", "Some changes will apply after restart");
@@ -1039,7 +1038,7 @@ public class MainStage extends Stage implements GUIInterface {
         loyaltyButton.setOnAction((ActionEvent event) -> {
             try {
                 final Customer c = dc.getCustomer(sale.getCustomerID());
-                int maxSpend = sale.getTotal().divide(new BigDecimal(dc.getSetting("TOTAL_SPEND_VALE"))).intValue();
+                int maxSpend = sale.getTotal().divide(new BigDecimal(JavaFXJTill.settings.getProperty("TOTAL_SPEND_VALE"))).intValue();
                 if (c.getLoyaltyPoints() < maxSpend) {
                     maxSpend = c.getLoyaltyPoints();
                 }
@@ -1049,7 +1048,7 @@ public class MainStage extends Stage implements GUIInterface {
                     MessageDialog.showMessage(this, "Error", "Not Enough Points");
                     return;
                 }
-                double value = Double.parseDouble(dc.getSetting("LOYALTY_VALUE"));
+                double value = Double.parseDouble(JavaFXJTill.settings.getProperty("LOYALTY_VALUE"));
                 BigDecimal roRemove = new BigDecimal(Double.toString(toSpend * value));
                 sale.setTotal(sale.getTotal().subtract(roRemove));
                 setTotalLabel();
@@ -1078,7 +1077,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentPane.add(voidItem, 6, 1, 1, 2);
         paymentPane.add(voidSale, 5, 1, 1, 2);
         paymentPane.add(discount, 4, 1, 1, 2);
-        paymentPane.add(settings, 6, 3, 1, 2);
+        paymentPane.add(settingsButton, 6, 3, 1, 2);
         paymentPane.add(cashUp, 5, 3, 1, 2);
         paymentPane.add(clearLogins, 4, 3, 1, 2);
         paymentPane.add(submitSales, 4, 5, 1, 2);
@@ -1310,16 +1309,13 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     private void sendSalesToServer() {
-        List<Sale> sales = SaleCache.getInstance().getAllSales();
-        sales.forEach((s) -> {
-            try {
-                s = dc.addSale(s);
-                LOG.log(Level.INFO, "Sale {0} has been sent to the server", s.getId());
-            } catch (IOException | SQLException ex) {
-                LOG.log(Level.SEVERE, null, ex);
-            }
-        });
-        SaleCache.getInstance().clearAll();
+        final List<Sale> sales = SaleCache.getInstance().getAllSales();
+        try {
+            dc.sendSales(sales);
+            SaleCache.getInstance().clearAll();
+        } catch (Exception ex) {
+            this.showMessageAlert("Error sending sales to Server", 5000);
+        }
     }
 
     private void completeCurrentSale() {
@@ -1338,9 +1334,15 @@ public class MainStage extends Stage implements GUIInterface {
         lastSale = sale.clone();
         sale.complete();
         try {
-            Sale s = dc.addSale(sale);
-            LOG.log(Level.INFO, "Sale {0} sent to server", s.getId());
-            if (dc.getSetting("ASK_EMAIL_RECEIPT").equals("TRUE")) {
+            try {
+                Sale s = dc.addSale(sale);
+                LOG.log(Level.INFO, "Sale {0} sent to server", s.getId());
+            } catch (IOException e) {
+                LOG.log(Level.WARNING, "Error connecting to server");
+                SaleCache.getInstance().addSale(sale);
+                sale.setId(0);
+            }
+            if (JavaFXJTill.settings.getProperty("ASK_EMAIL_RECEIPT").equals("TRUE")) {
                 if (YesNoDialog.showDialog(this, "Email Receipt", "Email Customer Receipt?") == YesNoDialog.YES) {
                     if (sale.getCustomerID() != 0) {
                         try {
@@ -1356,15 +1358,11 @@ public class MainStage extends Stage implements GUIInterface {
                 }
             }
         } catch (IOException | SQLException ex) {
-            LOG.log(Level.WARNING, "Error connecting to server");
-            SaleCache.getInstance().addSale(sale);
-            sale.setId(0);
-        } catch (MessagingException ex) {
-            MessageDialog.showMessage(this, "Error", ex);
+
         }
 
         try {
-            if (dc.getSetting("AUTO_LOGOUT").equals("TRUE")) {
+            if (JavaFXJTill.settings.getProperty("AUTO_LOGOUT").equals("TRUE")) {
                 try {
                     dc.tillLogout(staff);
                 } catch (StaffNotFoundException ex) {
@@ -1493,54 +1491,50 @@ public class MainStage extends Stage implements GUIInterface {
     public void addItemToSale(Item i) {
         if (i instanceof Product) { //If the item is a product
             final Product p = (Product) i;
-            try {
-                if (!refundMode) {
-                    sale.notifyAllListeners(new ProductEvent(p), itemQuantity);
-                    Category cat = dc.getCategory(p.getCategoryID());
-                    if (cat.isTimeRestrict()) { //Check for time restrictions
-                        final Calendar c = Calendar.getInstance();
-                        final long now = c.getTimeInMillis();
-                        c.set(Calendar.HOUR_OF_DAY, 1);
-                        c.set(Calendar.MINUTE, 0);
-                        c.set(Calendar.SECOND, 0);
-                        c.set(Calendar.MILLISECOND, 0);
-                        final long passed = now - c.getTimeInMillis();
-                        if (!cat.isSellTime(new Time(passed))) { //If the item can not be sold now due to the time
-                            MessageDialog.showMessage(this, "Time Restriction", "This item cannot be sold now");
-                            return;
-                        }
-                    }
-                    if (cat.getMinAge() > age) { //Check for age restrictions
-                        if (YesNoDialog.showDialog(this, "Age Restriction", "Is customer over " + cat.getMinAge() + "?") == YesNoDialog.NO) {
-                            return;
-                        }
-                        age = cat.getMinAge();
+            if (!refundMode) {
+                sale.notifyAllListeners(new ProductEvent(p), itemQuantity);
+                Category cat = p.getCategory();
+                if (cat.isTimeRestrict()) { //Check for time restrictions
+                    final Calendar c = Calendar.getInstance();
+                    final long now = c.getTimeInMillis();
+                    c.set(Calendar.HOUR_OF_DAY, 1);
+                    c.set(Calendar.MINUTE, 0);
+                    c.set(Calendar.SECOND, 0);
+                    c.set(Calendar.MILLISECOND, 0);
+                    final long passed = now - c.getTimeInMillis();
+                    if (!cat.isSellTime(new Time(passed))) { //If the item can not be sold now due to the time
+                        MessageDialog.showMessage(this, "Time Restriction", "This item cannot be sold now");
+                        return;
                     }
                 }
-                if (p.isOpen()) { //Check if the product is open price
-                    int value;
-                    if (barcode.getText().equals("")) {
-                        value = NumberEntry.showNumberEntryDialog(this, "Enter price"); //Show the dialog asking for the price
-                    } else {
-                        final String bc = barcode.getText();
-                        if (bc.contains(".") || !Utilities.isNumber(bc)) {
-                            showMessageAlert("Illegal character", 2000L);
-                            return;
-                        }
-                        value = Integer.parseInt(bc); //Get the price value from the input field
-                        barcode.setText("");
+                if (cat.getMinAge() > age) { //Check for age restrictions
+                    if (YesNoDialog.showDialog(this, "Age Restriction", "Is customer over " + cat.getMinAge() + "?") == YesNoDialog.NO) {
+                        return;
                     }
-                    if (value == 0) {
-                        return; //Exit the method if nothing was entered
-                    }
-                    p.setPrice(new BigDecimal(Double.toString((double) value / 100)));
+                    age = cat.getMinAge();
                 }
+            }
+            if (p.isOpen()) { //Check if the product is open price
+                int value;
+                if (barcode.getText().equals("")) {
+                    value = NumberEntry.showNumberEntryDialog(this, "Enter price"); //Show the dialog asking for the price
+                } else {
+                    final String bc = barcode.getText();
+                    if (bc.contains(".") || !Utilities.isNumber(bc)) {
+                        showMessageAlert("Illegal character", 2000L);
+                        return;
+                    }
+                    value = Integer.parseInt(bc); //Get the price value from the input field
+                    barcode.setText("");
+                }
+                if (value == 0) {
+                    return; //Exit the method if nothing was entered
+                }
+                p.setPrice(new BigDecimal(Double.toString((double) value / 100)));
+            }
 
-                if (refundMode) {
-                    itemQuantity = -itemQuantity; //If in refund mode, set the quantity to negative.
-                }
-            } catch (IOException | SQLException | JTillException ex) {
-                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+            if (refundMode) {
+                itemQuantity = -itemQuantity; //If in refund mode, set the quantity to negative.
             }
         } else { //If the item was a discount
             final Discount d = (Discount) i;
@@ -1786,10 +1780,16 @@ public class MainStage extends Stage implements GUIInterface {
 
     @Override
     public void connectionReestablish() {
+        sendSalesToServer();
         Platform.runLater(() -> {
             MainStage.this.mainVersion.setText(siteName);
             MainStage.this.paymentVersion.setText(siteName);
             MainStage.this.loginVersion.setText(siteName);
         });
+    }
+
+    @Override
+    public void initTill() {
+        this.logoff();
     }
 }

@@ -31,7 +31,7 @@ public class JavaFXJTill extends Application {
     /**
      * The data connection.
      */
-    private static DataConnect dc;
+    private static ServerConnection dc;
     /**
      * The properties for the terminal.
      */
@@ -57,6 +57,8 @@ public class JavaFXJTill extends Application {
      * The graphics user interface object.
      */
     private static MainStage mainStage;
+    
+    public static Properties settings;
 
     @Override
     public void start(Stage primaryStage) {
