@@ -153,6 +153,8 @@ public class MainStage extends Stage implements GUIInterface {
 
     private String siteName;
 
+    private final int topfont = 10;
+
     public MainStage(ServerConnection dc) {
         super();
         this.dc = dc;
@@ -183,11 +185,11 @@ public class MainStage extends Stage implements GUIInterface {
         MessageScreen.changeMessage("Initialising");
         MessageScreen.showWindow();
         Platform.runLater(() -> {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ex) {
-                LOG.log(Level.SEVERE, null, ex);
-            }
+//            try {
+//                Thread.sleep(2000);
+//            } catch (InterruptedException ex) {
+//                LOG.log(Level.SEVERE, null, ex);
+//            }
             boolean tryCon = true;
             while (tryCon) {
                 try {
@@ -286,15 +288,15 @@ public class MainStage extends Stage implements GUIInterface {
 
         staffLabel = new Label("Staff: ");
         staffLabel.setId("toplabel");
-        staffLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        staffLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
         mainVersion = new Label("JTill Terminal");
         mainVersion.setId("toplabel");
-        mainVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        mainVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
         time = new Label("--:-- --/--/----");
         time.setId("toplabel");
-        time.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        time.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
         ClockThread.addClockLabel(time);
         time.setAlignment(Pos.CENTER_RIGHT);
 
@@ -557,6 +559,8 @@ public class MainStage extends Stage implements GUIInterface {
             row.setVgrow(Priority.ALWAYS);
             mainPane.getRowConstraints().add(row);
         }
+
+        mainPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
         mainScene = new Scene(mainPane, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
@@ -778,11 +782,11 @@ public class MainStage extends Stage implements GUIInterface {
 
         paymentVersion = new Label("JTill Terminal");
         paymentVersion.setId("toplabel");
-        paymentVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        paymentVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
         paymentTime = new Label("--:-- --/--/----");
         paymentTime.setId("toplabel");
-        paymentTime.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        paymentTime.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
         ClockThread.addClockLabel(paymentTime);
         paymentTime.setAlignment(Pos.CENTER_RIGHT);
 
@@ -1117,6 +1121,8 @@ public class MainStage extends Stage implements GUIInterface {
             paymentPane.getRowConstraints().add(row);
         }
 
+        paymentPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
+
         paymentScene = new Scene(paymentPane, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
@@ -1159,17 +1165,19 @@ public class MainStage extends Stage implements GUIInterface {
             loginPane.getRowConstraints().add(row);
         }
 
+        loginPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
+
         notLoggedIn = new Label("Not Logged In");
         notLoggedIn.setId("toplabel");
-        notLoggedIn.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        notLoggedIn.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
         loginVersion = new Label("JTill Terminal");
         loginVersion.setId("toplabel");
-        loginVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        loginVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
         loginTime = new Label("--:-- --/--/----");
         loginTime.setId("toplabel");
-        loginTime.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        loginTime.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
         ClockThread.addClockLabel(loginTime);
         ClockThread.setFormat(ClockThread.DATE_TIME_FORMAT);
 
