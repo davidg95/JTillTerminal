@@ -58,6 +58,11 @@ public class MainStage extends Stage implements GUIInterface {
 
     private static final Logger LOG = Logger.getGlobal();
 
+    public static final int CODE = 1;
+    public static final int BUTTONS = 2;
+
+    private int type;
+
     private Staff staff;
     private Till till;
     private Sale sale;
@@ -278,6 +283,11 @@ public class MainStage extends Stage implements GUIInterface {
                 buttonPane.getChildren().add(buttonPanes.get(0));
             }
             addScreens(screens, screenPane); //Add the screens to the main interface.
+            if (JavaFXJTill.settings.get("LOGINTYPE").equals("CODE")) {
+                setLoginType(CODE);
+            } else {
+                setLoginType(BUTTONS);
+            }
         } catch (IOException | SQLException ex) {
             MessageDialog.showMessage(this, "Error", ex.getMessage());
         }
@@ -1126,28 +1136,86 @@ public class MainStage extends Stage implements GUIInterface {
         paymentScene = new Scene(paymentPane, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
+    /**
+     * The type of login to use.
+     *
+     * @param type can be either BUTTONS or CODE.
+     */
+    private void setLoginType(int type) {
+        this.type = type;
+        if (type == BUTTONS) {
+            staffLayout = new GridPane();
+            staffLayout.setHgap(40);
+            staffLayout.setVgap(40);
+
+            for (int i = 1; i <= 4; i++) {
+                ColumnConstraints col = new ColumnConstraints();        //staff layout columns
+                col.setPrefWidth(staffLayout.getWidth() / 4);
+                col.setFillWidth(true);
+                col.setHgrow(Priority.ALWAYS);
+                staffLayout.getColumnConstraints().add(col);
+            }
+
+            for (int i = 1; i <= 2; i++) {
+                RowConstraints row = new RowConstraints();              //staff layout rows
+                row.setPrefHeight(staffLayout.getHeight() / 2);
+                row.setFillHeight(true);
+                row.setVgrow(Priority.ALWAYS);
+                staffLayout.getRowConstraints().add(row);
+            }
+
+            loginPane.add(staffLayout, 1, 1, 8, 12);
+        } else {
+            doCodeEntry();
+        }
+    }
+
+    private void doCodeEntry() {
+        final Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                boolean cont = true;
+                while (cont) {
+                    int id = NumberEntry.showNumberEntryDialog(MainStage.this, "Enter login ID");
+                    if (id == 0) {
+                        return;
+                    }
+                    try {
+                        MainStage.this.staff = dc.getStaff(id);
+                        dc.tillLogin(id);
+                        Sale rs = dc.resumeSale(staff);
+                        if (rs != null) {
+                            MainStage.this.sale = rs;
+                            obTable.setAll(rs.getSaleItems());
+                            setTotalLabel();
+                            try {
+                                final Customer c = dc.getCustomer(rs.getCustomerID());
+                                setCustomer(c);
+                            } catch (CustomerNotFoundException ex) {
+                                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        } else {
+                            newSale();
+                        }
+                        staffLabel.setText("Staff: " + staff.getName());
+                        paymentLoggedIn.setText("Staff: " + staff.getName());
+                        if (!buttonPanes.isEmpty()) {
+                            buttonPane.getChildren().clear();
+                            buttonPane.getChildren().add(buttonPanes.get(0));
+                        }
+                        setScene(mainScene);
+                        cont = false;
+                    } catch (IOException | StaffNotFoundException | SQLException | LoginException ex) {
+                        MessageDialog.showMessage(MainStage.this, "Error", ex.getMessage());
+                    }
+                }
+            }
+        };
+        Platform.runLater(run);
+    }
+
     private void initLogin() {
         loginPane = new GridPane();
-
-        staffLayout = new GridPane();
-        staffLayout.setHgap(40);
-        staffLayout.setVgap(40);
-
-        for (int i = 1; i <= 4; i++) {
-            ColumnConstraints col = new ColumnConstraints();        //staff layout columns
-            col.setPrefWidth(staffLayout.getWidth() / 4);
-            col.setFillWidth(true);
-            col.setHgrow(Priority.ALWAYS);
-            staffLayout.getColumnConstraints().add(col);
-        }
-
-        for (int i = 1; i <= 2; i++) {
-            RowConstraints row = new RowConstraints();              //staff layout rows
-            row.setPrefHeight(staffLayout.getHeight() / 2);
-            row.setFillHeight(true);
-            row.setVgrow(Priority.ALWAYS);
-            staffLayout.getRowConstraints().add(row);
-        }
 
         for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();         //login pane columns
@@ -1202,6 +1270,10 @@ public class MainStage extends Stage implements GUIInterface {
         HBox hLogin = new HBox(0);
         hLogin.getChildren().add(login);
         login.setOnAction((ActionEvent event) -> {
+            if (this.type == CODE) {
+                doCodeEntry();
+                return;
+            }
             int val = NumberEntry.showNumberEntryDialog(this, "Enter Logon ID");
             if (val == 0) {
                 return;
@@ -1283,7 +1355,6 @@ public class MainStage extends Stage implements GUIInterface {
         loginMessage.setMinSize(0, 0);
         loginMessage.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
-        loginPane.add(staffLayout, 1, 1, 8, 12);
         loginPane.add(exit, 0, 14, 1, 2);
         loginPane.add(login, 1, 14, 1, 2);
         loginPane.add(print, 2, 14, 1, 2);
@@ -1337,7 +1408,7 @@ public class MainStage extends Stage implements GUIInterface {
             dc.sendSales(sales);
             LOG.log(Level.INFO, "Sales data has been sent to the server");
             SaleCache.getInstance().clearAll();
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             this.showMessageAlert("Error sending sales to Server", 5000);
         }
     }
@@ -1451,6 +1522,9 @@ public class MainStage extends Stage implements GUIInterface {
         staff = null;
         newSale();
         setScene(loginScene);
+        if (type == CODE) {
+            doCodeEntry();
+        }
     }
 
     /**
