@@ -277,9 +277,9 @@ public class MainStage extends Stage implements GUIInterface {
             DiscountCache.getInstance().setDiscounts(discounts);
             LOG.log(Level.INFO, "Loading screen and button configurations from the server");
             List<Screen> screens = dc.getAllScreens(); //Get all the screens from the server.
-//            screenPane = new GridPane();
             screenButtonGroup = new ToggleGroup();
             buttonPane.getChildren().clear();
+            screenPane.getChildren().clear();
             if (!buttonPanes.isEmpty()) {
                 buttonPane.getChildren().clear();
                 buttonPane.getChildren().add(buttonPanes.get(0));
