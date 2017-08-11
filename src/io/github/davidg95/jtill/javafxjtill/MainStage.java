@@ -100,7 +100,6 @@ public class MainStage extends Stage implements GUIInterface {
     private GridPane mainPane;
     private Pane buttonPane;
     private List<GridPane> buttonPanes;
-    private GridPane screenPane;
     private ToggleGroup screenButtonGroup;
     private Label staffLabel;
     private Label time;
@@ -279,12 +278,11 @@ public class MainStage extends Stage implements GUIInterface {
             List<Screen> screens = dc.getAllScreens(); //Get all the screens from the server.
             screenButtonGroup = new ToggleGroup();
             buttonPane.getChildren().clear();
-            screenPane.getChildren().clear();
             if (!buttonPanes.isEmpty()) {
                 buttonPane.getChildren().clear();
                 buttonPane.getChildren().add(buttonPanes.get(0));
             }
-            addScreens(screens, screenPane); //Add the screens to the main interface.
+            addScreens(screens); //Add the screens to the main interface.
             if (JavaFXJTill.settings.get("LOGINTYPE").equals("CODE")) {
                 setLoginType(CODE);
             } else {
@@ -317,8 +315,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         buttonPanes = new ArrayList<>();
         buttonPane = new StackPane();
-        buttonPane.setId("productsrid");
-        screenPane = new GridPane();
+        buttonPane.setId("productsgrid");
         screenButtonGroup = new ToggleGroup();
         buttonPane.getChildren().clear();
         if (!buttonPanes.isEmpty()) {
@@ -542,7 +539,6 @@ public class MainStage extends Stage implements GUIInterface {
         mainPane.add(mainVersion, 2, 0, 4, 1);
         mainPane.add(time, 7, 0, 3, 1);
         mainPane.add(buttonPane, 0, 1, 7, 11);
-        mainPane.add(screenPane, 0, 12, 7, 2);
         mainPane.add(itemsTable, 7, 1, 3, 5);
         mainPane.add(total, 7, 6, 2, 1);
         mainPane.add(totalItems, 9, 6);
@@ -1716,28 +1712,15 @@ public class MainStage extends Stage implements GUIInterface {
         }
     }
 
-    private void addScreens(List<Screen> screens, GridPane pane) {
+    private void addScreens(List<Screen> screens) {
         int xPos = 0;
         int yPos = 0;
 
         LOG.log(Level.INFO, "Got {0} screens from the server", screens.size());
 
         for (Screen s : screens) {
-            ToggleButton button = new ToggleButton(s.getName()); //Create a new toggle button for the screen.
-            button.setToggleGroup(screenButtonGroup); //Add the toggle button to the screens button group.
-            button.setId("screenButton");
-            button.prefWidthProperty().bind(pane.widthProperty().divide(4));
-            button.prefHeightProperty().bind(pane.heightProperty().divide(2));
-            pane.add(button, xPos, yPos); //Add the toggle button the the screen buttons pane.
             GridPane grid = setScreenButtons(s); //Set the buttons for that screen onto a new grid pane.
             buttonPanes.add(grid); //Add the new grid pane to the main grid pane container.
-            button.setOnAction((ActionEvent event) -> {
-                buttonPane.getChildren().clear();
-                buttonPane.getChildren().add(grid);
-                if (!barcode.isFocused()) {
-                    barcode.requestFocus();
-                }
-            });
             xPos++;
             if (xPos == 4) {
                 xPos = 0;
@@ -1760,10 +1743,10 @@ public class MainStage extends Stage implements GUIInterface {
                 if (b.getName().equals("[SPACE]")) { //If the button is a space, add en empty box.
                     Pane box = new Pane();
                     box.setId("productsgrid");
-                    box.minWidthProperty().bind(grid.widthProperty().divide(s.getWidth()).multiply(b.getWidth()));
-                    box.minHeightProperty().bind(grid.heightProperty().divide(s.getHeight()).multiply(b.getHeight()));
-                    box.maxWidthProperty().bind(grid.widthProperty().divide(s.getWidth()).multiply(b.getWidth()));
-                    box.maxHeightProperty().bind(grid.heightProperty().divide(s.getHeight()).multiply(b.getHeight()));
+                    box.minWidthProperty().bind(grid.widthProperty().divide(5).multiply(b.getWidth()));
+                    box.minHeightProperty().bind(grid.heightProperty().divide(10).multiply(b.getHeight()));
+                    box.maxWidthProperty().bind(grid.widthProperty().divide(5).multiply(b.getWidth()));
+                    box.maxHeightProperty().bind(grid.heightProperty().divide(10).multiply(b.getHeight()));
                     grid.add(box, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight());
                 } else { //If it is a button add a button.
                 }
@@ -1802,20 +1785,33 @@ public class MainStage extends Stage implements GUIInterface {
                             button.setId("productButton");
                             break;
                     }
-                    button.prefWidthProperty().bind(grid.widthProperty().divide(s.getWidth()).multiply(b.getWidth()));
-                    button.prefHeightProperty().bind(grid.heightProperty().divide(s.getHeight()).multiply(b.getHeight()));
+                    button.prefWidthProperty().bind(grid.widthProperty().divide(5).multiply(b.getWidth()));
+                    button.prefHeightProperty().bind(grid.heightProperty().divide(5).multiply(b.getHeight()));
                     int id = b.getItem();
                     try {
-                        final Item i = dc.getProduct(id); //Get the item associated with this product.
-                        button.setOnAction((ActionEvent e) -> {
-                            Platform.runLater(() -> {
-                                onProductButton(i); //When clicked, add the item to the sale.
-                                barcode.setText("");
-                                if (!barcode.isFocused()) {
-                                    barcode.requestFocus();
-                                }
+                        if (b.getType() == TillButton.ITEM) {
+                            final Item i = dc.getProduct(id); //Get the item associated with this product.
+                            button.setOnAction((ActionEvent e) -> {
+                                Platform.runLater(() -> {
+                                    onProductButton(i); //When clicked, add the item to the sale.
+                                    barcode.setText("");
+                                    if (!barcode.isFocused()) {
+                                        barcode.requestFocus();
+                                    }
+                                });
                             });
-                        });
+                        } else if (b.getType() == TillButton.SCREEN) {
+                            final Screen sc = dc.getScreen(b.getItem());
+                            button.setOnAction((ActionEvent e) -> {
+                                Platform.runLater(() -> {
+                                    buttonPane.getChildren().clear();
+                                    buttonPane.getChildren().add(setScreenButtons(sc));
+                                    if (!barcode.isFocused()) {
+                                        barcode.requestFocus();
+                                    }
+                                });
+                            });
+                        }
                         grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
                     } catch (IOException | ProductNotFoundException | SQLException ex) {
                         Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
