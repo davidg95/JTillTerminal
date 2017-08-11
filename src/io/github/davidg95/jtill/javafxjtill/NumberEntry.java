@@ -384,8 +384,12 @@ public class NumberEntry extends Stage {
     private void onEnter(TextField number) {
         if (!number.getText().equals("")) {
             if (Utilities.isNumber(number.getText())) {
-                value = Integer.parseInt(number.getText());
-                hide();
+                try {
+                    value = Integer.parseInt(number.getText());
+                    hide();
+                } catch (NumberFormatException ex) {
+
+                }
             }
         }
     }
