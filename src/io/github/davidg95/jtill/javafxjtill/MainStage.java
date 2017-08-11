@@ -29,8 +29,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -79,6 +77,8 @@ public class MainStage extends Stage implements GUIInterface {
 
     private final String stylesheet;
 
+    private List<Screen> screens;
+
     //Login Scene Components
     private Scene loginScene;
     private GridPane loginPane;
@@ -100,7 +100,6 @@ public class MainStage extends Stage implements GUIInterface {
     private GridPane mainPane;
     private Pane buttonPane;
     private List<GridPane> buttonPanes;
-    private ToggleGroup screenButtonGroup;
     private Label staffLabel;
     private Label time;
     private Label total;
@@ -275,8 +274,7 @@ public class MainStage extends Stage implements GUIInterface {
             }
             DiscountCache.getInstance().setDiscounts(discounts);
             LOG.log(Level.INFO, "Loading screen and button configurations from the server");
-            List<Screen> screens = dc.getAllScreens(); //Get all the screens from the server.
-            screenButtonGroup = new ToggleGroup();
+            screens = dc.getAllScreens(); //Get all the screens from the server.
             buttonPane.getChildren().clear();
             if (!buttonPanes.isEmpty()) {
                 buttonPane.getChildren().clear();
@@ -316,7 +314,6 @@ public class MainStage extends Stage implements GUIInterface {
         buttonPanes = new ArrayList<>();
         buttonPane = new StackPane();
         buttonPane.setId("productsgrid");
-        screenButtonGroup = new ToggleGroup();
         buttonPane.getChildren().clear();
         if (!buttonPanes.isEmpty()) {
             buttonPane.getChildren().clear();
@@ -1713,19 +1710,11 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     private void addScreens(List<Screen> screens) {
-        int xPos = 0;
-        int yPos = 0;
-
         LOG.log(Level.INFO, "Got {0} screens from the server", screens.size());
 
         for (Screen s : screens) {
             GridPane grid = setScreenButtons(s); //Set the buttons for that screen onto a new grid pane.
             buttonPanes.add(grid); //Add the new grid pane to the main grid pane container.
-            xPos++;
-            if (xPos == 4) {
-                xPos = 0;
-                yPos++;
-            }
         }
     }
 
@@ -1751,6 +1740,7 @@ public class MainStage extends Stage implements GUIInterface {
                 } else { //If it is a button add a button.
                 }
             });
+            s.setPane(grid);
             //Add the buttons on top.
             for (TillButton b : buttons) {
                 if (b.getName().equals("[SPACE]")) { //If the button is a space, add en empty box.
@@ -1801,11 +1791,14 @@ public class MainStage extends Stage implements GUIInterface {
                                 });
                             });
                         } else if (b.getType() == TillButton.SCREEN) {
-                            final Screen sc = dc.getScreen(b.getItem());
+                            final Screen sc = getScreen(b.getItem());
+                            if (sc == null) {
+                                throw new ScreenNotFoundException("Screen Missing");
+                            }
                             button.setOnAction((ActionEvent e) -> {
                                 Platform.runLater(() -> {
                                     buttonPane.getChildren().clear();
-                                    buttonPane.getChildren().add(setScreenButtons(sc));
+                                    buttonPane.getChildren().add(sc.getPane());
                                     if (!barcode.isFocused()) {
                                         barcode.requestFocus();
                                     }
@@ -1836,6 +1829,15 @@ public class MainStage extends Stage implements GUIInterface {
             mainPane.getRowConstraints().add(row);
         }
         return grid;
+    }
+
+    private Screen getScreen(int id) {
+        for (Screen s : screens) {
+            if (s.getId() == id) {
+                return s;
+            }
+        }
+        return null;
     }
 
     private void onProductButton(Item i) {
