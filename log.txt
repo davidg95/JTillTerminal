@@ -1,24 +1,18 @@
-JTill log Fri Aug 11 15:39:00 BST 2017
-[15:39:00] [INFO] Starting JTill Terminal
-[15:39:00] [INFO] Initalising
-[15:39:01] [INFO] Loading properties file
-[15:39:01] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[15:39:01] [INFO] Max sales set to {0}
-[15:39:01] [INFO] Downloading products list from server
-[15:39:01] [INFO] Downloaded 5 products from the server
-[15:39:01] [INFO] Downloading plu list from server
-[15:39:01] [INFO] Downloaded 5 plus from the server
-[15:39:01] [INFO] Set discounts in cache
-[15:39:01] [INFO] Loading screen and button configurations from the server
-[15:39:01] [INFO] Got {0} screens from the server
-[15:39:01] [INFO] Getting buttons for {0} screen
-[15:39:01] [INFO] Got {0} buttons for this screen
-[15:39:01] [INFO] Getting buttons for {0} screen
-[15:39:01] [INFO] Got {0} buttons for this screen
-[15:39:01] [INFO] Saving properties file
-[15:39:04] [INFO] Getting all discounts from cache
-[15:39:11] [INFO] Item has been added to a sale
-[15:39:26] [INFO] Item has been added to a sale
-[15:39:35] [INFO] Sale {0} sent to server
-[15:39:35] [INFO] Getting all discounts from cache
-[15:39:36] [INFO] Getting all discounts from cache
+JTill log Fri Aug 11 18:35:01 BST 2017
+[18:35:01] [INFO] Starting JTill Terminal
+[18:35:01] [INFO] Initalising
+[18:35:01] [INFO] Loading properties file
+[18:35:01] [INFO] Properties file not found, going into initial configuration
+[18:35:07] [INFO] Saving properties file
+[18:35:07] [INFO] Attempting connection to the server on IP address 192.168.1.78
+[18:35:11] [INFO] Max sales set to {0}
+[18:35:11] [INFO] Set discounts in cache
+[18:35:11] [INFO] Loading screen and button configurations from the server
+[18:35:11] [INFO] Got {0} screens from the server
+[18:35:11] [INFO] Getting buttons for {0} screen
+[18:35:11] [INFO] Got {0} buttons for this screen
+[18:35:11] [INFO] Getting buttons for {0} screen
+[18:35:11] [INFO] Got {0} buttons for this screen
+[18:35:12] [INFO] Getting buttons for {0} screen
+[18:35:12] [INFO] Got {0} buttons for this screen
+[18:35:13] [WARNING] Error connecting to the server
