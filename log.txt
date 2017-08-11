@@ -1,58 +1,24 @@
-JTill log Fri Aug 11 14:37:33 BST 2017
-[14:37:33] [INFO] Starting JTill Terminal
-[14:37:33] [INFO] Initalising
-[14:37:33] [INFO] Loading properties file
-[14:37:33] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[14:37:33] [INFO] Max sales set to {0}
-[14:37:33] [INFO] Downloading products list from server
-[14:37:34] [INFO] Downloaded 5 products from the server
-[14:37:34] [INFO] Downloading plu list from server
-[14:37:34] [INFO] Downloaded 5 plus from the server
-[14:37:34] [INFO] Set discounts in cache
-[14:37:34] [INFO] Loading screen and button configurations from the server
-[14:37:34] [INFO] Got {0} screens from the server
-[14:37:34] [INFO] Getting buttons for {0} screen
-[14:37:34] [INFO] Got {0} buttons for this screen
-[14:37:34] [INFO] Getting buttons for {0} screen
-[14:37:34] [INFO] Got {0} buttons for this screen
-[14:37:34] [INFO] Saving properties file
-[14:37:37] [INFO] Getting all discounts from cache
-[14:37:38] [INFO] Getting buttons for {0} screen
-[14:37:38] [INFO] Got {0} buttons for this screen
-[14:37:39] [INFO] Getting buttons for {0} screen
-[14:37:39] [INFO] Got {0} buttons for this screen
-[14:37:40] [INFO] Getting buttons for {0} screen
-[14:37:40] [INFO] Got {0} buttons for this screen
-[14:37:41] [INFO] Getting buttons for {0} screen
-[14:37:41] [INFO] Got {0} buttons for this screen
-[14:37:42] [INFO] Getting buttons for {0} screen
-[14:37:42] [INFO] Got {0} buttons for this screen
-[14:37:43] [INFO] Getting buttons for {0} screen
-[14:37:43] [INFO] Got {0} buttons for this screen
-[14:37:44] [INFO] Getting buttons for {0} screen
-[14:37:44] [INFO] Got {0} buttons for this screen
-[14:37:45] [INFO] Getting buttons for {0} screen
-[14:37:45] [INFO] Got {0} buttons for this screen
-[14:37:46] [INFO] Getting buttons for {0} screen
-[14:37:46] [INFO] Got {0} buttons for this screen
-[14:37:47] [INFO] Getting buttons for {0} screen
-[14:37:47] [INFO] Got {0} buttons for this screen
-[14:37:48] [INFO] Getting buttons for {0} screen
-[14:37:48] [INFO] Got {0} buttons for this screen
-[14:37:51] [INFO] Getting buttons for {0} screen
-[14:37:51] [INFO] Got {0} buttons for this screen
-[14:37:52] [INFO] Getting buttons for {0} screen
-[14:37:52] [INFO] Got {0} buttons for this screen
-[14:38:19] [INFO] Getting buttons for {0} screen
-[14:38:19] [INFO] Got {0} buttons for this screen
-[14:38:21] [INFO] Getting buttons for {0} screen
-[14:38:21] [INFO] Got {0} buttons for this screen
-[14:38:23] [INFO] Getting buttons for {0} screen
-[14:38:24] [INFO] Got {0} buttons for this screen
-[14:38:24] [INFO] Getting buttons for {0} screen
-[14:38:24] [INFO] Got {0} buttons for this screen
-[14:38:25] [INFO] Getting buttons for {0} screen
-[14:38:25] [INFO] Got {0} buttons for this screen
-[14:38:27] [INFO] Getting buttons for {0} screen
-[14:38:28] [INFO] Got {0} buttons for this screen
-[14:38:29] [INFO] Getting all discounts from cache
+JTill log Fri Aug 11 14:40:22 BST 2017
+[14:40:22] [INFO] Starting JTill Terminal
+[14:40:22] [INFO] Initalising
+[14:40:23] [INFO] Loading properties file
+[14:40:23] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[14:40:23] [INFO] Max sales set to {0}
+[14:40:23] [INFO] Downloading products list from server
+[14:40:23] [INFO] Downloaded 5 products from the server
+[14:40:23] [INFO] Downloading plu list from server
+[14:40:23] [INFO] Downloaded 5 plus from the server
+[14:40:23] [INFO] Set discounts in cache
+[14:40:23] [INFO] Loading screen and button configurations from the server
+[14:40:23] [INFO] Got {0} screens from the server
+[14:40:23] [INFO] Getting buttons for {0} screen
+[14:40:23] [INFO] Got {0} buttons for this screen
+[14:40:23] [INFO] Getting buttons for {0} screen
+[14:40:23] [INFO] Got {0} buttons for this screen
+[14:40:24] [INFO] Saving properties file
+[14:40:27] [INFO] Getting all discounts from cache
+[14:40:28] [INFO] Getting buttons for {0} screen
+[14:40:28] [INFO] Got {0} buttons for this screen
+[14:40:29] [INFO] Getting buttons for {0} screen
+[14:40:29] [INFO] Got {0} buttons for this screen
+[14:40:30] [INFO] Getting all discounts from cache
