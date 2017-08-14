@@ -20,7 +20,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -47,6 +46,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.TextAlignment;
 
 /**
  *
@@ -308,10 +308,10 @@ public class MainStage extends Stage implements GUIInterface {
         mainVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
         time = new Label("--:-- --/--/----");
-        time.setId("toplabel");
+        time.setId("timeLabel");
         time.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
         ClockThread.addClockLabel(time);
-        time.setAlignment(Pos.CENTER_RIGHT);
+        time.setTextAlignment(TextAlignment.RIGHT);
 
         buttonPanes = new ArrayList<>();
         buttonPane = new StackPane();
@@ -536,7 +536,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         mainPane.add(staffLabel, 0, 0, 2, 1);
         mainPane.add(mainVersion, 2, 0, 4, 1);
-        mainPane.add(time, 7, 0, 3, 1);
+        mainPane.add(time, 9, 0, 1, 1);
         mainPane.add(buttonPane, 0, 1, 7, 11);
         mainPane.add(itemsTable, 7, 1, 3, 5);
         mainPane.add(total, 7, 6, 2, 1);
@@ -795,10 +795,10 @@ public class MainStage extends Stage implements GUIInterface {
         paymentVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
         paymentTime = new Label("--:-- --/--/----");
-        paymentTime.setId("toplabel");
+        paymentTime.setId("timeLabel");
         paymentTime.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
         ClockThread.addClockLabel(paymentTime);
-        paymentTime.setAlignment(Pos.CENTER_RIGHT);
+        paymentTime.setTextAlignment(TextAlignment.RIGHT);
 
         fivePounds = new Button(symbol + "5");
         fivePounds.setId("paymentMethods");
@@ -1087,7 +1087,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         paymentPane.add(paymentLoggedIn, 0, 0, 2, 1);
         paymentPane.add(paymentVersion, 2, 0, 4, 1);
-        paymentPane.add(paymentTime, 7, 0, 3, 1);
+        paymentPane.add(paymentTime, 9, 0, 1, 1);
         paymentPane.add(fivePounds, 0, 1, 1, 2);
         paymentPane.add(tenPounds, 1, 1, 1, 2);
         paymentPane.add(twentyPounds, 2, 1, 1, 2);
@@ -1226,7 +1226,8 @@ public class MainStage extends Stage implements GUIInterface {
         loginVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
         loginTime = new Label("--:-- --/--/----");
-        loginTime.setId("toplabel");
+        loginTime.setId("timeLabel");
+        loginTime.setTextAlignment(TextAlignment.RIGHT);
         loginTime.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
         ClockThread.addClockLabel(loginTime);
         ClockThread.setFormat(ClockThread.DATE_TIME_FORMAT);
@@ -1327,7 +1328,7 @@ public class MainStage extends Stage implements GUIInterface {
         loginPane.add(print, 2, 14, 1, 2);
         //loginPane.add(test, 3, 14, 1, 2);
         loginPane.add(loginMessage, 4, 14, 3, 2);
-        loginPane.add(loginTime, 7, 0, 3, 1);
+        loginPane.add(loginTime, 9, 0, 1, 1);
         loginPane.add(notLoggedIn, 0, 0, 2, 1);
         loginPane.add(loginVersion, 2, 0, 4, 1);
 
