@@ -1143,7 +1143,9 @@ public class MainStage extends Stage implements GUIInterface {
      */
     private void setLoginType(int type) {
         this.type = type;
-        loginPane.add(getLoginPane(), 1, 1, 8, 12);
+        Platform.runLater(() -> {
+            loginPane.add(getLoginPane(), 1, 1, 8, 12);
+        });
     }
 
     private void login(int id) {
