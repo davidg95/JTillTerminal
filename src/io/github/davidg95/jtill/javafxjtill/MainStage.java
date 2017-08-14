@@ -186,6 +186,9 @@ public class MainStage extends Stage implements GUIInterface {
         if (!this.isShowing()) {
             initStyle(StageStyle.UNDECORATED);
         }
+        setFullScreen(true);
+        setResizable(false);
+        setMaximized(true);
         show();
         MessageScreen.changeMessage("Initialising");
         MessageScreen.showWindow();
