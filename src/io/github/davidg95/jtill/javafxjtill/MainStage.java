@@ -61,6 +61,8 @@ public class MainStage extends Stage implements GUIInterface {
 
     private int type;
 
+    private Screen def_screen;
+
     private Staff staff;
     private Till till;
     private Sale sale;
@@ -1580,6 +1582,8 @@ public class MainStage extends Stage implements GUIInterface {
         addCustomer.setText("Add Customer");
         chargeAccount.setDisable(true);
         loyaltyButton.setDisable(true);
+        buttonPane.getChildren().clear();
+        buttonPane.getChildren().add(def_screen.getPane());
         age = 0;
     }
 
@@ -1729,7 +1733,7 @@ public class MainStage extends Stage implements GUIInterface {
 
             //Add the spaces first.
             buttons.forEach((b) -> {
-                if (b.getName().equals("[SPACE]")) { //If the button is a space, add en empty box.
+                if (b.getType() == TillButton.SPACE) { //If the button is a space, add en empty box.
                     Pane box = new Pane();
                     box.setId("productsgrid");
                     box.minWidthProperty().bind(grid.widthProperty().divide(5).multiply(b.getWidth()));
@@ -1743,7 +1747,7 @@ public class MainStage extends Stage implements GUIInterface {
             s.setPane(grid);
             //Add the buttons on top.
             for (TillButton b : buttons) {
-                if (b.getName().equals("[SPACE]")) { //If the button is a space, add en empty box.
+                if (b.getType() == TillButton.SPACE) { //If the button is a space, add en empty box.
                 } else { //If it is a button add a button.
                     Button button = new Button(b.getName()); //Create the button for this button.
                     switch (b.getColorValue()) {
@@ -1794,6 +1798,9 @@ public class MainStage extends Stage implements GUIInterface {
                             final Screen sc = getScreen(b.getItem());
                             if (sc == null) {
                                 throw new ScreenNotFoundException("Screen Missing");
+                            }
+                            if (sc.getId() == till.getDefaultScreen()) {
+                                def_screen = sc;
                             }
                             button.setOnAction((ActionEvent e) -> {
                                 Platform.runLater(() -> {
@@ -1871,7 +1878,8 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     @Override
-    public void allow() {
+    public void allow(Till t) {
+        this.till = t;
         login.setDisable(false);
         this.getServerData();
         Platform.runLater(() -> {
@@ -1934,5 +1942,10 @@ public class MainStage extends Stage implements GUIInterface {
         Platform.runLater(() -> {
             MessageScreen.hideWindow();
         });
+    }
+
+    @Override
+    public Till showTillSetupWindow(String name) {
+        return null;
     }
 }
