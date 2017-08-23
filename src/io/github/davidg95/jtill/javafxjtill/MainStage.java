@@ -81,8 +81,10 @@ public class MainStage extends Stage implements GUIInterface {
 
     private List<Screen> screens;
 
+    private Scene mainScene;
+    private GridPane parentPane;
+
     //Login Scene Components
-    private Scene loginScene;
     private GridPane loginPane;
     private Button exit;
     private Button login;
@@ -94,11 +96,11 @@ public class MainStage extends Stage implements GUIInterface {
     private Label loginVersion;
     private int x = 0;
     private int y = 0;
+    private TextField loginNumber;
 
     //Main Scene Components
     private TableView itemsTable;
     private ObservableList<SaleItem> obTable;
-    private Scene mainScene;
     private GridPane mainPane;
     private Pane buttonPane;
     private List<GridPane> buttonPanes;
@@ -120,7 +122,6 @@ public class MainStage extends Stage implements GUIInterface {
     private Button voidLast;
 
     //Payment Scene Components
-    private Scene paymentScene;
     private GridPane paymentPane;
     private Button fivePounds;
     private Button tenPounds;
@@ -172,6 +173,13 @@ public class MainStage extends Stage implements GUIInterface {
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
     }
 
+    private void setPanel(Pane panel) {
+        parentPane.getChildren().clear();
+        parentPane.getChildren().add(panel);
+        panel.requestLayout();
+        parentPane.requestLayout();
+    }
+
     public void initalise() {
         paymentLoggedIn = new Label();
         paymentLoggedIn.setId("toplabel");
@@ -179,25 +187,21 @@ public class MainStage extends Stage implements GUIInterface {
         init();
         initPayment();
         initLogin();
+        parentPane = new GridPane();
+        mainScene = new Scene(parentPane, SCREEN_WIDTH, SCREEN_HEIGHT);
         mainScene.getStylesheets().add(stylesheet);
-        paymentScene.getStylesheets().add(stylesheet);
-        loginScene.getStylesheets().add(stylesheet);
-        setScene(loginScene); //Show the login scene first
+        setPanel(loginPane);
+        setScene(mainScene); //Show the login scene first
         if (!this.isShowing()) {
             initStyle(StageStyle.UNDECORATED);
         }
-        setFullScreen(true);
+//        setFullScreen(true);
         setResizable(false);
         setMaximized(true);
         show();
         MessageScreen.changeMessage("Initialising");
         MessageScreen.showWindow();
         Platform.runLater(() -> {
-//            try {
-//                Thread.sleep(2000);
-//            } catch (InterruptedException ex) {
-//                LOG.log(Level.SEVERE, null, ex);
-//            }
             boolean tryCon = true;
             while (tryCon) {
                 try {
@@ -211,7 +215,6 @@ public class MainStage extends Stage implements GUIInterface {
                         System.exit(0);
                     }
                 } finally {
-//                    MessageScreen.hideWindow();
                 }
             }
         });
@@ -439,7 +442,7 @@ public class MainStage extends Stage implements GUIInterface {
         payment.setMinSize(0, 0);
         payment.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         payment.setOnAction((ActionEvent event) -> {
-            setScene(paymentScene);
+            setPanel(paymentPane);
         });
 
         logoff = new Button("Logoff");
@@ -574,7 +577,7 @@ public class MainStage extends Stage implements GUIInterface {
         }
 
         mainPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
-        mainScene = new Scene(mainPane, SCREEN_WIDTH, SCREEN_HEIGHT);
+        mainPane.getColumnConstraints().get(0).setPrefWidth(SCREEN_WIDTH / 8);
     }
 
     private GridPane createNumbersPane() {
@@ -928,7 +931,7 @@ public class MainStage extends Stage implements GUIInterface {
         back.setId("bottom");
         back.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         back.setOnAction((ActionEvent event) -> {
-            setScene(mainScene);
+            setPanel(mainPane);
         });
 
         paymentsList = new ListView<>();
@@ -1135,8 +1138,6 @@ public class MainStage extends Stage implements GUIInterface {
         }
 
         paymentPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
-
-        paymentScene = new Scene(paymentPane, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
     /**
@@ -1153,14 +1154,12 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void login(int id) {
         try {
-            Platform.runLater(() -> {
-                MessageScreen.changeMessage("Logging in");
-                MessageScreen.showWindow();
-            });
+//            Platform.runLater(() -> {
+            MessageScreen.changeMessage("Logging in");
+            MessageScreen.showWindow();
+//            });
             MainStage.this.staff = dc.getStaff(id);
-            Platform.runLater(() -> {
-                setScene(mainScene);
-            });
+            setPanel(mainPane);
             dc.tillLogin(id);
             Platform.runLater(() -> {
                 staffLabel.setText("Staff: " + staff.getName());
@@ -1308,36 +1307,13 @@ public class MainStage extends Stage implements GUIInterface {
         loginMessage.setId("message");
         loginMessage.setMinSize(0, 0);
         loginMessage.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
-        Button test = new Button("Test message");
-        test.setId("blue");
-        test.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        test.setOnAction((ActionEvent event) -> {
-            MessageScreen.changeMessage("Test message...");
-            MessageScreen.showWindow();
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    Platform.runLater(() -> {
-                        MessageScreen.hideWindow();
-                    });
-                }
-            }.start();
-        });
+        
         loginPane.add(exit, 0, 14, 1, 2);
         loginPane.add(print, 2, 14, 1, 2);
-        //loginPane.add(test, 3, 14, 1, 2);
         loginPane.add(loginMessage, 4, 14, 3, 2);
         loginPane.add(loginTime, 9, 0, 1, 1);
         loginPane.add(notLoggedIn, 0, 0, 2, 1);
         loginPane.add(loginVersion, 2, 0, 4, 1);
-
-        loginScene = new Scene(loginPane, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
     private GridPane getLoginPane() {
@@ -1381,20 +1357,20 @@ public class MainStage extends Stage implements GUIInterface {
 
             GridPane nums = new GridPane();
 
-            TextField number = new TextField();
-            number.setMaxHeight(50);
-            number.setMaxWidth(400);
-            number.setMinHeight(50);
-            number.setMaxWidth(400);
-            number.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-            number.setOnAction((ActionEvent event) -> {
-                if (!"".equals(number.getText())) {
-                    int id = Integer.parseInt(number.getText());
+            loginNumber = new TextField();
+            loginNumber.setMaxHeight(50);
+            loginNumber.setMaxWidth(400);
+            loginNumber.setMinHeight(50);
+            loginNumber.setMaxWidth(400);
+            loginNumber.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+            loginNumber.setOnAction((ActionEvent event) -> {
+                if (!"".equals(loginNumber.getText())) {
+                    int id = Integer.parseInt(loginNumber.getText());
                     login(id);
-                    number.setText("");
+                    loginNumber.setText("");
                 }
             });
-            nums.add(number, 1, 2, 4, 1);
+            nums.add(loginNumber, 1, 2, 4, 1);
 
             Button seven = new Button("7");
             seven.setId("number");
@@ -1406,7 +1382,7 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hSeven, 1, 3);
 
             seven.setOnAction((ActionEvent event) -> {
-                number.setText(number.getText() + "7");
+                loginNumber.setText(loginNumber.getText() + "7");
             });
 
             Button eight = new Button("8");
@@ -1419,7 +1395,7 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hEight, 2, 3);
 
             eight.setOnAction((ActionEvent event) -> {
-                number.setText(number.getText() + "8");
+                loginNumber.setText(loginNumber.getText() + "8");
             });
 
             Button nine = new Button("9");
@@ -1432,7 +1408,7 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hNine, 3, 3);
 
             nine.setOnAction((ActionEvent event) -> {
-                number.setText(number.getText() + "9");
+                loginNumber.setText(loginNumber.getText() + "9");
             });
 
             Button four = new Button("4");
@@ -1445,7 +1421,7 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hFour, 1, 4);
 
             four.setOnAction((ActionEvent event) -> {
-                number.setText(number.getText() + "4");
+                loginNumber.setText(loginNumber.getText() + "4");
             });
 
             Button five = new Button("5");
@@ -1458,7 +1434,7 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hFive, 2, 4);
 
             five.setOnAction((ActionEvent event) -> {
-                number.setText(number.getText() + "5");
+                loginNumber.setText(loginNumber.getText() + "5");
             });
 
             Button six = new Button("6");
@@ -1471,7 +1447,7 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hSix, 3, 4);
 
             six.setOnAction((ActionEvent event) -> {
-                number.setText(number.getText() + "6");
+                loginNumber.setText(loginNumber.getText() + "6");
             });
 
             Button one = new Button("1");
@@ -1484,7 +1460,7 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hOne, 1, 5);
 
             one.setOnAction((ActionEvent event) -> {
-                number.setText(number.getText() + "1");
+                loginNumber.setText(loginNumber.getText() + "1");
             });
 
             Button two = new Button("2");
@@ -1497,7 +1473,7 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hTwo, 2, 5);
 
             two.setOnAction((ActionEvent event) -> {
-                number.setText(number.getText() + "2");
+                loginNumber.setText(loginNumber.getText() + "2");
             });
 
             Button three = new Button("3");
@@ -1510,7 +1486,7 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hThree, 3, 5);
 
             three.setOnAction((ActionEvent event) -> {
-                number.setText(number.getText() + "3");
+                loginNumber.setText(loginNumber.getText() + "3");
             });
 
             Button zero = new Button("0");
@@ -1522,7 +1498,7 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hZero, 1, 6, 2, 1);
 
             zero.setOnAction((ActionEvent event) -> {
-                number.setText(number.getText() + "0");
+                loginNumber.setText(loginNumber.getText() + "0");
             });
 
             Button dZero = new Button("00");
@@ -1534,7 +1510,7 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hDzero, 3, 6);
 
             dZero.setOnAction((ActionEvent event) -> {
-                number.setText(number.getText() + "00");
+                loginNumber.setText(loginNumber.getText() + "00");
             });
 
             Button clear = new Button("Clear");
@@ -1546,7 +1522,7 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hClear, 4, 3, 1, 2);
 
             clear.setOnAction((ActionEvent event) -> {
-                number.setText("");
+                loginNumber.setText("");
             });
 
             Button enter = new Button("Enter");
@@ -1558,10 +1534,10 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hEnter, 4, 5, 1, 2);
 
             enter.setOnAction((ActionEvent event) -> {
-                if (!"".equals(number.getText())) {
-                    int id = Integer.parseInt(number.getText());
+                if (!"".equals(loginNumber.getText())) {
+                    int id = Integer.parseInt(loginNumber.getText());
                     login(id);
-                    number.setText("");
+                    loginNumber.setText("");
                 }
             });
 
@@ -1668,15 +1644,17 @@ public class MainStage extends Stage implements GUIInterface {
                     Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 newSale();
-                setScene(loginScene);
+                Platform.runLater(() -> {
+                    setPanel(loginPane);
+                });
             } else {
                 newSale();
-                setScene(mainScene);
+                setPanel(mainPane);
             }
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
             newSale();
-            setScene(mainScene);
+            setPanel(mainPane);
         }
     }
 
@@ -1725,7 +1703,12 @@ public class MainStage extends Stage implements GUIInterface {
         }
         staff = null;
         newSale();
-        setScene(loginScene);
+        Platform.runLater(() -> {
+            setPanel(loginPane);
+            if(type == BUTTONS){
+                loginNumber.requestFocus();
+            }
+        });
     }
 
     /**
