@@ -270,6 +270,8 @@ public class MainStage extends Stage implements GUIInterface {
                     java.awt.Color col = new java.awt.Color(color);
                     Color c = Color.color((double) col.getRed() / 255, (double) col.getGreen() / 255, (double) col.getBlue() / 255);
                     parentPane.setBackground(new Background(new BackgroundFill(c, CornerRadii.EMPTY, Insets.EMPTY)));
+                }else{
+                    parentPane.setBackground(null);
                 }
             } catch (IOException ex) {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
