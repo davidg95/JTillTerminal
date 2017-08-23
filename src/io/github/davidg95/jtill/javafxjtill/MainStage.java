@@ -20,7 +20,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -47,6 +46,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.TextAlignment;
 
 /**
  *
@@ -156,7 +156,7 @@ public class MainStage extends Stage implements GUIInterface {
     private final double SCREEN_WIDTH = javafx.stage.Screen.getPrimary().getBounds().getWidth();
     private final double SCREEN_HEIGHT = javafx.stage.Screen.getPrimary().getBounds().getHeight();
 
-    private String siteName;
+    private String terminalName;
 
     private final int topfont = 10;
 
@@ -186,6 +186,9 @@ public class MainStage extends Stage implements GUIInterface {
         if (!this.isShowing()) {
             initStyle(StageStyle.UNDECORATED);
         }
+        setFullScreen(true);
+        setResizable(false);
+        setMaximized(true);
         show();
         MessageScreen.changeMessage("Initialising");
         MessageScreen.showWindow();
@@ -254,10 +257,10 @@ public class MainStage extends Stage implements GUIInterface {
                 LOG.log(Level.SEVERE, null, ex);
             }
             symbol = JavaFXJTill.settings.getProperty("CURRENCY_SYMBOL");
-            siteName = "JTill Terminal - " + JavaFXJTill.settings.getProperty("SITE_NAME");
-            loginVersion.setText(siteName);
-            mainVersion.setText(siteName);
-            paymentVersion.setText(siteName);
+            terminalName = till.getName() + " - " + JavaFXJTill.settings.getProperty("SITE_NAME");
+            loginVersion.setText(terminalName);
+            mainVersion.setText(terminalName);
+            paymentVersion.setText(terminalName);
             ((TableColumn) itemsTable.getColumns().get(2)).setText(symbol);
             twentyPounds.setText(symbol + "20");
             tenPounds.setText(symbol + "10");
@@ -308,10 +311,10 @@ public class MainStage extends Stage implements GUIInterface {
         mainVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
         time = new Label("--:-- --/--/----");
-        time.setId("toplabel");
+        time.setId("timeLabel");
         time.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
         ClockThread.addClockLabel(time);
-        time.setAlignment(Pos.CENTER_RIGHT);
+        time.setTextAlignment(TextAlignment.RIGHT);
 
         buttonPanes = new ArrayList<>();
         buttonPane = new StackPane();
@@ -536,7 +539,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         mainPane.add(staffLabel, 0, 0, 2, 1);
         mainPane.add(mainVersion, 2, 0, 4, 1);
-        mainPane.add(time, 7, 0, 3, 1);
+        mainPane.add(time, 9, 0, 1, 1);
         mainPane.add(buttonPane, 0, 1, 7, 11);
         mainPane.add(itemsTable, 7, 1, 3, 5);
         mainPane.add(total, 7, 6, 2, 1);
@@ -795,10 +798,10 @@ public class MainStage extends Stage implements GUIInterface {
         paymentVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
         paymentTime = new Label("--:-- --/--/----");
-        paymentTime.setId("toplabel");
+        paymentTime.setId("timeLabel");
         paymentTime.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
         ClockThread.addClockLabel(paymentTime);
-        paymentTime.setAlignment(Pos.CENTER_RIGHT);
+        paymentTime.setTextAlignment(TextAlignment.RIGHT);
 
         fivePounds = new Button(symbol + "5");
         fivePounds.setId("paymentMethods");
@@ -1087,7 +1090,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         paymentPane.add(paymentLoggedIn, 0, 0, 2, 1);
         paymentPane.add(paymentVersion, 2, 0, 4, 1);
-        paymentPane.add(paymentTime, 7, 0, 3, 1);
+        paymentPane.add(paymentTime, 9, 0, 1, 1);
         paymentPane.add(fivePounds, 0, 1, 1, 2);
         paymentPane.add(tenPounds, 1, 1, 1, 2);
         paymentPane.add(twentyPounds, 2, 1, 1, 2);
@@ -1143,99 +1146,58 @@ public class MainStage extends Stage implements GUIInterface {
      */
     private void setLoginType(int type) {
         this.type = type;
-        if (type == BUTTONS) {
-            staffLayout = new GridPane();
-            staffLayout.setHgap(40);
-            staffLayout.setVgap(40);
-
-            for (int i = 1; i <= 4; i++) {
-                ColumnConstraints col = new ColumnConstraints();        //staff layout columns
-                col.setPrefWidth(staffLayout.getWidth() / 4);
-                col.setFillWidth(true);
-                col.setHgrow(Priority.ALWAYS);
-                staffLayout.getColumnConstraints().add(col);
-            }
-
-            for (int i = 1; i <= 2; i++) {
-                RowConstraints row = new RowConstraints();              //staff layout rows
-                row.setPrefHeight(staffLayout.getHeight() / 2);
-                row.setFillHeight(true);
-                row.setVgrow(Priority.ALWAYS);
-                staffLayout.getRowConstraints().add(row);
-            }
-
-            loginPane.add(staffLayout, 1, 1, 8, 12);
-        }
+        Platform.runLater(() -> {
+            loginPane.add(getLoginPane(), 1, 1, 8, 12);
+        });
     }
 
-    private void doCodeEntry() {
-        final Runnable run = new Runnable() {
-            @Override
-            public void run() {
-                int id = NumberEntry.showNumberEntryDialog(MainStage.this, "Enter login ID");
-                new Thread() {
-                    @Override
-                    public void run() {
-                        if (id == 0) {
-                            return;
-                        }
-                        try {
-                            login(id);
-                            //MessageScreen.hideWindow();
-                        } catch (IOException | StaffNotFoundException | SQLException | LoginException ex) {
-                            Platform.runLater(() -> {
-                                MessageScreen.hideWindow();
-                                MessageDialog.showMessage(MainStage.this, "Error", ex.getMessage());
-                                doCodeEntry();
-                            });
-                        }
-                        Platform.runLater(() -> {
-                            MessageScreen.hideWindow();
-                        });
-                    }
-                }.start();
-            }
-        };
-        Platform.runLater(run);
-    }
-
-    private void login(int id) throws IOException, LoginException, SQLException, StaffNotFoundException {
-        Platform.runLater(() -> {
-            MessageScreen.changeMessage("Logging in");
-            MessageScreen.showWindow();
-        });
-        MainStage.this.staff = dc.getStaff(id);
-        Platform.runLater(() -> {
-            setScene(mainScene);
-        });
-        dc.tillLogin(id);
-        Platform.runLater(() -> {
-            staffLabel.setText("Staff: " + staff.getName());
-            paymentLoggedIn.setText("Staff: " + staff.getName());
-            if (!buttonPanes.isEmpty()) {
-                buttonPane.getChildren().clear();
-                buttonPane.getChildren().add(buttonPanes.get(0));
-            }
-        });
-        Platform.runLater(() -> {
-            try {
-                Sale rs = dc.resumeSale(staff);
-                if (rs != null) {
-                    MainStage.this.sale = rs;
-                    obTable.setAll(rs.getSaleItems());
-                    setTotalLabel();
-                    try {
-                        final Customer c = dc.getCustomer(rs.getCustomerID());
-                        setCustomer(c);
-                    } catch (CustomerNotFoundException | IOException | SQLException ex) {
-                        Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    newSale();
+    private void login(int id) {
+        try {
+            Platform.runLater(() -> {
+                MessageScreen.changeMessage("Logging in");
+                MessageScreen.showWindow();
+            });
+            MainStage.this.staff = dc.getStaff(id);
+            Platform.runLater(() -> {
+                setScene(mainScene);
+            });
+            dc.tillLogin(id);
+            Platform.runLater(() -> {
+                staffLabel.setText("Staff: " + staff.getName());
+                paymentLoggedIn.setText("Staff: " + staff.getName());
+                if (!buttonPanes.isEmpty()) {
+                    buttonPane.getChildren().clear();
+                    buttonPane.getChildren().add(buttonPanes.get(0));
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            });
+            Platform.runLater(() -> {
+                try {
+                    Sale rs = dc.resumeSale(staff);
+                    if (rs != null) {
+                        MainStage.this.sale = rs;
+                        obTable.setAll(rs.getSaleItems());
+                        setTotalLabel();
+                        try {
+                            final Customer c = dc.getCustomer(rs.getCustomerID());
+                            setCustomer(c);
+                        } catch (CustomerNotFoundException | IOException | SQLException ex) {
+                            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        newSale();
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+        } catch (LoginException | SQLException | IOException | StaffNotFoundException ex) {
+            Platform.runLater(() -> {
+                MessageScreen.hideWindow();
+                MessageDialog.showMessage(MainStage.this, "Error", ex.getMessage());
+            });
+        }
+        Platform.runLater(() -> {
+            MessageScreen.hideWindow();
         });
     }
 
@@ -1269,7 +1231,8 @@ public class MainStage extends Stage implements GUIInterface {
         loginVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
         loginTime = new Label("--:-- --/--/----");
-        loginTime.setId("toplabel");
+        loginTime.setId("timeLabel");
+        loginTime.setTextAlignment(TextAlignment.RIGHT);
         loginTime.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
         ClockThread.addClockLabel(loginTime);
         ClockThread.setFormat(ClockThread.DATE_TIME_FORMAT);
@@ -1295,10 +1258,6 @@ public class MainStage extends Stage implements GUIInterface {
         HBox hLogin = new HBox(0);
         hLogin.getChildren().add(login);
         login.setOnAction((ActionEvent event) -> {
-            if (this.type == CODE) {
-                doCodeEntry();
-                return;
-            }
             int val = NumberEntry.showNumberEntryDialog(this, "Enter Logon ID");
             if (val == 0) {
                 return;
@@ -1312,18 +1271,7 @@ public class MainStage extends Stage implements GUIInterface {
                     button.prefWidthProperty().bind(staffLayout.widthProperty().divide(4));
                     button.prefHeightProperty().bind(staffLayout.heightProperty().divide(2));
                     button.setOnAction((ActionEvent evt) -> {
-                        try {
-                            MainStage.this.staff = s;
-                            login(s.getId());
-                        } catch (LoginException | SQLException | IOException | StaffNotFoundException ex) {
-                            Platform.runLater(() -> {
-                                MessageScreen.hideWindow();
-                                MessageDialog.showMessage(MainStage.this, "Error", ex.getMessage());
-                            });
-                        }
-                        Platform.runLater(() -> {
-                            MessageScreen.hideWindow();
-                        });
+                        login(s.getId());
                     });
                     staffLayout.add(button, x, y);
 
@@ -1382,15 +1330,244 @@ public class MainStage extends Stage implements GUIInterface {
             }.start();
         });
         loginPane.add(exit, 0, 14, 1, 2);
-        loginPane.add(login, 1, 14, 1, 2);
         loginPane.add(print, 2, 14, 1, 2);
         //loginPane.add(test, 3, 14, 1, 2);
         loginPane.add(loginMessage, 4, 14, 3, 2);
-        loginPane.add(loginTime, 7, 0, 3, 1);
+        loginPane.add(loginTime, 9, 0, 1, 1);
         loginPane.add(notLoggedIn, 0, 0, 2, 1);
         loginPane.add(loginVersion, 2, 0, 4, 1);
 
         loginScene = new Scene(loginPane, SCREEN_WIDTH, SCREEN_HEIGHT);
+    }
+
+    private GridPane getLoginPane() {
+        staffLayout = new GridPane();
+        if (type == BUTTONS) {
+            loginPane.add(login, 1, 14, 1, 2);
+            staffLayout.setHgap(40);
+            staffLayout.setVgap(40);
+
+            for (int i = 1; i <= 4; i++) {
+                ColumnConstraints col = new ColumnConstraints();        //staff layout columns
+                col.setPrefWidth(staffLayout.getWidth() / 4);
+                col.setFillWidth(true);
+                col.setHgrow(Priority.ALWAYS);
+                staffLayout.getColumnConstraints().add(col);
+            }
+
+            for (int i = 1; i <= 2; i++) {
+                RowConstraints row = new RowConstraints();              //staff layout rows
+                row.setPrefHeight(staffLayout.getHeight() / 5);
+                row.setFillHeight(true);
+                row.setVgrow(Priority.ALWAYS);
+                staffLayout.getRowConstraints().add(row);
+            }
+        } else {
+            for (int i = 1; i <= 4; i++) {
+                ColumnConstraints col = new ColumnConstraints();        //staff layout columns
+                col.setPrefWidth(staffLayout.getWidth() / 5);
+                col.setFillWidth(true);
+                col.setHgrow(Priority.ALWAYS);
+                staffLayout.getColumnConstraints().add(col);
+            }
+
+            for (int i = 1; i <= 2; i++) {
+                RowConstraints row = new RowConstraints();              //staff layout rows
+                row.setPrefHeight(staffLayout.getHeight() / 2);
+                row.setFillHeight(true);
+                row.setVgrow(Priority.ALWAYS);
+                staffLayout.getRowConstraints().add(row);
+            }
+
+            GridPane nums = new GridPane();
+
+            TextField number = new TextField();
+            number.setMaxHeight(50);
+            number.setMaxWidth(400);
+            number.setMinHeight(50);
+            number.setMaxWidth(400);
+            number.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+            number.setOnAction((ActionEvent event) -> {
+                if (!"".equals(number.getText())) {
+                    int id = Integer.parseInt(number.getText());
+                    login(id);
+                    number.setText("");
+                }
+            });
+            nums.add(number, 1, 2, 4, 1);
+
+            Button seven = new Button("7");
+            seven.setId("number");
+            seven.setMaxSize(100, 100);
+            seven.setMinSize(100, 100);
+            HBox hSeven = new HBox(0);
+            //hSeven.setAlignment(Pos.TOP_LEFT);
+            hSeven.getChildren().add(seven);
+            nums.add(hSeven, 1, 3);
+
+            seven.setOnAction((ActionEvent event) -> {
+                number.setText(number.getText() + "7");
+            });
+
+            Button eight = new Button("8");
+            eight.setId("number");
+            eight.setMaxSize(100, 100);
+            eight.setMinSize(100, 100);
+            HBox hEight = new HBox(0);
+            //hSeven.setAlignment(Pos.TOP_CENTER);
+            hEight.getChildren().add(eight);
+            nums.add(hEight, 2, 3);
+
+            eight.setOnAction((ActionEvent event) -> {
+                number.setText(number.getText() + "8");
+            });
+
+            Button nine = new Button("9");
+            nine.setId("number");
+            nine.setMaxSize(100, 100);
+            nine.setMinSize(100, 100);
+            HBox hNine = new HBox(0);
+            //hSeven.setAlignment(Pos.TOP_RIGHT);
+            hNine.getChildren().add(nine);
+            nums.add(hNine, 3, 3);
+
+            nine.setOnAction((ActionEvent event) -> {
+                number.setText(number.getText() + "9");
+            });
+
+            Button four = new Button("4");
+            four.setId("number");
+            four.setMaxSize(100, 100);
+            four.setMinSize(100, 100);
+            HBox hFour = new HBox(0);
+            //hFour.setAlignment(Pos.CENTER_LEFT);
+            hFour.getChildren().add(four);
+            nums.add(hFour, 1, 4);
+
+            four.setOnAction((ActionEvent event) -> {
+                number.setText(number.getText() + "4");
+            });
+
+            Button five = new Button("5");
+            five.setId("number");
+            five.setMaxSize(100, 100);
+            five.setMinSize(100, 100);
+            HBox hFive = new HBox(0);
+            //hFive.setAlignment(Pos.CENTER);
+            hFive.getChildren().add(five);
+            nums.add(hFive, 2, 4);
+
+            five.setOnAction((ActionEvent event) -> {
+                number.setText(number.getText() + "5");
+            });
+
+            Button six = new Button("6");
+            six.setId("number");
+            six.setMaxSize(100, 100);
+            six.setMinSize(100, 100);
+            HBox hSix = new HBox(0);
+            //hSix.setAlignment(Pos.CENTER_RIGHT);
+            hSix.getChildren().add(six);
+            nums.add(hSix, 3, 4);
+
+            six.setOnAction((ActionEvent event) -> {
+                number.setText(number.getText() + "6");
+            });
+
+            Button one = new Button("1");
+            one.setId("number");
+            one.setMaxSize(100, 100);
+            one.setMinSize(100, 100);
+            HBox hOne = new HBox(0);
+            //hOne.setAlignment(Pos.BOTTOM_LEFT);
+            hOne.getChildren().add(one);
+            nums.add(hOne, 1, 5);
+
+            one.setOnAction((ActionEvent event) -> {
+                number.setText(number.getText() + "1");
+            });
+
+            Button two = new Button("2");
+            two.setId("number");
+            two.setMaxSize(100, 100);
+            two.setMinSize(100, 100);
+            HBox hTwo = new HBox(0);
+            //hTwo.setAlignment(Pos.BOTTOM_CENTER);
+            hTwo.getChildren().add(two);
+            nums.add(hTwo, 2, 5);
+
+            two.setOnAction((ActionEvent event) -> {
+                number.setText(number.getText() + "2");
+            });
+
+            Button three = new Button("3");
+            three.setId("number");
+            three.setMaxSize(100, 100);
+            three.setMinSize(100, 100);
+            HBox hThree = new HBox(0);
+            //hThree.setAlignment(Pos.BOTTOM_RIGHT);
+            hThree.getChildren().add(three);
+            nums.add(hThree, 3, 5);
+
+            three.setOnAction((ActionEvent event) -> {
+                number.setText(number.getText() + "3");
+            });
+
+            Button zero = new Button("0");
+            zero.setId("number");
+            zero.setMaxSize(200, 100);
+            zero.setMinSize(200, 100);
+            HBox hZero = new HBox(0);
+            hZero.getChildren().add(zero);
+            nums.add(hZero, 1, 6, 2, 1);
+
+            zero.setOnAction((ActionEvent event) -> {
+                number.setText(number.getText() + "0");
+            });
+
+            Button dZero = new Button("00");
+            dZero.setId("number");
+            dZero.setMaxSize(100, 100);
+            dZero.setMinSize(100, 100);
+            HBox hDzero = new HBox(0);
+            hDzero.getChildren().add(dZero);
+            nums.add(hDzero, 3, 6);
+
+            dZero.setOnAction((ActionEvent event) -> {
+                number.setText(number.getText() + "00");
+            });
+
+            Button clear = new Button("Clear");
+            clear.setId("number");
+            clear.setMaxSize(100, 200);
+            clear.setMinSize(100, 200);
+            HBox hClear = new HBox(0);
+            hClear.getChildren().add(clear);
+            nums.add(hClear, 4, 3, 1, 2);
+
+            clear.setOnAction((ActionEvent event) -> {
+                number.setText("");
+            });
+
+            Button enter = new Button("Enter");
+            enter.setId("number");
+            enter.setMaxSize(100, 200);
+            enter.setMinSize(100, 200);
+            HBox hEnter = new HBox(0);
+            hEnter.getChildren().add(enter);
+            nums.add(hEnter, 4, 5, 1, 2);
+
+            enter.setOnAction((ActionEvent event) -> {
+                if (!"".equals(number.getText())) {
+                    int id = Integer.parseInt(number.getText());
+                    login(id);
+                    number.setText("");
+                }
+            });
+
+            staffLayout.add(nums, 1, 1, 3, 3);
+        }
+        return staffLayout;
     }
 
     private void clearLoginScreen() {
@@ -1549,9 +1726,6 @@ public class MainStage extends Stage implements GUIInterface {
         staff = null;
         newSale();
         setScene(loginScene);
-        if (type == CODE) {
-            doCodeEntry();
-        }
     }
 
     /**
@@ -1723,6 +1897,9 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     private GridPane setScreenButtons(Screen s) {
+        if (s.getId() == till.getDefaultScreen()) {
+            def_screen = s;
+        }
         GridPane grid = new GridPane(); //Create a new GridPane for this screen.
         grid.setId("productsgrid");
         try {
@@ -1798,9 +1975,6 @@ public class MainStage extends Stage implements GUIInterface {
                             final Screen sc = getScreen(b.getItem());
                             if (sc == null) {
                                 throw new ScreenNotFoundException("Screen Missing");
-                            }
-                            if (sc.getId() == till.getDefaultScreen()) {
-                                def_screen = sc;
                             }
                             button.setOnAction((ActionEvent e) -> {
                                 Platform.runLater(() -> {
@@ -1885,9 +2059,6 @@ public class MainStage extends Stage implements GUIInterface {
         Platform.runLater(() -> {
             MessageScreen.hideWindow();
         });
-        if (type == CODE) {
-            doCodeEntry();
-        }
     }
 
     @Override
@@ -1912,7 +2083,7 @@ public class MainStage extends Stage implements GUIInterface {
     @Override
     public void connectionDrop() {
         Platform.runLater(() -> {
-            final String temp = siteName + " (Offline)";
+            final String temp = terminalName + " (Offline)";
             MainStage.this.mainVersion.setText(temp);
             MainStage.this.paymentVersion.setText(temp);
             MainStage.this.loginVersion.setText(temp);
@@ -1923,9 +2094,9 @@ public class MainStage extends Stage implements GUIInterface {
     public void connectionReestablish() {
         sendSalesToServer();
         Platform.runLater(() -> {
-            MainStage.this.mainVersion.setText(siteName);
-            MainStage.this.paymentVersion.setText(siteName);
-            MainStage.this.loginVersion.setText(siteName);
+            MainStage.this.mainVersion.setText(terminalName);
+            MainStage.this.paymentVersion.setText(terminalName);
+            MainStage.this.loginVersion.setText(terminalName);
         });
     }
 
