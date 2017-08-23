@@ -42,10 +42,15 @@ import java.awt.print.PrinterException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import javafx.geometry.Insets;
 import javafx.scene.control.TableRow;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
 /**
@@ -258,6 +263,16 @@ public class MainStage extends Stage implements GUIInterface {
                 }
             } catch (SQLException ex) {
                 LOG.log(Level.SEVERE, null, ex);
+            }
+            try {
+                int color = Integer.parseInt(dc.getSetting("TERMINAL_BG"));
+                if (color != 0) {
+                    java.awt.Color col = new java.awt.Color(color);
+                    Color c = Color.color((double) col.getRed() / 255, (double) col.getGreen() / 255, (double) col.getBlue() / 255);
+                    parentPane.setBackground(new Background(new BackgroundFill(c, CornerRadii.EMPTY, Insets.EMPTY)));
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
             }
             symbol = JavaFXJTill.settings.getProperty("CURRENCY_SYMBOL");
             terminalName = till.getName() + " - " + JavaFXJTill.settings.getProperty("SITE_NAME");
@@ -1307,7 +1322,7 @@ public class MainStage extends Stage implements GUIInterface {
         loginMessage.setId("message");
         loginMessage.setMinSize(0, 0);
         loginMessage.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        
+
         loginPane.add(exit, 0, 14, 1, 2);
         loginPane.add(print, 2, 14, 1, 2);
         loginPane.add(loginMessage, 4, 14, 3, 2);
@@ -1705,7 +1720,7 @@ public class MainStage extends Stage implements GUIInterface {
         newSale();
         Platform.runLater(() -> {
             setPanel(loginPane);
-            if(type == BUTTONS){
+            if (type == BUTTONS) {
                 loginNumber.requestFocus();
             }
         });
