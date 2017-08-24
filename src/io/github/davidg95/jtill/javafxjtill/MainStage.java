@@ -1581,6 +1581,7 @@ public class MainStage extends Stage implements GUIInterface {
             });
 
             staffLayout.add(nums, 1, 1, 3, 3);
+            loginNumber.requestFocus();
         }
         return staffLayout;
     }
@@ -1744,7 +1745,7 @@ public class MainStage extends Stage implements GUIInterface {
         newSale();
         Platform.runLater(() -> {
             setPanel(loginPane);
-            if (type == BUTTONS) {
+            if (type == CODE) {
                 loginNumber.requestFocus();
             }
         });
@@ -1779,7 +1780,9 @@ public class MainStage extends Stage implements GUIInterface {
         chargeAccount.setDisable(true);
         loyaltyButton.setDisable(true);
         buttonPane.getChildren().clear();
-        buttonPane.getChildren().add(def_screen.getPane());
+        if (def_screen != null) {
+            buttonPane.getChildren().add(def_screen.getPane());
+        }
         age = 0;
     }
 
@@ -1912,6 +1915,12 @@ public class MainStage extends Stage implements GUIInterface {
     private void addScreens(List<Screen> screens) {
         LOG.log(Level.INFO, "Got {0} screens from the server", screens.size());
 
+        try {
+            def_screen = dc.getScreen(till.getDefaultScreen());
+        } catch (IOException | SQLException | ScreenNotFoundException ex) {
+            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         for (Screen s : screens) {
             GridPane grid = setScreenButtons(s); //Set the buttons for that screen onto a new grid pane.
             buttonPanes.add(grid); //Add the new grid pane to the main grid pane container.
@@ -1919,9 +1928,6 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     private GridPane setScreenButtons(Screen s) {
-        if (s.getId() == till.getDefaultScreen()) {
-            def_screen = s;
-        }
         GridPane grid = new GridPane(); //Create a new GridPane for this screen.
         grid.setId("productsgrid");
         try {
@@ -2134,6 +2140,7 @@ public class MainStage extends Stage implements GUIInterface {
         MainStage.this.getServerData();
         Platform.runLater(() -> {
             MessageScreen.hideWindow();
+            loginNumber.requestFocus();
         });
     }
 
