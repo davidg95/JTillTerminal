@@ -950,6 +950,7 @@ public class MainStage extends Stage implements GUIInterface {
         back.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         back.setOnAction((ActionEvent event) -> {
             setPanel(mainPane);
+            barcode.requestFocus();
         });
 
         paymentsList = new ListView<>();
@@ -1181,6 +1182,7 @@ public class MainStage extends Stage implements GUIInterface {
             dc.tillLogin(id);
             Platform.runLater(() -> {
                 setPanel(mainPane);
+                barcode.requestFocus();
             });
             Platform.runLater(() -> {
                 staffLabel.setText("Staff: " + staff.getName());
@@ -1784,6 +1786,7 @@ public class MainStage extends Stage implements GUIInterface {
             buttonPane.getChildren().add(def_screen.getPane());
         }
         age = 0;
+        barcode.requestFocus();
     }
 
     private void updateList() {

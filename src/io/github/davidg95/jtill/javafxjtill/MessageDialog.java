@@ -6,10 +6,12 @@
 package io.github.davidg95.jtill.javafxjtill;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -65,6 +67,9 @@ public class MessageDialog extends Stage {
         HBox hButton = new HBox(0);
         hButton.getChildren().add(button);
         button.setOnAction((ActionEvent event) -> {
+            hide();
+        });
+        button.setOnKeyPressed((KeyEvent ke) -> {
             hide();
         });
         pane.add(hButton, 0, 1);
