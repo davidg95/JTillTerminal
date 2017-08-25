@@ -102,6 +102,7 @@ public class MainStage extends Stage implements GUIInterface {
     private int x = 0;
     private int y = 0;
     private TextField loginNumber;
+    private GridPane loginArea;
 
     //Main Scene Components
     private TableView itemsTable;
@@ -270,7 +271,7 @@ public class MainStage extends Stage implements GUIInterface {
                     java.awt.Color col = new java.awt.Color(color);
                     Color c = Color.color((double) col.getRed() / 255, (double) col.getGreen() / 255, (double) col.getBlue() / 255);
                     parentPane.setBackground(new Background(new BackgroundFill(c, CornerRadii.EMPTY, Insets.EMPTY)));
-                }else{
+                } else {
                     parentPane.setBackground(null);
                 }
             } catch (IOException ex) {
@@ -949,6 +950,7 @@ public class MainStage extends Stage implements GUIInterface {
         back.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         back.setOnAction((ActionEvent event) -> {
             setPanel(mainPane);
+            barcode.requestFocus();
         });
 
         paymentsList = new ListView<>();
@@ -1165,19 +1167,23 @@ public class MainStage extends Stage implements GUIInterface {
     private void setLoginType(int type) {
         this.type = type;
         Platform.runLater(() -> {
-            loginPane.add(getLoginPane(), 1, 1, 8, 12);
+            loginArea.getChildren().clear();
+            loginArea.add(getLoginPane(), 5, 0);
         });
     }
 
     private void login(int id) {
         try {
-//            Platform.runLater(() -> {
-            MessageScreen.changeMessage("Logging in");
-            MessageScreen.showWindow();
-//            });
+            Platform.runLater(() -> {
+                MessageScreen.changeMessage("Logging in");
+                MessageScreen.showWindow();
+            });
             MainStage.this.staff = dc.getStaff(id);
-            setPanel(mainPane);
             dc.tillLogin(id);
+            Platform.runLater(() -> {
+                setPanel(mainPane);
+                barcode.requestFocus();
+            });
             Platform.runLater(() -> {
                 staffLabel.setText("Staff: " + staff.getName());
                 paymentLoggedIn.setText("Staff: " + staff.getName());
@@ -1186,26 +1192,31 @@ public class MainStage extends Stage implements GUIInterface {
                     buttonPane.getChildren().add(buttonPanes.get(0));
                 }
             });
-            Platform.runLater(() -> {
-                try {
-                    Sale rs = dc.resumeSale(staff);
-                    if (rs != null) {
-                        MainStage.this.sale = rs;
+            try {
+                Sale rs = dc.resumeSale(staff);
+                if (rs != null) {
+                    MainStage.this.sale = rs;
+                    Platform.runLater(() -> {
+                        MessageScreen.changeMessage("Getting transaction");
                         obTable.setAll(rs.getSaleItems());
                         setTotalLabel();
-                        try {
-                            final Customer c = dc.getCustomer(rs.getCustomerID());
+                    });
+                    try {
+                        final Customer c = dc.getCustomer(rs.getCustomerID());
+                        Platform.runLater(() -> {
                             setCustomer(c);
-                        } catch (CustomerNotFoundException | IOException | SQLException ex) {
-                            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    } else {
-                        newSale();
+                        });
+                    } catch (CustomerNotFoundException | IOException | SQLException ex) {
+                        Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } catch (IOException ex) {
-                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                } else {
+                    Platform.runLater(() -> {
+                        newSale();
+                    });
                 }
-            });
+            } catch (IOException ex) {
+                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (LoginException | SQLException | IOException | StaffNotFoundException ex) {
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
@@ -1325,12 +1336,15 @@ public class MainStage extends Stage implements GUIInterface {
         loginMessage.setMinSize(0, 0);
         loginMessage.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
+        loginArea = new GridPane();
+
         loginPane.add(exit, 0, 14, 1, 2);
         loginPane.add(print, 2, 14, 1, 2);
         loginPane.add(loginMessage, 4, 14, 3, 2);
         loginPane.add(loginTime, 9, 0, 1, 1);
         loginPane.add(notLoggedIn, 0, 0, 2, 1);
         loginPane.add(loginVersion, 2, 0, 4, 1);
+        loginPane.add(loginArea, 1, 1, 8, 12);
     }
 
     private GridPane getLoginPane() {
@@ -1381,11 +1395,16 @@ public class MainStage extends Stage implements GUIInterface {
             loginNumber.setMaxWidth(400);
             loginNumber.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
             loginNumber.setOnAction((ActionEvent event) -> {
-                if (!"".equals(loginNumber.getText())) {
-                    int id = Integer.parseInt(loginNumber.getText());
-                    login(id);
-                    loginNumber.setText("");
-                }
+                new Thread() {
+                    @Override
+                    public void run() {
+                        if (!"".equals(loginNumber.getText())) {
+                            int id = Integer.parseInt(loginNumber.getText());
+                            login(id);
+                            loginNumber.setText("");
+                        }
+                    }
+                }.start();
             });
             nums.add(loginNumber, 1, 2, 4, 1);
 
@@ -1551,14 +1570,20 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hEnter, 4, 5, 1, 2);
 
             enter.setOnAction((ActionEvent event) -> {
-                if (!"".equals(loginNumber.getText())) {
-                    int id = Integer.parseInt(loginNumber.getText());
-                    login(id);
-                    loginNumber.setText("");
-                }
+                new Thread() {
+                    @Override
+                    public void run() {
+                        if (!"".equals(loginNumber.getText())) {
+                            int id = Integer.parseInt(loginNumber.getText());
+                            login(id);
+                            loginNumber.setText("");
+                        }
+                    }
+                }.start();
             });
 
             staffLayout.add(nums, 1, 1, 3, 3);
+            loginNumber.requestFocus();
         }
         return staffLayout;
     }
@@ -1722,7 +1747,7 @@ public class MainStage extends Stage implements GUIInterface {
         newSale();
         Platform.runLater(() -> {
             setPanel(loginPane);
-            if (type == BUTTONS) {
+            if (type == CODE) {
                 loginNumber.requestFocus();
             }
         });
@@ -1757,8 +1782,11 @@ public class MainStage extends Stage implements GUIInterface {
         chargeAccount.setDisable(true);
         loyaltyButton.setDisable(true);
         buttonPane.getChildren().clear();
-        buttonPane.getChildren().add(def_screen.getPane());
+        if (def_screen != null) {
+            buttonPane.getChildren().add(def_screen.getPane());
+        }
         age = 0;
+        barcode.requestFocus();
     }
 
     private void updateList() {
@@ -1890,16 +1918,22 @@ public class MainStage extends Stage implements GUIInterface {
     private void addScreens(List<Screen> screens) {
         LOG.log(Level.INFO, "Got {0} screens from the server", screens.size());
 
+        try {
+            def_screen = dc.getScreen(till.getDefaultScreen());
+        } catch (IOException | SQLException | ScreenNotFoundException ex) {
+            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         for (Screen s : screens) {
             GridPane grid = setScreenButtons(s); //Set the buttons for that screen onto a new grid pane.
+            if (s.getId() == def_screen.getId()) {
+                def_screen.setPane(grid);
+            }
             buttonPanes.add(grid); //Add the new grid pane to the main grid pane container.
         }
     }
 
     private GridPane setScreenButtons(Screen s) {
-        if (s.getId() == till.getDefaultScreen()) {
-            def_screen = s;
-        }
         GridPane grid = new GridPane(); //Create a new GridPane for this screen.
         grid.setId("productsgrid");
         try {
@@ -2112,6 +2146,7 @@ public class MainStage extends Stage implements GUIInterface {
         MainStage.this.getServerData();
         Platform.runLater(() -> {
             MessageScreen.hideWindow();
+            loginNumber.requestFocus();
         });
     }
 
