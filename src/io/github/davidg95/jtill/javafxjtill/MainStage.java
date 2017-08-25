@@ -1923,6 +1923,9 @@ public class MainStage extends Stage implements GUIInterface {
 
         for (Screen s : screens) {
             GridPane grid = setScreenButtons(s); //Set the buttons for that screen onto a new grid pane.
+            if (s.getId() == def_screen.getId()) {
+                def_screen.setPane(grid);
+            }
             buttonPanes.add(grid); //Add the new grid pane to the main grid pane container.
         }
     }
