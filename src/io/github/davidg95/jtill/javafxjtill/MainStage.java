@@ -172,6 +172,8 @@ public class MainStage extends Stage implements GUIInterface {
 
     private final int topfont = 10;
 
+    private List<Staff> staffCache;
+
     public MainStage(ServerConnection dc) {
         super();
         this.dc = dc;
@@ -323,6 +325,7 @@ public class MainStage extends Stage implements GUIInterface {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            staffCache = dc.getAllStaff();
         } catch (IOException | SQLException ex) {
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
@@ -1189,8 +1192,17 @@ public class MainStage extends Stage implements GUIInterface {
                 MessageScreen.changeMessage("Logging in");
                 MessageScreen.showWindow();
             });
-            MainStage.this.staff = dc.getStaff(id);
-            dc.tillLogin(id);
+            try {
+                MainStage.this.staff = dc.getStaff(id);
+                dc.tillLogin(id);
+            } catch (IOException ex) {
+                for (Staff s : staffCache) {
+                    if (s.getId() == id) {
+                        this.staff = s;
+                        break;
+                    }
+                }
+            }
             Platform.runLater(() -> {
                 setPanel(mainPane);
                 barcode.requestFocus();
@@ -1227,8 +1239,11 @@ public class MainStage extends Stage implements GUIInterface {
                 }
             } catch (IOException ex) {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                Platform.runLater(() -> {
+                    newSale();
+                });
             }
-        } catch (LoginException | SQLException | IOException | StaffNotFoundException ex) {
+        } catch (LoginException | SQLException | StaffNotFoundException ex) {
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
                 MessageDialog.showMessage(MainStage.this, "Error", ex.getMessage());
