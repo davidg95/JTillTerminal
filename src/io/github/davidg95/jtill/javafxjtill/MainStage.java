@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.TableRow;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -108,7 +109,7 @@ public class MainStage extends Stage implements GUIInterface {
     private TableView itemsTable;
     private ObservableList<SaleItem> obTable;
     private GridPane mainPane;
-    private Pane buttonPane;
+    private StackPane buttonPane;
     private List<GridPane> buttonPanes;
     private Label staffLabel;
     private Label time;
@@ -1941,26 +1942,33 @@ public class MainStage extends Stage implements GUIInterface {
             List<TillButton> buttons = dc.getButtonsOnScreen(s); //Get all the buttons for this screen.
 
             LOG.log(Level.INFO, "Got {0} buttons for this screen", buttons.size());
-
-            //Add the spaces first.
-            buttons.forEach((b) -> {
-                if (b.getType() == TillButton.SPACE) { //If the button is a space, add en empty box.
-                    Pane box = new Pane();
-                    box.setId("productsgrid");
-                    box.minWidthProperty().bind(grid.widthProperty().divide(5).multiply(b.getWidth()));
-                    box.minHeightProperty().bind(grid.heightProperty().divide(10).multiply(b.getHeight()));
-                    box.maxWidthProperty().bind(grid.widthProperty().divide(5).multiply(b.getWidth()));
-                    box.maxHeightProperty().bind(grid.heightProperty().divide(10).multiply(b.getHeight()));
-                    grid.add(box, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight());
-                } else { //If it is a button add a button.
-                }
-            });
             s.setPane(grid);
+
+            for (int i = 1; i <= 5; i++) {
+                ColumnConstraints col = new ColumnConstraints();
+                col.setPercentWidth(20);
+                col.setFillWidth(true);
+                col.setHgrow(Priority.ALWAYS);
+                grid.getColumnConstraints().add(col);
+            }
+
+            for (int i = 1; i <= 10; i++) {
+                RowConstraints row = new RowConstraints();
+                row.setPercentHeight(10);
+                row.setFillHeight(true);
+                row.setVgrow(Priority.ALWAYS);
+                grid.getRowConstraints().add(row);
+            }
             //Add the buttons on top.
             for (TillButton b : buttons) {
                 if (b.getType() == TillButton.SPACE) { //If the button is a space, add en empty box.
+//                    StackPane pane = new StackPane();
+//                    pane.setMinSize(0, 0);
+//                    pane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+//                    n = pane;
                 } else { //If it is a button add a button.
                     Button button = new Button(b.getName()); //Create the button for this button.
+                    button.wrapTextProperty().setValue(true);
                     switch (b.getColorValue()) {
                         case TillButton.BLUE:
                             button.setId("cBlue");
@@ -1990,8 +1998,6 @@ public class MainStage extends Stage implements GUIInterface {
                             button.setId("productButton");
                             break;
                     }
-                    button.prefWidthProperty().bind(grid.widthProperty().divide(5).multiply(b.getWidth()));
-                    button.prefHeightProperty().bind(grid.heightProperty().divide(5).multiply(b.getHeight()));
                     int id = b.getItem();
                     try {
                         if (b.getType() == TillButton.ITEM) {
@@ -2020,6 +2026,9 @@ public class MainStage extends Stage implements GUIInterface {
                                 });
                             });
                         }
+                        button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                        GridPane.setFillHeight(button, true);
+                        GridPane.setFillWidth(button, true);
                         grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
                     } catch (IOException | ProductNotFoundException | SQLException ex) {
                         Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
@@ -2028,20 +2037,6 @@ public class MainStage extends Stage implements GUIInterface {
             }
         } catch (IOException | SQLException | ScreenNotFoundException ex) {
             showErrorAlert(ex);
-        }
-
-        for (int i = 1; i <= 5; i++) {
-            ColumnConstraints col = new ColumnConstraints();
-            col.setFillWidth(true);
-            col.setHgrow(Priority.ALWAYS);
-            mainPane.getColumnConstraints().add(col);
-        }
-
-        for (int i = 1; i <= 10; i++) {
-            RowConstraints row = new RowConstraints();
-            row.setFillHeight(true);
-            row.setVgrow(Priority.ALWAYS);
-            mainPane.getRowConstraints().add(row);
         }
         return grid;
     }
