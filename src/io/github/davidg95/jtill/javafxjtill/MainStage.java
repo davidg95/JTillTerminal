@@ -43,7 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.TableRow;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -109,7 +109,7 @@ public class MainStage extends Stage implements GUIInterface {
     private TableView itemsTable;
     private ObservableList<SaleItem> obTable;
     private GridPane mainPane;
-    private GridPane buttonPane;
+    private StackPane buttonPane;
     private List<GridPane> buttonPanes;
     private Label staffLabel;
     private Label time;
@@ -339,7 +339,7 @@ public class MainStage extends Stage implements GUIInterface {
         time.setTextAlignment(TextAlignment.RIGHT);
 
         buttonPanes = new ArrayList<>();
-        buttonPane = new GridPane();
+        buttonPane = new StackPane();
         buttonPane.setId("productsgrid");
         buttonPane.getChildren().clear();
         if (!buttonPanes.isEmpty()) {
@@ -1962,8 +1962,13 @@ public class MainStage extends Stage implements GUIInterface {
             //Add the buttons on top.
             for (TillButton b : buttons) {
                 if (b.getType() == TillButton.SPACE) { //If the button is a space, add en empty box.
+//                    StackPane pane = new StackPane();
+//                    pane.setMinSize(0, 0);
+//                    pane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+//                    n = pane;
                 } else { //If it is a button add a button.
                     Button button = new Button(b.getName()); //Create the button for this button.
+                    button.wrapTextProperty().setValue(true);
                     switch (b.getColorValue()) {
                         case TillButton.BLUE:
                             button.setId("cBlue");
@@ -2021,10 +2026,10 @@ public class MainStage extends Stage implements GUIInterface {
                                 });
                             });
                         }
-                        HBox hbBtn = new HBox(10);
-                        hbBtn.setAlignment(Pos.CENTER);
-                        hbBtn.getChildren().add(button);
-                        grid.add(hbBtn, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
+                        button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                        GridPane.setFillHeight(button, true);
+                        GridPane.setFillWidth(button, true);
+                        grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
                     } catch (IOException | ProductNotFoundException | SQLException ex) {
                         Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                     }
