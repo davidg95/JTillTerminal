@@ -43,10 +43,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.TableRow;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Priority;
@@ -312,6 +316,12 @@ public class MainStage extends Stage implements GUIInterface {
                 setLoginType(CODE);
             } else {
                 setLoginType(BUTTONS);
+            }
+            try {
+                BackgroundImage myBi = new BackgroundImage(new Image(dc.getLoginBackground().toURI().toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+                loginPane.setBackground(new Background(myBi));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         } catch (IOException | SQLException ex) {
             Platform.runLater(() -> {
@@ -1182,10 +1192,6 @@ public class MainStage extends Stage implements GUIInterface {
             MainStage.this.staff = dc.getStaff(id);
             dc.tillLogin(id);
             Platform.runLater(() -> {
-                setPanel(mainPane);
-                barcode.requestFocus();
-            });
-            Platform.runLater(() -> {
                 staffLabel.setText("Staff: " + staff.getName());
                 paymentLoggedIn.setText("Staff: " + staff.getName());
                 if (!buttonPanes.isEmpty()) {
@@ -1225,6 +1231,8 @@ public class MainStage extends Stage implements GUIInterface {
             });
         }
         Platform.runLater(() -> {
+            setPanel(mainPane);
+            barcode.requestFocus();
             MessageScreen.hideWindow();
         });
     }
