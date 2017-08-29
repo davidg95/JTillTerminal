@@ -1192,6 +1192,10 @@ public class MainStage extends Stage implements GUIInterface {
             MainStage.this.staff = dc.getStaff(id);
             dc.tillLogin(id);
             Platform.runLater(() -> {
+                setPanel(mainPane);
+                barcode.requestFocus();
+            });
+            Platform.runLater(() -> {
                 staffLabel.setText("Staff: " + staff.getName());
                 paymentLoggedIn.setText("Staff: " + staff.getName());
                 if (!buttonPanes.isEmpty()) {
@@ -1231,8 +1235,6 @@ public class MainStage extends Stage implements GUIInterface {
             });
         }
         Platform.runLater(() -> {
-            setPanel(mainPane);
-            barcode.requestFocus();
             MessageScreen.hideWindow();
         });
     }
