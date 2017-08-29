@@ -1962,10 +1962,6 @@ public class MainStage extends Stage implements GUIInterface {
             //Add the buttons on top.
             for (TillButton b : buttons) {
                 if (b.getType() == TillButton.SPACE) { //If the button is a space, add en empty box.
-//                    StackPane pane = new StackPane();
-//                    pane.setMinSize(0, 0);
-//                    pane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-//                    n = pane;
                 } else { //If it is a button add a button.
                     Button button = new Button(b.getName()); //Create the button for this button.
                     button.wrapTextProperty().setValue(true);
