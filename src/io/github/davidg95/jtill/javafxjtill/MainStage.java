@@ -1204,16 +1204,16 @@ public class MainStage extends Stage implements GUIInterface {
                 }
             }
             Platform.runLater(() -> {
-                setPanel(mainPane);
-                barcode.requestFocus();
-            });
-            Platform.runLater(() -> {
                 staffLabel.setText("Staff: " + staff.getName());
                 paymentLoggedIn.setText("Staff: " + staff.getName());
                 if (!buttonPanes.isEmpty()) {
                     buttonPane.getChildren().clear();
                     buttonPane.getChildren().add(buttonPanes.get(0));
                 }
+            });
+            Platform.runLater(() -> {
+                setPanel(mainPane);
+                barcode.requestFocus();
             });
             try {
                 Sale rs = dc.resumeSale(staff);
@@ -1223,6 +1223,7 @@ public class MainStage extends Stage implements GUIInterface {
                         MessageScreen.changeMessage("Getting transaction");
                         obTable.setAll(rs.getSaleItems());
                         setTotalLabel();
+                        resumeSale(rs);
                     });
                     try {
                         final Customer c = dc.getCustomer(rs.getCustomerID());
@@ -1658,6 +1659,18 @@ public class MainStage extends Stage implements GUIInterface {
             SaleCache.getInstance().clearAll();
         } catch (Throwable ex) {
             this.showMessageAlert("Error sending sales to Server", 5000);
+        }
+    }
+
+    private void resumeSale(Sale s) {
+        if (s.getCustomer() == null) {
+            addCustomer.setText("Add Customer");
+            chargeAccount.setDisable(true);
+            loyaltyButton.setDisable(true);
+        } else {
+            addCustomer.setText("Remove Customer");
+            chargeAccount.setDisable(false);
+            loyaltyButton.setDisable(false);
         }
     }
 
