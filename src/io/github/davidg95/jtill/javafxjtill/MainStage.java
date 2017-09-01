@@ -135,36 +135,43 @@ public class MainStage extends Stage implements GUIInterface {
 
     //Payment Scene Components
     private GridPane paymentPane;
+
     private Button fivePounds;
     private Button tenPounds;
     private Button twentyPounds;
     private Button customValue;
+
     private Button exactValue;
     private Button card;
     private Button cheque;
+    private Button voidItem;
+
     private Button addCustomer;
-    private Label saleCustomer;
-    private Label paymentTotal;
+    private Button chargeAccount;
+    private Button loyaltyButton;
+    private Button coupon;
+
+    private Button voidSale;
+    private Button refundButton;
+    private Button cashUp;
+    private Button saveTransaction;
+
     private ListView<PaymentItem> paymentsList;
     private ObservableList<PaymentItem> obPayments;
-    private Button discount;
-    private Button chargeAccount;
+    private Label saleCustomer;
+    private Label paymentTotal;
+
     private Button settingsButton;
-    private Button voidItem;
-    private Button voidSale;
-    private Button cashUp;
-    private Button clearLogins;
-    private Button back;
+
     private Label paymentLoggedIn;
     private Label paymentVersion;
     private Label paymentTime;
     private Label paymentMessages;
-    private Button paymentLogoff;
-    private Button submitSales;
-    private Button clockOff;
-    private Button refundButton;
     private Label paymentRefund;
-    private Button loyaltyButton;
+
+    private Button back;
+    private Button paymentLogoff;
+    private Button clockOff;
 
     private final double SCREEN_WIDTH = javafx.stage.Screen.getPrimary().getBounds().getWidth();
     private final double SCREEN_HEIGHT = javafx.stage.Screen.getPrimary().getBounds().getHeight();
@@ -487,7 +494,12 @@ public class MainStage extends Stage implements GUIInterface {
         logoff.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         logoff.setMinSize(0, 0);
         logoff.setOnAction((ActionEvent event) -> {
-            Platform.runLater(this::logoff);
+            new Thread() {
+                @Override
+                public void run() {
+                    logoff();
+                }
+            }.start();
         });
         logoff.setStyle("-fx-base: #0000FF;");
 
@@ -1003,24 +1015,6 @@ public class MainStage extends Stage implements GUIInterface {
             }
         });
 
-        discount = new Button("Discounts");
-        discount.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        discount.setOnAction((ActionEvent event) -> {
-            Discount d = DiscountSelectDialog.showDialog(this, dc);
-            if (d != null) {
-                d.setPrice(sale.getTotal().multiply(new BigDecimal(Double.toString(d.getPercentage() / 100)).negate()));
-                boolean inSale = sale.addItem(d, 1);
-                if (!inSale) {
-                    obTable.add(sale.getLastAdded());
-                    itemsTable.scrollTo(obTable.size() - 1);
-                } else {
-                    itemsTable.refresh();
-                }
-                setTotalLabel();
-                itemsTable.refresh();
-            }
-        });
-
         settingsButton = new Button("Settings");
         settingsButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         settingsButton.setOnAction((ActionEvent event) -> {
@@ -1039,36 +1033,31 @@ public class MainStage extends Stage implements GUIInterface {
                 LOG.log(Level.INFO, "Submitting all sales to the server");
                 sendSalesToServer();
                 SaleCache.getInstance().clearAll();
-                CashUpDialog.showDialog(this, dc, till);
-                clearLoginScreen();
-                logoff();
+                int res = CashUpDialog.showDialog(this, dc, till);
+                if (res == 1) {
+                    clearLoginScreen();
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            logoff();
+                        }
+                    }.start();
+                }
             } else {
                 MessageDialog.showMessage(this, "Cash Up", "You are not allowed to view this screen");
             }
-        });
-
-        clearLogins = new Button("Clear Login Screen");
-        clearLogins.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        clearLogins.setOnAction((ActionEvent event) -> {
-            if (staff.getPosition() >= 2) {
-                clearLoginScreen();
-                MessageDialog.showMessage(this, "Login Screen", "Staff cleared from login screen");
-            } else {
-                MessageDialog.showMessage(this, "Login Screen", "You are not allowed to do this");
-            }
-        });
-
-        submitSales = new Button("Submit all sales");
-        submitSales.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        submitSales.setOnAction((ActionEvent event) -> {
-            sendSalesToServer();
         });
 
         paymentLogoff = new Button("Logoff");
         paymentLogoff.setId("bottom");
         paymentLogoff.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         paymentLogoff.setOnAction((ActionEvent event) -> {
-            Platform.runLater(this::logoff);
+            new Thread() {
+                @Override
+                public void run() {
+                    logoff();
+                }
+            }.start();
         });
         paymentLogoff.setStyle("-fx-base: #0000FF;");
 
@@ -1129,40 +1118,74 @@ public class MainStage extends Stage implements GUIInterface {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        
+
         Label paymentScreenName = new Label("Payment");
         paymentScreenName.setId("toplabel");
         paymentScreenName.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
+        GridPane pane = new GridPane();
+
+        for (int i = 1; i <= 4; i++) {
+            ColumnConstraints col = new ColumnConstraints();
+            col.setPercentWidth(25);
+            col.setFillWidth(true);
+            col.setHgrow(Priority.ALWAYS);
+            pane.getColumnConstraints().add(col);
+        }
+
+        for (int i = 1; i <= 4; i++) {
+            RowConstraints row = new RowConstraints();
+            row.setPercentHeight(25);
+            row.setFillHeight(true);
+            row.setVgrow(Priority.ALWAYS);
+            pane.getRowConstraints().add(row);
+        }
+
+        coupon = new Button("Coupon");
+        coupon.setId("paymentMethods");
+        coupon.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        coupon.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        coupon.setOnAction((ActionEvent) -> {
+
+        });
+
+        saveTransaction = new Button("Save Transaction");
+        saveTransaction.setId("paymentMethods");
+        saveTransaction.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        saveTransaction.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        saveTransaction.setOnAction((ActionEvent) -> {
+
+        });
+
+        pane.add(fivePounds, 0, 0);
+        pane.add(tenPounds, 1, 0);
+        pane.add(twentyPounds, 2, 0);
+        pane.add(customValue, 3, 0);
+        pane.add(exactValue, 0, 1);
+        pane.add(card, 1, 1);
+        pane.add(cheque, 2, 1);
+        pane.add(voidItem, 3, 1);
+        pane.add(addCustomer, 0, 2);
+        pane.add(chargeAccount, 1, 2);
+        pane.add(loyaltyButton, 2, 2);
+        pane.add(coupon, 3, 2);
+        pane.add(voidSale, 0, 3);
+        pane.add(refundButton, 1, 3);
+        pane.add(cashUp, 2, 3);
+        pane.add(saveTransaction, 3, 3);
+
         paymentPane.add(paymentLoggedIn, 2, 0, 2, 1);
         paymentPane.add(paymentVersion, 4, 0, 3, 1);
         paymentPane.add(paymentTime, 9, 0, 1, 1);
-        paymentPane.add(fivePounds, 0, 1, 1, 2);
-        paymentPane.add(tenPounds, 1, 1, 1, 2);
-        paymentPane.add(twentyPounds, 2, 1, 1, 2);
-        paymentPane.add(customValue, 0, 3, 1, 2);
-        paymentPane.add(exactValue, 1, 3, 1, 2);
-        paymentPane.add(card, 2, 3, 1, 2);
-        paymentPane.add(addCustomer, 0, 5, 1, 2);
-        paymentPane.add(chargeAccount, 1, 5, 1, 2);
-        paymentPane.add(cheque, 2, 5, 1, 2);
         paymentPane.add(saleCustomer, 8, 7, 2, 1);
+        paymentPane.add(pane, 0, 1, 7, 10);
         paymentPane.add(back, 7, 14, 3, 2);
         paymentPane.add(paymentsList, 7, 1, 3, 5);
         paymentPane.add(paymentTotal, 7, 6, 3, 1);
-        paymentPane.add(voidItem, 6, 1, 1, 2);
-        paymentPane.add(voidSale, 5, 1, 1, 2);
-        paymentPane.add(discount, 4, 1, 1, 2);
-        paymentPane.add(settingsButton, 6, 3, 1, 2);
-        paymentPane.add(cashUp, 5, 3, 1, 2);
-        paymentPane.add(clearLogins, 4, 3, 1, 2);
-        paymentPane.add(submitSales, 4, 5, 1, 2);
         paymentPane.add(paymentMessages, 4, 14, 3, 2);
         paymentPane.add(clockOff, 1, 14, 1, 2);
         paymentPane.add(paymentLogoff, 0, 14, 1, 2);
-        paymentPane.add(refundButton, 0, 10, 1, 2);
         paymentPane.add(paymentRefund, 7, 0);
-        paymentPane.add(loyaltyButton, 0, 7, 1, 2);
         paymentPane.add(paymentScreenName, 0, 0, 2, 1);
 
         for (int i = 1; i <= 10; i++) {
@@ -1215,8 +1238,8 @@ public class MainStage extends Stage implements GUIInterface {
                 }
             }
             Platform.runLater(() -> {
-                staffLabel.setText("Staff: " + staff.getName());
-                paymentLoggedIn.setText("Staff: " + staff.getName());
+                staffLabel.setText(staff.getName());
+                paymentLoggedIn.setText(staff.getName());
                 if (!buttonPanes.isEmpty()) {
                     buttonPane.getChildren().clear();
                     buttonPane.getChildren().add(buttonPanes.get(0));
@@ -1785,17 +1808,30 @@ public class MainStage extends Stage implements GUIInterface {
      */
     private void logoff() {
         try {
+            Platform.runLater(() -> {
+                MessageScreen.changeMessage("Logging off...");
+                MessageScreen.showWindow();
+            });
             setRefund(false);
             dc.tillLogout(staff);
             if (!sale.getSaleItems().isEmpty()) {
+                Platform.runLater(() -> {
+                    MessageScreen.changeMessage("Saving Transaction");
+                });
                 dc.suspendSale(sale, staff);
             }
         } catch (IOException | StaffNotFoundException ex) {
-
+            Platform.runLater(() -> {
+                MessageScreen.hideWindow();
+                MessageDialog.showMessage(this, "Logoff", "Error sending sale to server");
+            });
         }
         staff = null;
-        newSale();
         Platform.runLater(() -> {
+            Platform.runLater(() -> {
+                MessageScreen.hideWindow();
+            });
+            newSale();
             setPanel(loginPane);
             if (type == CODE) {
                 loginNumber.requestFocus();
