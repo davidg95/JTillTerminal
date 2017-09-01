@@ -46,6 +46,8 @@ public class CashUpDialog extends Stage {
     private Label differenceLabel;
     private TextField differenceField;
     private Button close;
+    
+    private static int result;
 
     public CashUpDialog(Window parent, DataConnect dc, Till t) {
         this.dc = dc;
@@ -56,9 +58,11 @@ public class CashUpDialog extends Stage {
         initModality(Modality.APPLICATION_MODAL);
     }
 
-    public static void showDialog(Window parent, DataConnect dc, Till t) {
+    public static int showDialog(Window parent, DataConnect dc, Till t) {
         dialog = new CashUpDialog(parent, dc, t);
+        result = 0;
         dialog.showAndWait();
+        return result;
     }
 
     private void init() {
@@ -202,6 +206,7 @@ public class CashUpDialog extends Stage {
                             + "\nDifference: £" + difference.toString();
                     dc.sendEmail(message);
                 }
+                result = 1;
             } catch (IOException | SQLException ex) {
                 MessageDialog.showMessage(this, "Cash Up", "Server error");
             }

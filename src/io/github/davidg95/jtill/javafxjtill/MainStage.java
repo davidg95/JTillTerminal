@@ -42,6 +42,7 @@ import java.awt.print.PrinterException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import javafx.geometry.Insets;
 import javafx.scene.control.TableRow;
 import javafx.scene.image.Image;
@@ -135,36 +136,43 @@ public class MainStage extends Stage implements GUIInterface {
 
     //Payment Scene Components
     private GridPane paymentPane;
+
     private Button fivePounds;
     private Button tenPounds;
     private Button twentyPounds;
     private Button customValue;
+
     private Button exactValue;
     private Button card;
     private Button cheque;
+    private Button voidItem;
+
     private Button addCustomer;
-    private Label saleCustomer;
-    private Label paymentTotal;
+    private Button chargeAccount;
+    private Button loyaltyButton;
+    private Button coupon;
+
+    private Button voidSale;
+    private Button refundButton;
+    private Button cashUp;
+    private Button saveTransaction;
+
     private ListView<PaymentItem> paymentsList;
     private ObservableList<PaymentItem> obPayments;
-    private Button discount;
-    private Button chargeAccount;
+    private Label saleCustomer;
+    private Label paymentTotal;
+
     private Button settingsButton;
-    private Button voidItem;
-    private Button voidSale;
-    private Button cashUp;
-    private Button clearLogins;
-    private Button back;
+
     private Label paymentLoggedIn;
     private Label paymentVersion;
     private Label paymentTime;
     private Label paymentMessages;
-    private Button paymentLogoff;
-    private Button submitSales;
-    private Button clockOff;
-    private Button refundButton;
     private Label paymentRefund;
-    private Button loyaltyButton;
+
+    private Button back;
+    private Button paymentLogoff;
+    private Button clockOff;
 
     private final double SCREEN_WIDTH = javafx.stage.Screen.getPrimary().getBounds().getWidth();
     private final double SCREEN_HEIGHT = javafx.stage.Screen.getPrimary().getBounds().getHeight();
@@ -174,6 +182,8 @@ public class MainStage extends Stage implements GUIInterface {
     private final int topfont = 10;
 
     private List<Staff> staffCache;
+
+    private List<Sale> saleCache;
 
     public MainStage(ServerConnection dc) {
         super();
@@ -185,6 +195,7 @@ public class MainStage extends Stage implements GUIInterface {
         }
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
+        saleCache = new LinkedList<>();
     }
 
     private void setPanel(Pane panel) {
@@ -225,10 +236,11 @@ public class MainStage extends Stage implements GUIInterface {
                     MessageScreen.hideWindow();
                     LOG.log(Level.WARNING, "Error connecting to the server");
                     if (YesNoDialog.showDialog(this, "Could not connect to server", "A connection could not be established to the server, do you want to try again?") == YesNoDialog.NO) {
-                        LOG.log(Level.INFO, "Stopping JTill Terminal");
-                        System.exit(0);
+                        tryCon = false;
+                    } else {
+                        MessageScreen.changeMessage("Initialising");
+                        MessageScreen.showWindow();
                     }
-                } finally {
                 }
             }
         });
@@ -274,6 +286,11 @@ public class MainStage extends Stage implements GUIInterface {
                 LOG.log(Level.SEVERE, null, ex);
             }
             try {
+                till = dc.getTill(till.getId());
+            } catch (JTillException ex) {
+                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
                 int color = Integer.parseInt(dc.getSetting("TERMINAL_BG"));
                 if (color != 0) {
                     java.awt.Color col = new java.awt.Color(color);
@@ -287,13 +304,15 @@ public class MainStage extends Stage implements GUIInterface {
             }
             symbol = JavaFXJTill.settings.getProperty("CURRENCY_SYMBOL");
             terminalName = till.getName() + " - " + JavaFXJTill.settings.getProperty("SITE_NAME");
-            loginVersion.setText(terminalName);
-            mainVersion.setText(terminalName);
-            paymentVersion.setText(terminalName);
-            ((TableColumn) itemsTable.getColumns().get(2)).setText(symbol);
-            twentyPounds.setText(symbol + "20");
-            tenPounds.setText(symbol + "10");
-            fivePounds.setText(symbol + "5");
+            Platform.runLater(() -> {
+                loginVersion.setText(terminalName);
+                mainVersion.setText(terminalName);
+                paymentVersion.setText(terminalName);
+                ((TableColumn) itemsTable.getColumns().get(2)).setText(symbol);
+                twentyPounds.setText(symbol + "20");
+                tenPounds.setText(symbol + "10");
+                fivePounds.setText(symbol + "5");
+            });
             List<Discount> discounts = dc.getValidDiscounts();
             for (Discount d : discounts) {
                 try {
@@ -487,7 +506,18 @@ public class MainStage extends Stage implements GUIInterface {
         logoff.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         logoff.setMinSize(0, 0);
         logoff.setOnAction((ActionEvent event) -> {
-            Platform.runLater(this::logoff);
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        logoff();
+                    } finally {
+                        Platform.runLater(() -> {
+                            MessageScreen.hideWindow();
+                        });
+                    }
+                }
+            }.start();
         });
         logoff.setStyle("-fx-base: #0000FF;");
 
@@ -1003,24 +1033,6 @@ public class MainStage extends Stage implements GUIInterface {
             }
         });
 
-        discount = new Button("Discounts");
-        discount.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        discount.setOnAction((ActionEvent event) -> {
-            Discount d = DiscountSelectDialog.showDialog(this, dc);
-            if (d != null) {
-                d.setPrice(sale.getTotal().multiply(new BigDecimal(Double.toString(d.getPercentage() / 100)).negate()));
-                boolean inSale = sale.addItem(d, 1);
-                if (!inSale) {
-                    obTable.add(sale.getLastAdded());
-                    itemsTable.scrollTo(obTable.size() - 1);
-                } else {
-                    itemsTable.refresh();
-                }
-                setTotalLabel();
-                itemsTable.refresh();
-            }
-        });
-
         settingsButton = new Button("Settings");
         settingsButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         settingsButton.setOnAction((ActionEvent event) -> {
@@ -1039,36 +1051,37 @@ public class MainStage extends Stage implements GUIInterface {
                 LOG.log(Level.INFO, "Submitting all sales to the server");
                 sendSalesToServer();
                 SaleCache.getInstance().clearAll();
-                CashUpDialog.showDialog(this, dc, till);
-                clearLoginScreen();
-                logoff();
+                int res = CashUpDialog.showDialog(this, dc, till);
+                if (res == 1) {
+                    clearLoginScreen();
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            logoff();
+                            Platform.runLater(() -> {
+                                MessageScreen.hideWindow();
+                            });
+                        }
+                    }.start();
+                }
             } else {
                 MessageDialog.showMessage(this, "Cash Up", "You are not allowed to view this screen");
             }
-        });
-
-        clearLogins = new Button("Clear Login Screen");
-        clearLogins.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        clearLogins.setOnAction((ActionEvent event) -> {
-            if (staff.getPosition() >= 2) {
-                clearLoginScreen();
-                MessageDialog.showMessage(this, "Login Screen", "Staff cleared from login screen");
-            } else {
-                MessageDialog.showMessage(this, "Login Screen", "You are not allowed to do this");
-            }
-        });
-
-        submitSales = new Button("Submit all sales");
-        submitSales.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        submitSales.setOnAction((ActionEvent event) -> {
-            sendSalesToServer();
         });
 
         paymentLogoff = new Button("Logoff");
         paymentLogoff.setId("bottom");
         paymentLogoff.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         paymentLogoff.setOnAction((ActionEvent event) -> {
-            Platform.runLater(this::logoff);
+            new Thread() {
+                @Override
+                public void run() {
+                    logoff();
+                    Platform.runLater(() -> {
+                        MessageScreen.hideWindow();
+                    });
+                }
+            }.start();
         });
         paymentLogoff.setStyle("-fx-base: #0000FF;");
 
@@ -1129,40 +1142,74 @@ public class MainStage extends Stage implements GUIInterface {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        
+
         Label paymentScreenName = new Label("Payment");
         paymentScreenName.setId("toplabel");
         paymentScreenName.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
+        GridPane pane = new GridPane();
+
+        for (int i = 1; i <= 4; i++) {
+            ColumnConstraints col = new ColumnConstraints();
+            col.setPercentWidth(25);
+            col.setFillWidth(true);
+            col.setHgrow(Priority.ALWAYS);
+            pane.getColumnConstraints().add(col);
+        }
+
+        for (int i = 1; i <= 4; i++) {
+            RowConstraints row = new RowConstraints();
+            row.setPercentHeight(25);
+            row.setFillHeight(true);
+            row.setVgrow(Priority.ALWAYS);
+            pane.getRowConstraints().add(row);
+        }
+
+        coupon = new Button("Coupon");
+        coupon.setId("paymentMethods");
+        coupon.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        coupon.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        coupon.setOnAction((ActionEvent) -> {
+
+        });
+
+        saveTransaction = new Button("Save Transaction");
+        saveTransaction.setId("paymentMethods");
+        saveTransaction.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        saveTransaction.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        saveTransaction.setOnAction((ActionEvent) -> {
+
+        });
+
+        pane.add(fivePounds, 0, 0);
+        pane.add(tenPounds, 1, 0);
+        pane.add(twentyPounds, 2, 0);
+        pane.add(customValue, 3, 0);
+        pane.add(exactValue, 0, 1);
+        pane.add(card, 1, 1);
+        pane.add(cheque, 2, 1);
+        pane.add(voidItem, 3, 1);
+        pane.add(addCustomer, 0, 2);
+        pane.add(chargeAccount, 1, 2);
+        pane.add(loyaltyButton, 2, 2);
+        pane.add(coupon, 3, 2);
+        pane.add(voidSale, 0, 3);
+        pane.add(refundButton, 1, 3);
+        pane.add(cashUp, 2, 3);
+        pane.add(saveTransaction, 3, 3);
+
         paymentPane.add(paymentLoggedIn, 2, 0, 2, 1);
         paymentPane.add(paymentVersion, 4, 0, 3, 1);
         paymentPane.add(paymentTime, 9, 0, 1, 1);
-        paymentPane.add(fivePounds, 0, 1, 1, 2);
-        paymentPane.add(tenPounds, 1, 1, 1, 2);
-        paymentPane.add(twentyPounds, 2, 1, 1, 2);
-        paymentPane.add(customValue, 0, 3, 1, 2);
-        paymentPane.add(exactValue, 1, 3, 1, 2);
-        paymentPane.add(card, 2, 3, 1, 2);
-        paymentPane.add(addCustomer, 0, 5, 1, 2);
-        paymentPane.add(chargeAccount, 1, 5, 1, 2);
-        paymentPane.add(cheque, 2, 5, 1, 2);
         paymentPane.add(saleCustomer, 8, 7, 2, 1);
+        paymentPane.add(pane, 0, 1, 7, 10);
         paymentPane.add(back, 7, 14, 3, 2);
         paymentPane.add(paymentsList, 7, 1, 3, 5);
         paymentPane.add(paymentTotal, 7, 6, 3, 1);
-        paymentPane.add(voidItem, 6, 1, 1, 2);
-        paymentPane.add(voidSale, 5, 1, 1, 2);
-        paymentPane.add(discount, 4, 1, 1, 2);
-        paymentPane.add(settingsButton, 6, 3, 1, 2);
-        paymentPane.add(cashUp, 5, 3, 1, 2);
-        paymentPane.add(clearLogins, 4, 3, 1, 2);
-        paymentPane.add(submitSales, 4, 5, 1, 2);
         paymentPane.add(paymentMessages, 4, 14, 3, 2);
         paymentPane.add(clockOff, 1, 14, 1, 2);
         paymentPane.add(paymentLogoff, 0, 14, 1, 2);
-        paymentPane.add(refundButton, 0, 10, 1, 2);
         paymentPane.add(paymentRefund, 7, 0);
-        paymentPane.add(loyaltyButton, 0, 7, 1, 2);
         paymentPane.add(paymentScreenName, 0, 0, 2, 1);
 
         for (int i = 1; i <= 10; i++) {
@@ -1215,11 +1262,12 @@ public class MainStage extends Stage implements GUIInterface {
                 }
             }
             Platform.runLater(() -> {
-                staffLabel.setText("Staff: " + staff.getName());
-                paymentLoggedIn.setText("Staff: " + staff.getName());
+                staffLabel.setText(staff.getName());
+                paymentLoggedIn.setText(staff.getName());
                 if (!buttonPanes.isEmpty()) {
                     buttonPane.getChildren().clear();
-                    buttonPane.getChildren().add(buttonPanes.get(0));
+                    buttonPane.getChildren().add(def_screen.getPane());
+                    screenLabel.setText(def_screen.getName());
                 }
             });
             Platform.runLater(() -> {
@@ -1227,14 +1275,24 @@ public class MainStage extends Stage implements GUIInterface {
                 barcode.requestFocus();
             });
             try {
-                Sale rs = dc.resumeSale(staff);
+                Sale rs = null;
+                for (Sale s : saleCache) {
+                    if (s.getStaff().equals(staff)) {
+                        rs = s;
+                    }
+                }
+                saleCache.remove(rs);
+                if (rs == null) {
+                    rs = dc.resumeSale(staff);
+                }
                 if (rs != null) {
                     MainStage.this.sale = rs;
+                    final Sale frs = rs;
                     Platform.runLater(() -> {
                         MessageScreen.changeMessage("Getting transaction");
-                        obTable.setAll(rs.getSaleItems());
+                        obTable.setAll(frs.getSaleItems());
                         setTotalLabel();
-                        resumeSale(rs);
+                        resumeSale(frs);
                     });
                     try {
                         final Customer c = dc.getCustomer(rs.getCustomerID());
@@ -1247,12 +1305,14 @@ public class MainStage extends Stage implements GUIInterface {
                 } else {
                     Platform.runLater(() -> {
                         newSale();
+                        MessageScreen.hideWindow();
                     });
                 }
             } catch (IOException ex) {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                 Platform.runLater(() -> {
                     newSale();
+                    MessageScreen.hideWindow();
                 });
             }
         } catch (LoginException | SQLException | StaffNotFoundException ex) {
@@ -1700,6 +1760,8 @@ public class MainStage extends Stage implements GUIInterface {
         th.start();
         lastSale = sale.clone();
         sale.complete();
+        sale.setStaff(staff);
+        sale.setStaffID(staff.getId());
         try {
             try {
                 Sale s = dc.addSale(sale);
@@ -1785,17 +1847,32 @@ public class MainStage extends Stage implements GUIInterface {
      */
     private void logoff() {
         try {
+            Platform.runLater(() -> {
+                MessageScreen.changeMessage("Logging off...");
+                MessageScreen.showWindow();
+            });
             setRefund(false);
             dc.tillLogout(staff);
-            if (!sale.getSaleItems().isEmpty()) {
-                dc.suspendSale(sale, staff);
-            }
         } catch (IOException | StaffNotFoundException ex) {
-
+            Platform.runLater(() -> {
+                MessageScreen.hideWindow();
+            });
         }
+        sale.setStaff(staff);
+        if (!sale.getSaleItems().isEmpty()) {
+            Platform.runLater(() -> {
+                MessageScreen.changeMessage("Saving Transaction");
+            });
+            try {
+                dc.suspendSale(sale, staff);
+            } catch (IOException ex) {
+                saleCache.add(sale);
+            }
+        }
+
         staff = null;
-        newSale();
         Platform.runLater(() -> {
+            newSale();
             setPanel(loginPane);
             if (type == CODE) {
                 loginNumber.requestFocus();
@@ -1834,6 +1911,7 @@ public class MainStage extends Stage implements GUIInterface {
         buttonPane.getChildren().clear();
         if (def_screen != null) {
             buttonPane.getChildren().add(def_screen.getPane());
+            screenLabel.setText(def_screen.getName());
         }
         age = 0;
         barcode.requestFocus();
@@ -2181,9 +2259,7 @@ public class MainStage extends Stage implements GUIInterface {
             MessageScreen.changeMessage("Initialising");
             MessageScreen.showWindow();
         });
-        Platform.runLater(() -> {
-            MainStage.this.logoff();
-        });
+        MainStage.this.logoff();
         MainStage.this.getServerData();
         Platform.runLater(() -> {
             MessageScreen.hideWindow();
@@ -2194,5 +2270,12 @@ public class MainStage extends Stage implements GUIInterface {
     @Override
     public Till showTillSetupWindow(String name) {
         return null;
+    }
+
+    @Override
+    public void renameTill(String name) {
+        till.setName(name);
+        JavaFXJTill.NAME = name;
+        JavaFXJTill.saveProperties();
     }
 }
