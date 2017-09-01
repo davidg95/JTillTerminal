@@ -1723,6 +1723,8 @@ public class MainStage extends Stage implements GUIInterface {
         th.start();
         lastSale = sale.clone();
         sale.complete();
+        sale.setStaff(staff);
+        sale.setStaffID(staff.getId());
         try {
             try {
                 Sale s = dc.addSale(sale);
