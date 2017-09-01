@@ -119,6 +119,7 @@ public class MainStage extends Stage implements GUIInterface {
     private Label time;
     private Label total;
     private Label totalItems;
+    private Label screenLabel;
     private Button logoff;
     private Button quantity;
     private Button voidSelected;
@@ -340,6 +341,10 @@ public class MainStage extends Stage implements GUIInterface {
         staffLabel = new Label("Staff: ");
         staffLabel.setId("toplabel");
         staffLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
+
+        screenLabel = new Label("Main");
+        screenLabel.setId("toplabel");
+        screenLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
         mainVersion = new Label("JTill Terminal");
         mainVersion.setId("toplabel");
@@ -572,10 +577,10 @@ public class MainStage extends Stage implements GUIInterface {
             }
         });
 
-        mainPane.add(staffLabel, 0, 0, 2, 1);
-        mainPane.add(mainVersion, 2, 0, 4, 1);
+        mainPane.add(staffLabel, 2, 0, 2, 1);
+        mainPane.add(mainVersion, 4, 0, 3, 1);
         mainPane.add(time, 9, 0, 1, 1);
-        mainPane.add(buttonPane, 0, 1, 7, 11);
+        mainPane.add(buttonPane, 0, 1, 7, 13);
         mainPane.add(itemsTable, 7, 1, 3, 5);
         mainPane.add(total, 7, 6, 2, 1);
         mainPane.add(totalItems, 9, 6);
@@ -590,7 +595,8 @@ public class MainStage extends Stage implements GUIInterface {
         mainPane.add(lookup, 1, 14, 1, 2);
         mainPane.add(assisstance, 3, 14, 1, 2);
         mainPane.add(alertMessage, 4, 14, 3, 2);
-        mainPane.add(mainRefund, 6, 0);
+        mainPane.add(mainRefund, 7, 0);
+        mainPane.add(screenLabel, 0, 0, 2, 1);
 
         for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();
@@ -1123,9 +1129,13 @@ public class MainStage extends Stage implements GUIInterface {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+        
+        Label paymentScreenName = new Label("Payment");
+        paymentScreenName.setId("toplabel");
+        paymentScreenName.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
-        paymentPane.add(paymentLoggedIn, 0, 0, 2, 1);
-        paymentPane.add(paymentVersion, 2, 0, 4, 1);
+        paymentPane.add(paymentLoggedIn, 2, 0, 2, 1);
+        paymentPane.add(paymentVersion, 4, 0, 3, 1);
         paymentPane.add(paymentTime, 9, 0, 1, 1);
         paymentPane.add(fivePounds, 0, 1, 1, 2);
         paymentPane.add(tenPounds, 1, 1, 1, 2);
@@ -1151,8 +1161,9 @@ public class MainStage extends Stage implements GUIInterface {
         paymentPane.add(clockOff, 1, 14, 1, 2);
         paymentPane.add(paymentLogoff, 0, 14, 1, 2);
         paymentPane.add(refundButton, 0, 10, 1, 2);
-        paymentPane.add(paymentRefund, 6, 0);
+        paymentPane.add(paymentRefund, 7, 0);
         paymentPane.add(loyaltyButton, 0, 7, 1, 2);
+        paymentPane.add(paymentScreenName, 0, 0, 2, 1);
 
         for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();
@@ -1369,8 +1380,8 @@ public class MainStage extends Stage implements GUIInterface {
         loginPane.add(print, 2, 14, 1, 2);
         loginPane.add(loginMessage, 4, 14, 3, 2);
         loginPane.add(loginTime, 9, 0, 1, 1);
-        loginPane.add(notLoggedIn, 0, 0, 2, 1);
-        loginPane.add(loginVersion, 2, 0, 4, 1);
+        loginPane.add(notLoggedIn, 2, 0, 2, 1);
+        loginPane.add(loginVersion, 4, 0, 3, 1);
         loginPane.add(loginArea, 1, 1, 8, 12);
     }
 
@@ -2054,6 +2065,7 @@ public class MainStage extends Stage implements GUIInterface {
                                 Platform.runLater(() -> {
                                     buttonPane.getChildren().clear();
                                     buttonPane.getChildren().add(sc.getPane());
+                                    screenLabel.setText(sc.getName());
                                     if (!barcode.isFocused()) {
                                         barcode.requestFocus();
                                     }
