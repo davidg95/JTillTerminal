@@ -1261,6 +1261,9 @@ public class MainStage extends Stage implements GUIInterface {
                     }
                 }
             }
+            if (staff == null) {
+                throw new StaffNotFoundException(id + " not found");
+            }
             Platform.runLater(() -> {
                 staffLabel.setText(staff.getName());
                 paymentLoggedIn.setText(staff.getName());
@@ -1309,11 +1312,12 @@ public class MainStage extends Stage implements GUIInterface {
                     });
                 }
             } catch (IOException ex) {
-                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-                Platform.runLater(() -> {
-                    newSale();
-                    MessageScreen.hideWindow();
-                });
+                if (staff != null) {
+                    Platform.runLater(() -> {
+                        newSale();
+                        MessageScreen.hideWindow();
+                    });
+                }
             }
         } catch (LoginException | SQLException | StaffNotFoundException ex) {
             Platform.runLater(() -> {
