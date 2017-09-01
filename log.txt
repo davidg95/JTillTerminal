@@ -1,22 +1,24 @@
-JTill log Fri Sep 01 12:52:22 BST 2017
-[12:52:22] [INFO] Starting JTill Terminal
-[12:52:22] [INFO] Initalising
-[12:52:23] [INFO] Loading properties file
-[12:52:23] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[12:52:23] [INFO] Max sales set to {0}
-[12:52:23] [INFO] Downloading products list from server
-[12:52:23] [INFO] Downloaded 4 products from the server
-[12:52:23] [INFO] Downloading plu list from server
-[12:52:23] [INFO] Downloaded 4 plus from the server
-[12:52:23] [INFO] Set discounts in cache
-[12:52:23] [INFO] Loading screen and button configurations from the server
-[12:52:23] [INFO] Got {0} screens from the server
-[12:52:23] [INFO] Getting buttons for {0} screen
-[12:52:23] [INFO] Got {0} buttons for this screen
-[12:52:23] [INFO] Getting buttons for {0} screen
-[12:52:23] [INFO] Got {0} buttons for this screen
-[12:52:24] [INFO] Saving properties file
-[12:52:25] [INFO] Getting all discounts from cache
-[12:52:27] [INFO] Item has been added to a sale
-[12:52:48] [INFO] Sale {0} sent to server
-[12:52:49] [INFO] Getting all discounts from cache
+JTill log Fri Sep 01 14:25:53 BST 2017
+[14:25:53] [INFO] Starting JTill Terminal
+[14:25:53] [INFO] Initalising
+[14:25:53] [INFO] Loading properties file
+[14:25:53] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[14:25:53] [INFO] Max sales set to {0}
+[14:25:53] [INFO] Downloading products list from server
+[14:25:54] [INFO] Downloaded 4 products from the server
+[14:25:54] [INFO] Downloading plu list from server
+[14:25:54] [INFO] Downloaded 4 plus from the server
+[14:25:54] [INFO] Set discounts in cache
+[14:25:54] [INFO] Loading screen and button configurations from the server
+[14:25:54] [INFO] Got {0} screens from the server
+[14:25:54] [INFO] Getting buttons for {0} screen
+[14:25:54] [INFO] Got {0} buttons for this screen
+[14:25:54] [INFO] Getting buttons for {0} screen
+[14:25:54] [INFO] Got {0} buttons for this screen
+[14:25:54] [INFO] Saving properties file
+[14:25:58] [INFO] Getting all discounts from cache
+[14:26:08] [INFO] Item has been added to a sale
+[14:26:15] [INFO] Getting all discounts from cache
+[14:26:23] [WARNING] Error connecting to server
+[14:26:23] [INFO] Adding sale
+[14:26:23] [INFO] Getting all discounts from cache

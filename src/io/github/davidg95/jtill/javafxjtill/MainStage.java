@@ -42,6 +42,7 @@ import java.awt.print.PrinterException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import javafx.geometry.Insets;
 import javafx.scene.control.TableRow;
 import javafx.scene.image.Image;
@@ -182,6 +183,8 @@ public class MainStage extends Stage implements GUIInterface {
 
     private List<Staff> staffCache;
 
+    private List<Sale> saleCache;
+
     public MainStage(ServerConnection dc) {
         super();
         this.dc = dc;
@@ -192,6 +195,7 @@ public class MainStage extends Stage implements GUIInterface {
         }
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
+        saleCache = new LinkedList<>();
     }
 
     private void setPanel(Pane panel) {
@@ -232,10 +236,11 @@ public class MainStage extends Stage implements GUIInterface {
                     MessageScreen.hideWindow();
                     LOG.log(Level.WARNING, "Error connecting to the server");
                     if (YesNoDialog.showDialog(this, "Could not connect to server", "A connection could not be established to the server, do you want to try again?") == YesNoDialog.NO) {
-                        LOG.log(Level.INFO, "Stopping JTill Terminal");
-                        System.exit(0);
+                        tryCon = false;
+                    } else {
+                        MessageScreen.changeMessage("Initialising");
+                        MessageScreen.showWindow();
                     }
-                } finally {
                 }
             }
         });
@@ -281,6 +286,11 @@ public class MainStage extends Stage implements GUIInterface {
                 LOG.log(Level.SEVERE, null, ex);
             }
             try {
+                till = dc.getTill(till.getId());
+            } catch (JTillException ex) {
+                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
                 int color = Integer.parseInt(dc.getSetting("TERMINAL_BG"));
                 if (color != 0) {
                     java.awt.Color col = new java.awt.Color(color);
@@ -294,13 +304,15 @@ public class MainStage extends Stage implements GUIInterface {
             }
             symbol = JavaFXJTill.settings.getProperty("CURRENCY_SYMBOL");
             terminalName = till.getName() + " - " + JavaFXJTill.settings.getProperty("SITE_NAME");
-            loginVersion.setText(terminalName);
-            mainVersion.setText(terminalName);
-            paymentVersion.setText(terminalName);
-            ((TableColumn) itemsTable.getColumns().get(2)).setText(symbol);
-            twentyPounds.setText(symbol + "20");
-            tenPounds.setText(symbol + "10");
-            fivePounds.setText(symbol + "5");
+            Platform.runLater(() -> {
+                loginVersion.setText(terminalName);
+                mainVersion.setText(terminalName);
+                paymentVersion.setText(terminalName);
+                ((TableColumn) itemsTable.getColumns().get(2)).setText(symbol);
+                twentyPounds.setText(symbol + "20");
+                tenPounds.setText(symbol + "10");
+                fivePounds.setText(symbol + "5");
+            });
             List<Discount> discounts = dc.getValidDiscounts();
             for (Discount d : discounts) {
                 try {
@@ -497,7 +509,13 @@ public class MainStage extends Stage implements GUIInterface {
             new Thread() {
                 @Override
                 public void run() {
-                    logoff();
+                    try {
+                        logoff();
+                    } finally {
+                        Platform.runLater(() -> {
+                            MessageScreen.hideWindow();
+                        });
+                    }
                 }
             }.start();
         });
@@ -1040,6 +1058,9 @@ public class MainStage extends Stage implements GUIInterface {
                         @Override
                         public void run() {
                             logoff();
+                            Platform.runLater(() -> {
+                                MessageScreen.hideWindow();
+                            });
                         }
                     }.start();
                 }
@@ -1056,6 +1077,9 @@ public class MainStage extends Stage implements GUIInterface {
                 @Override
                 public void run() {
                     logoff();
+                    Platform.runLater(() -> {
+                        MessageScreen.hideWindow();
+                    });
                 }
             }.start();
         });
@@ -1242,7 +1266,8 @@ public class MainStage extends Stage implements GUIInterface {
                 paymentLoggedIn.setText(staff.getName());
                 if (!buttonPanes.isEmpty()) {
                     buttonPane.getChildren().clear();
-                    buttonPane.getChildren().add(buttonPanes.get(0));
+                    buttonPane.getChildren().add(def_screen.getPane());
+                    screenLabel.setText(def_screen.getName());
                 }
             });
             Platform.runLater(() -> {
@@ -1250,14 +1275,24 @@ public class MainStage extends Stage implements GUIInterface {
                 barcode.requestFocus();
             });
             try {
-                Sale rs = dc.resumeSale(staff);
+                Sale rs = null;
+                for (Sale s : saleCache) {
+                    if (s.getStaff().equals(staff)) {
+                        rs = s;
+                    }
+                }
+                saleCache.remove(rs);
+                if (rs == null) {
+                    rs = dc.resumeSale(staff);
+                }
                 if (rs != null) {
                     MainStage.this.sale = rs;
+                    final Sale frs = rs;
                     Platform.runLater(() -> {
                         MessageScreen.changeMessage("Getting transaction");
-                        obTable.setAll(rs.getSaleItems());
+                        obTable.setAll(frs.getSaleItems());
                         setTotalLabel();
-                        resumeSale(rs);
+                        resumeSale(frs);
                     });
                     try {
                         final Customer c = dc.getCustomer(rs.getCustomerID());
@@ -1270,12 +1305,14 @@ public class MainStage extends Stage implements GUIInterface {
                 } else {
                     Platform.runLater(() -> {
                         newSale();
+                        MessageScreen.hideWindow();
                     });
                 }
             } catch (IOException ex) {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                 Platform.runLater(() -> {
                     newSale();
+                    MessageScreen.hideWindow();
                 });
             }
         } catch (LoginException | SQLException | StaffNotFoundException ex) {
@@ -1816,23 +1853,25 @@ public class MainStage extends Stage implements GUIInterface {
             });
             setRefund(false);
             dc.tillLogout(staff);
-            if (!sale.getSaleItems().isEmpty()) {
-                Platform.runLater(() -> {
-                    MessageScreen.changeMessage("Saving Transaction");
-                });
-                dc.suspendSale(sale, staff);
-            }
         } catch (IOException | StaffNotFoundException ex) {
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
-                MessageDialog.showMessage(this, "Logoff", "Error sending sale to server");
             });
         }
+        sale.setStaff(staff);
+        if (!sale.getSaleItems().isEmpty()) {
+            Platform.runLater(() -> {
+                MessageScreen.changeMessage("Saving Transaction");
+            });
+            try {
+                dc.suspendSale(sale, staff);
+            } catch (IOException ex) {
+                saleCache.add(sale);
+            }
+        }
+
         staff = null;
         Platform.runLater(() -> {
-            Platform.runLater(() -> {
-                MessageScreen.hideWindow();
-            });
             newSale();
             setPanel(loginPane);
             if (type == CODE) {
@@ -1872,6 +1911,7 @@ public class MainStage extends Stage implements GUIInterface {
         buttonPane.getChildren().clear();
         if (def_screen != null) {
             buttonPane.getChildren().add(def_screen.getPane());
+            screenLabel.setText(def_screen.getName());
         }
         age = 0;
         barcode.requestFocus();
@@ -2219,9 +2259,7 @@ public class MainStage extends Stage implements GUIInterface {
             MessageScreen.changeMessage("Initialising");
             MessageScreen.showWindow();
         });
-        Platform.runLater(() -> {
-            MainStage.this.logoff();
-        });
+        MainStage.this.logoff();
         MainStage.this.getServerData();
         Platform.runLater(() -> {
             MessageScreen.hideWindow();
@@ -2232,5 +2270,12 @@ public class MainStage extends Stage implements GUIInterface {
     @Override
     public Till showTillSetupWindow(String name) {
         return null;
+    }
+
+    @Override
+    public void renameTill(String name) {
+        till.setName(name);
+        JavaFXJTill.NAME = name;
+        JavaFXJTill.saveProperties();
     }
 }
