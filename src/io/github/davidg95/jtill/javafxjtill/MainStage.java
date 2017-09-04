@@ -73,6 +73,8 @@ public class MainStage extends Stage implements GUIInterface {
     private int type;
 
     private Screen def_screen;
+    private Screen last_screen;
+    private Screen currentScreen;
 
     private Staff staff;
     private Till till;
@@ -2144,21 +2146,22 @@ public class MainStage extends Stage implements GUIInterface {
                                 throw new ScreenNotFoundException("Screen Missing");
                             }
                             button.setOnAction((ActionEvent e) -> {
-                                Platform.runLater(() -> {
-                                    buttonPane.getChildren().clear();
-                                    buttonPane.getChildren().add(sc.getPane());
-                                    screenLabel.setText(sc.getName());
-                                    if (!barcode.isFocused()) {
-                                        barcode.requestFocus();
-                                    }
-                                });
+                                changeScreen(sc);
+                            });
+                        } else if (b.getType() == TillButton.BACK) {
+                            button.setOnAction((ActionEvent e) -> {
+                                changeScreen(last_screen);
+                            });
+                        } else if (b.getType() == TillButton.MAIN) {
+                            button.setOnAction((ActionEvent e) -> {
+                                changeScreen(def_screen);
                             });
                         }
                         button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                         GridPane.setFillHeight(button, true);
                         GridPane.setFillWidth(button, true);
                         grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
-                    } catch (IOException | ProductNotFoundException | SQLException ex) {
+                    } catch (IOException | ProductNotFoundException | SQLException | ScreenNotFoundException ex) {
                         Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -2180,6 +2183,17 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void onProductButton(Item i) {
         addItemToSale(i);
+    }
+
+    private void changeScreen(Screen sc) {
+        last_screen = currentScreen;
+        buttonPane.getChildren().clear();
+        buttonPane.getChildren().add(sc.getPane());
+        screenLabel.setText(sc.getName());
+        if (!barcode.isFocused()) {
+            barcode.requestFocus();
+        }
+        currentScreen = sc;
     }
 
     @Override
