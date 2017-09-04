@@ -616,9 +616,8 @@ public class MainStage extends Stage implements GUIInterface {
         mainPane.add(itemsTable, 7, 1, 3, 5);
         mainPane.add(total, 7, 6, 2, 1);
         mainPane.add(totalItems, 9, 6);
-        mainPane.add(quantity, 7, 7);
+        mainPane.add(quantity, 7, 7, 2, 1);
         mainPane.add(voidSelected, 9, 7);
-        mainPane.add(voidLast, 8, 7);
         mainPane.add(barcode, 7, 8, 3, 1);
         mainPane.add(numbers, 7, 9, 3, 5);
         mainPane.add(payment, 7, 14, 3, 2);
@@ -2017,6 +2016,7 @@ public class MainStage extends Stage implements GUIInterface {
         if (!inSale) {
             obTable.add(sale.getLastAdded());
             itemsTable.scrollTo(obTable.size() - 1);
+            itemsTable.getSelectionModel().select(obTable.size() - 1);
         } else {
             itemsTable.refresh();
         }
