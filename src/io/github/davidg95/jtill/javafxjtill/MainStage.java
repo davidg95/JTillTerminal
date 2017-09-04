@@ -1193,14 +1193,14 @@ public class MainStage extends Stage implements GUIInterface {
         pane.add(exactValue, 0, 1);
         pane.add(card, 1, 1);
         pane.add(cheque, 2, 1);
-        pane.add(voidItem, 3, 1);
+        pane.add(cashUp, 3, 1);
         pane.add(addCustomer, 0, 2);
         pane.add(chargeAccount, 1, 2);
         pane.add(loyaltyButton, 2, 2);
-        pane.add(coupon, 3, 2);
+        pane.add(voidItem, 3, 2);
         pane.add(voidSale, 0, 3);
         pane.add(refundButton, 1, 3);
-        pane.add(cashUp, 2, 3);
+        pane.add(coupon, 2, 3);
         pane.add(saveTransaction, 3, 3);
 
         paymentPane.add(paymentLoggedIn, 2, 0, 2, 1);
