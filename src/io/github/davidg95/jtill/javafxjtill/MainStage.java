@@ -1916,8 +1916,7 @@ public class MainStage extends Stage implements GUIInterface {
         loyaltyButton.setDisable(true);
         buttonPane.getChildren().clear();
         if (def_screen != null) {
-            buttonPane.getChildren().add(def_screen.getPane());
-            screenLabel.setText(def_screen.getName());
+            changeScreen(def_screen);
         }
         age = 0;
         barcode.requestFocus();
