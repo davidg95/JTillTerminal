@@ -1017,6 +1017,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentTotal.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         voidItem = new Button("Void");
+        voidItem.setId("paymentMethods");
         voidItem.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         voidItem.setOnAction((ActionEvent event) -> {
             if (paymentsList.getSelectionModel().getSelectedIndex() > -1) {
@@ -1028,6 +1029,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         voidSale = new Button("Void Sale");
+        voidSale.setId("paymentMethods");
         voidSale.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         voidSale.setOnAction((ActionEvent event) -> {
             if (YesNoDialog.showDialog(this, "Void Sale", "Are you sure you want to void the sale?") == YesNoDialog.YES) {
@@ -1047,6 +1049,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         cashUp = new Button("Cash Up");
+        cashUp.setId("paymentMethods");
         cashUp.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         cashUp.setOnAction((ActionEvent event) -> {
             if (staff.getPosition() >= 3) {
