@@ -439,8 +439,6 @@ public class MainStage extends Stage implements GUIInterface {
                 int val = NumberEntry.showNumberEntryDialog(this, "Enter Quantity", itemQuantity);
                 if (val > 0) {
                     itemQuantity = val;
-                } else {
-                    MessageDialog.showMessage(this, "Quantity", "Quantity must be greater than zero");
                 }
             } else {
                 if (Utilities.isNumber(barcode.getText())) {
@@ -609,15 +607,38 @@ public class MainStage extends Stage implements GUIInterface {
             }
         });
 
+        GridPane pane = new GridPane();
+        pane.add(total, 0, 0);
+        pane.add(totalItems, 1, 0);
+        pane.add(quantity, 0, 1);
+        pane.add(voidSelected, 1, 1);
+
+        for (int i = 1; i <= 2; i++) {
+            ColumnConstraints col = new ColumnConstraints();
+            col.setPercentWidth(50);
+            col.setFillWidth(true);
+            col.setHgrow(Priority.ALWAYS);
+            pane.getColumnConstraints().add(col);
+        }
+
+        for (int i = 1; i <= 2; i++) {
+            RowConstraints row = new RowConstraints();
+            row.setPercentHeight(50);
+            row.setFillHeight(true);
+            row.setVgrow(Priority.ALWAYS);
+            pane.getRowConstraints().add(row);
+        }
+
         mainPane.add(staffLabel, 2, 0, 2, 1);
         mainPane.add(mainVersion, 4, 0, 3, 1);
         mainPane.add(time, 9, 0, 1, 1);
         mainPane.add(buttonPane, 0, 1, 7, 13);
         mainPane.add(itemsTable, 7, 1, 3, 5);
-        mainPane.add(total, 7, 6, 2, 1);
-        mainPane.add(totalItems, 9, 6);
-        mainPane.add(quantity, 7, 7, 2, 1);
-        mainPane.add(voidSelected, 9, 7);
+        mainPane.add(pane, 7, 6, 3, 2);
+//        mainPane.add(total, 7, 6, 2, 1);
+//        mainPane.add(totalItems, 9, 6);
+//        mainPane.add(quantity, 7, 7, 2, 1);
+//        mainPane.add(voidSelected, 9, 7);
         mainPane.add(barcode, 7, 8, 3, 1);
         mainPane.add(numbers, 7, 9, 3, 5);
         mainPane.add(payment, 7, 14, 3, 2);
