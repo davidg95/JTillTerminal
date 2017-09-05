@@ -2323,4 +2323,12 @@ public class MainStage extends Stage implements GUIInterface {
         JavaFXJTill.NAME = name;
         JavaFXJTill.saveProperties();
     }
+
+    @Override
+    public void logout() {
+        this.logoff();
+        Platform.runLater(()->{
+            MessageScreen.hideWindow();
+        });
+    }
 }
