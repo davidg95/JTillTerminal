@@ -6,15 +6,20 @@
 package io.github.davidg95.jtill.javafxjtill;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
 /**
@@ -31,12 +36,64 @@ public class YesNoDialog extends Stage {
 
     private final String message;
 
+    private GridPane pane;
+
     public YesNoDialog(Window parent, String title, String message) {
         this.message = message;
         init();
         setTitle(title);
         initOwner(parent);
         initModality(Modality.APPLICATION_MODAL);
+        initStyle(StageStyle.UNDECORATED);
+        makeDraggable(this, pane);
+    }
+
+    private static class Delta {
+
+        private double x;
+        private double y;
+    }
+
+    public static void makeDraggable(final Stage stage, final Node byNode) {
+        Delta d = new Delta();
+        byNode.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                // record a delta distance for the drag and drop operation.
+                d.x = stage.getX() - mouseEvent.getScreenX();
+                d.y = stage.getY() - mouseEvent.getScreenY();
+                byNode.setCursor(Cursor.MOVE);
+            }
+        });
+        byNode.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                byNode.setCursor(Cursor.HAND);
+            }
+        });
+        byNode.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                stage.setX(mouseEvent.getScreenX() + d.x);
+                stage.setY(mouseEvent.getScreenY() + d.y);
+            }
+        });
+        byNode.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!mouseEvent.isPrimaryButtonDown()) {
+                    byNode.setCursor(Cursor.HAND);
+                }
+            }
+        });
+        byNode.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!mouseEvent.isPrimaryButtonDown()) {
+                    byNode.setCursor(Cursor.DEFAULT);
+                }
+            }
+        });
     }
 
     public static int showDialog(Window parent, String title, String message) {
@@ -47,7 +104,7 @@ public class YesNoDialog extends Stage {
     }
 
     private void init() {
-        GridPane pane = new GridPane();
+        pane = new GridPane();
         Label label = new Label(message);
         label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         label.setMinSize(600, 50);

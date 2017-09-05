@@ -502,7 +502,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         logoff = new Button("Logoff");
-        logoff.setId("bottom");
+        logoff.setId("cRed");
         logoff.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         logoff.setMinSize(0, 0);
         logoff.setOnAction((ActionEvent event) -> {
@@ -1054,6 +1054,7 @@ public class MainStage extends Stage implements GUIInterface {
         voidSale.setOnAction((ActionEvent event) -> {
             if (YesNoDialog.showDialog(this, "Void Sale", "Are you sure you want to void the sale?") == YesNoDialog.YES) {
                 newSale();
+                setPanel(mainPane);
             }
         });
 
@@ -1095,7 +1096,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         paymentLogoff = new Button("Logoff");
-        paymentLogoff.setId("bottom");
+        paymentLogoff.setId("cRed");
         paymentLogoff.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         paymentLogoff.setOnAction((ActionEvent event) -> {
             new Thread() {
@@ -1117,7 +1118,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentMessages.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
         clockOff = new Button("Clock Off");
-        clockOff.setId("bottom");
+        clockOff.setId("cRed");
         clockOff.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         clockOff.setOnAction((ActionEvent event) -> {
             try {
@@ -1277,6 +1278,7 @@ public class MainStage extends Stage implements GUIInterface {
             });
             try {
                 MainStage.this.staff = dc.getStaff(id);
+                dc.clockOn(id);
                 dc.tillLogin(id);
             } catch (IOException ex) {
                 for (Staff s : staffCache) {
@@ -1398,11 +1400,13 @@ public class MainStage extends Stage implements GUIInterface {
         hExit.getChildren().add(exit);
         exit.setOnAction((ActionEvent event) -> {
             Platform.runLater(() -> {
-                try {
-                    dc.close();
-                } catch (IOException ex) {
+                if (YesNoDialog.showDialog(this, "Exit JTill", "Are you sure you want to exit JTill?") == YesNoDialog.YES) {
+                    try {
+                        dc.close();
+                    } catch (IOException ex) {
+                    }
+                    System.exit(0);
                 }
-                System.exit(0);
             });
         });
 

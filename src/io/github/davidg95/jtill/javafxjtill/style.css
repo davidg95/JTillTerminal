@@ -58,7 +58,7 @@ and open the template in the editor.
     -fx-text-fill: white;
 }
 
-#cBlue:pressed{
+#cBlue:hover{
     -fx-background-color: #0735b9;
 }
 
@@ -67,7 +67,7 @@ and open the template in the editor.
     -fx-text-fill: white;
 }
 
-#cRed:pressed{
+#cRed:hover{
     -fx-background-color: #c11e1e;
 }
 
@@ -76,7 +76,7 @@ and open the template in the editor.
     -fx-text-fill: black;
 }
 
-#cGreen:pressed{
+#cGreen:hover{
     -fx-background-color: #17b017;
 }
 
@@ -85,7 +85,7 @@ and open the template in the editor.
     -fx-text-fill: black;
 }
 
-#cYellow:pressed{
+#cYellow:hover{
     -fx-background-color: #bcbc20;
 }
 
@@ -94,7 +94,7 @@ and open the template in the editor.
     -fx-text-fill: black;
 }
 
-#cOrange:pressed{
+#cOrange:hover{
     -fx-background-color: #bc8e20
 }
 
@@ -103,7 +103,7 @@ and open the template in the editor.
     -fx-text-fill: white;
 }
 
-#cPurple:pressed{
+#cPurple:hover{
     -fx-background-color: #6d16b0;
 }
 
@@ -112,7 +112,7 @@ and open the template in the editor.
     -fx-text-fill: black;
 }
 
-#cWhite:pressed{
+#cWhite:hover{
     -fx-background-color: grey;
 }
 
@@ -130,11 +130,12 @@ and open the template in the editor.
 }
 
 #bottom{
-    -fx-background-color: green;
+    -fx-background-color: #2a5be7;
+    -fx-text-fill: white;
 }
 
-#bottom:pressed{
-    -fx-background-color: darkgreen;
+#bottom:hover{
+    -fx-background-color: #0735b9;
 }
 
 #red{
@@ -152,7 +153,7 @@ and open the template in the editor.
     -fx-text-fill: white;
 }
 
-#paymentMethods:pressed{
+#paymentMethods:hover{
     -fx-background-color: #1a27ac;
 }
 
@@ -193,7 +194,7 @@ and open the template in the editor.
     -fx-text-fill: white;
 }
 
-#number:pressed{
+#number:hover{
     -fx-background-color: #0735b9;
 }
 
