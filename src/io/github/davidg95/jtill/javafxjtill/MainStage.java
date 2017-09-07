@@ -139,6 +139,9 @@ public class MainStage extends Stage implements GUIInterface {
     //Payment Scene Components
     private GridPane paymentPane;
 
+    private TableView paymentItemsTable;
+    private ObservableList<SaleItem> payObTable;
+
     private Button fivePounds;
     private Button tenPounds;
     private Button twentyPounds;
@@ -311,6 +314,7 @@ public class MainStage extends Stage implements GUIInterface {
                 mainVersion.setText(terminalName);
                 paymentVersion.setText(terminalName);
                 ((TableColumn) itemsTable.getColumns().get(2)).setText(symbol);
+                ((TableColumn) paymentItemsTable.getColumns().get(2)).setText(symbol);
                 twentyPounds.setText(symbol + "20");
                 tenPounds.setText(symbol + "10");
                 fivePounds.setText(symbol + "5");
@@ -400,6 +404,7 @@ public class MainStage extends Stage implements GUIInterface {
         cst.prefWidthProperty().bind(itemsTable.widthProperty().divide(7).multiply(2));
         itemsTable.getColumns().addAll(qty, itm, cst);
         obTable = FXCollections.observableArrayList();
+        payObTable = FXCollections.observableArrayList();
         itemsTable.setItems(obTable);
 
         itemsTable.setRowFactory(tv -> {
@@ -1048,6 +1053,38 @@ public class MainStage extends Stage implements GUIInterface {
             }
         });
 
+        paymentItemsTable = new TableView();
+        paymentItemsTable.setId("ITEMS");
+        paymentItemsTable.setEditable(false);
+        TableColumn qty = new TableColumn("Qty.");
+        TableColumn itm = new TableColumn("Item");
+        TableColumn cst = new TableColumn(symbol);
+        qty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        itm.setCellValueFactory(new PropertyValueFactory<>("name"));
+        cst.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
+        qty.prefWidthProperty().bind(paymentItemsTable.widthProperty().divide(7));
+        itm.prefWidthProperty().bind(paymentItemsTable.widthProperty().divide(7).multiply(4));
+        cst.prefWidthProperty().bind(paymentItemsTable.widthProperty().divide(7).multiply(2));
+        paymentItemsTable.getColumns().addAll(qty, itm, cst);
+        obTable = FXCollections.observableArrayList();
+        paymentItemsTable.setItems(payObTable);
+
+        paymentItemsTable.setRowFactory(tv -> {
+            TableRow<SaleItem> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    SaleItem rowData = row.getItem();
+                    int q = NumberEntry.showNumberEntryDialog(this, "Set quantity", rowData.getQuantity());
+                    rowData.setQuantity(q);
+                    setTotalLabel();
+                    paymentItemsTable.refresh();
+                    sale.updateTotal();
+                    setTotalLabel();
+                }
+            });
+            return row;
+        });
+
         voidSale = new Button("Void Sale");
         voidSale.setId("paymentMethods");
         voidSale.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -1230,7 +1267,8 @@ public class MainStage extends Stage implements GUIInterface {
         paymentPane.add(saleCustomer, 8, 7, 2, 1);
         paymentPane.add(pane, 0, 1, 7, 10);
         paymentPane.add(back, 7, 14, 3, 2);
-        paymentPane.add(paymentsList, 7, 1, 3, 5);
+        paymentPane.add(paymentsList, 7, 9, 3, 5);
+        paymentPane.add(paymentItemsTable, 7, 1, 3, 5);
         paymentPane.add(paymentTotal, 7, 6, 3, 1);
         paymentPane.add(paymentMessages, 4, 14, 3, 2);
         paymentPane.add(clockOff, 1, 14, 1, 2);
@@ -1404,8 +1442,9 @@ public class MainStage extends Stage implements GUIInterface {
                     try {
                         dc.close();
                     } catch (IOException ex) {
+                    } finally {
+                        System.exit(0);
                     }
-                    System.exit(0);
                 }
             });
         });
@@ -2042,8 +2081,12 @@ public class MainStage extends Stage implements GUIInterface {
             obTable.add(sale.getLastAdded());
             itemsTable.scrollTo(obTable.size() - 1);
             itemsTable.getSelectionModel().select(obTable.size() - 1);
+            payObTable.add(sale.getLastAdded());
+            paymentItemsTable.scrollTo(payObTable.size() - 1);
+            paymentItemsTable.getSelectionModel().select(payObTable.size() - 1);
         } else {
             itemsTable.refresh();
+            paymentItemsTable.refresh();
         }
         LOG.log(Level.INFO, "Item has been added to a sale");
         setTotalLabel();
@@ -2327,7 +2370,7 @@ public class MainStage extends Stage implements GUIInterface {
     @Override
     public void logout() {
         this.logoff();
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             MessageScreen.hideWindow();
         });
     }

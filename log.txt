@@ -1,60 +1,23 @@
-JTill log Thu Sep 07 14:06:34 BST 2017
-[14:06:34] [INFO] Starting JTill Terminal
-[14:06:34] [INFO] Initalising
-[14:06:34] [INFO] Loading properties file
-[14:06:34] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[14:06:35] [INFO] Max sales set to {0}
-[14:06:35] [INFO] Downloading products list from server
-[14:06:35] [INFO] Downloaded 4 products from the server
-[14:06:35] [INFO] Downloading plu list from server
-[14:06:35] [INFO] Downloaded 4 plus from the server
-[14:06:35] [INFO] Set discounts in cache
-[14:06:35] [INFO] Loading screen and button configurations from the server
-[14:06:35] [INFO] Got {0} screens from the server
-[14:06:35] [INFO] Getting buttons for {0} screen
-[14:06:35] [INFO] Got {0} buttons for this screen
-[14:06:35] [INFO] Getting buttons for {0} screen
-[14:06:35] [INFO] Got {0} buttons for this screen
-[14:06:35] [INFO] Saving properties file
-[14:06:37] [INFO] Getting all discounts from cache
-[14:06:39] [INFO] Item has been added to a sale
-[14:06:43] [INFO] Sale {0} sent to server
-[14:06:43] [INFO] Getting all discounts from cache
-[14:06:54] [INFO] Getting all discounts from cache
-[14:06:54] [INFO] Max sales set to {0}
-[14:06:54] [INFO] Downloading products list from server
-[14:06:54] [INFO] Downloaded 4 products from the server
-[14:06:54] [INFO] Downloading plu list from server
-[14:06:54] [INFO] Downloaded 4 plus from the server
-[14:06:55] [INFO] Set discounts in cache
-[14:06:55] [INFO] Loading screen and button configurations from the server
-[14:06:55] [INFO] Got {0} screens from the server
-[14:06:55] [INFO] Getting buttons for {0} screen
-[14:06:55] [INFO] Got {0} buttons for this screen
-[14:06:55] [INFO] Getting buttons for {0} screen
-[14:06:55] [INFO] Got {0} buttons for this screen
-[14:06:57] [INFO] Getting all discounts from cache
-[14:06:58] [INFO] Item has been added to a sale
-[14:07:02] [INFO] Sale {0} sent to server
-[14:07:02] [INFO] Getting all discounts from cache
-[14:08:11] [INFO] Getting all discounts from cache
-[14:08:11] [INFO] Max sales set to {0}
-[14:08:11] [INFO] Downloading products list from server
-[14:08:11] [INFO] Downloaded 5 products from the server
-[14:08:11] [INFO] Downloading plu list from server
-[14:08:11] [INFO] Downloaded 5 plus from the server
-[14:08:11] [INFO] Set discounts in cache
-[14:08:11] [INFO] Loading screen and button configurations from the server
-[14:08:12] [INFO] Got {0} screens from the server
-[14:08:12] [INFO] Getting buttons for {0} screen
-[14:08:12] [INFO] Got {0} buttons for this screen
-[14:08:12] [INFO] Getting buttons for {0} screen
-[14:08:12] [INFO] Got {0} buttons for this screen
-[14:08:14] [INFO] Getting all discounts from cache
-[14:08:18] [INFO] Item has been added to a sale
-[14:08:23] [INFO] Sale {0} sent to server
-[14:08:23] [INFO] Getting all discounts from cache
-[14:08:43] [INFO] Item has been added to a sale
-[14:08:47] [INFO] Sale {0} sent to server
-[14:08:47] [INFO] Getting all discounts from cache
-[14:09:20] [INFO] Getting all discounts from cache
+JTill log Thu Sep 07 15:01:46 BST 2017
+[15:01:46] [INFO] Starting JTill Terminal
+[15:01:46] [INFO] Initalising
+[15:01:46] [INFO] Loading properties file
+[15:01:46] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[15:01:47] [INFO] Max sales set to {0}
+[15:01:47] [INFO] Downloading products list from server
+[15:01:47] [INFO] Downloaded 5 products from the server
+[15:01:47] [INFO] Downloading plu list from server
+[15:01:47] [INFO] Downloaded 5 plus from the server
+[15:01:47] [INFO] Set discounts in cache
+[15:01:47] [INFO] Loading screen and button configurations from the server
+[15:01:47] [INFO] Got {0} screens from the server
+[15:01:47] [INFO] Getting buttons for {0} screen
+[15:01:47] [INFO] Got {0} buttons for this screen
+[15:01:47] [INFO] Getting buttons for {0} screen
+[15:01:47] [INFO] Got {0} buttons for this screen
+[15:01:48] [INFO] Saving properties file
+[15:01:49] [INFO] Getting all discounts from cache
+[15:01:51] [INFO] Item has been added to a sale
+[15:02:00] [INFO] Sale {0} sent to server
+[15:02:00] [INFO] Getting all discounts from cache
+[15:02:01] [INFO] Getting all discounts from cache
