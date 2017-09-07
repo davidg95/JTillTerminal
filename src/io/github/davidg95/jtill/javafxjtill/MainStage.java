@@ -404,7 +404,6 @@ public class MainStage extends Stage implements GUIInterface {
         cst.prefWidthProperty().bind(itemsTable.widthProperty().divide(7).multiply(2));
         itemsTable.getColumns().addAll(qty, itm, cst);
         obTable = FXCollections.observableArrayList();
-        payObTable = FXCollections.observableArrayList();
         itemsTable.setItems(obTable);
 
         itemsTable.setRowFactory(tv -> {
@@ -1067,6 +1066,7 @@ public class MainStage extends Stage implements GUIInterface {
         cst.prefWidthProperty().bind(paymentItemsTable.widthProperty().divide(7).multiply(2));
         paymentItemsTable.getColumns().addAll(qty, itm, cst);
         obTable = FXCollections.observableArrayList();
+        payObTable = FXCollections.observableArrayList();
         paymentItemsTable.setItems(payObTable);
 
         paymentItemsTable.setRowFactory(tv -> {
@@ -1359,6 +1359,7 @@ public class MainStage extends Stage implements GUIInterface {
                     Platform.runLater(() -> {
                         MessageScreen.changeMessage("Getting transaction");
                         obTable.setAll(frs.getSaleItems());
+                        payObTable.setAll(frs.getSaleItems());
                         setTotalLabel();
                         resumeSale(frs);
                     });
@@ -1969,7 +1970,9 @@ public class MainStage extends Stage implements GUIInterface {
         });
         obTable = FXCollections.observableArrayList();
         obPayments = FXCollections.observableArrayList();
+        payObTable = FXCollections.observableArrayList();
         paymentsList.setItems(obPayments);
+        paymentItemsTable.setItems(payObTable);
         updateList();
         total.setText("Total: " + symbol + "0.00");
         totalItems.setText("Items: 0");
