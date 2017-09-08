@@ -1,23 +1,18 @@
-JTill log Thu Sep 07 15:01:46 BST 2017
-[15:01:46] [INFO] Starting JTill Terminal
-[15:01:46] [INFO] Initalising
-[15:01:46] [INFO] Loading properties file
-[15:01:46] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[15:01:47] [INFO] Max sales set to {0}
-[15:01:47] [INFO] Downloading products list from server
-[15:01:47] [INFO] Downloaded 5 products from the server
-[15:01:47] [INFO] Downloading plu list from server
-[15:01:47] [INFO] Downloaded 5 plus from the server
-[15:01:47] [INFO] Set discounts in cache
-[15:01:47] [INFO] Loading screen and button configurations from the server
-[15:01:47] [INFO] Got {0} screens from the server
-[15:01:47] [INFO] Getting buttons for {0} screen
-[15:01:47] [INFO] Got {0} buttons for this screen
-[15:01:47] [INFO] Getting buttons for {0} screen
-[15:01:47] [INFO] Got {0} buttons for this screen
-[15:01:48] [INFO] Saving properties file
-[15:01:49] [INFO] Getting all discounts from cache
-[15:01:51] [INFO] Item has been added to a sale
-[15:02:00] [INFO] Sale {0} sent to server
-[15:02:00] [INFO] Getting all discounts from cache
-[15:02:01] [INFO] Getting all discounts from cache
+JTill log Fri Sep 08 13:56:20 BST 2017
+[13:56:20] [INFO] Starting JTill Terminal
+[13:56:20] [INFO] Initalising
+[13:56:20] [INFO] Loading properties file
+[13:56:20] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[13:56:20] [INFO] Max sales set to {0}
+[13:56:20] [INFO] Downloading products list from server
+[13:56:20] [INFO] Downloaded 5 products from the server
+[13:56:20] [INFO] Downloading plu list from server
+[13:56:20] [INFO] Downloaded 5 plus from the server
+[13:56:21] [INFO] Set discounts in cache
+[13:56:21] [INFO] Loading screen and button configurations from the server
+[13:56:21] [INFO] Got {0} screens from the server
+[13:56:21] [INFO] Getting buttons for {0} screen
+[13:56:21] [INFO] Got {0} buttons for this screen
+[13:56:21] [INFO] Getting buttons for {0} screen
+[13:56:21] [INFO] Got {0} buttons for this screen
+[13:56:22] [INFO] Saving properties file
