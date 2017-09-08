@@ -682,7 +682,7 @@ public class MainStage extends Stage implements GUIInterface {
 
         for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();
-            col.setPercentWidth(10);
+            col.setPrefWidth(SCREEN_WIDTH / 10);
             col.setFillWidth(true);
             col.setHgrow(Priority.ALWAYS);
             mainPane.getColumnConstraints().add(col);
@@ -696,8 +696,8 @@ public class MainStage extends Stage implements GUIInterface {
             mainPane.getRowConstraints().add(row);
         }
 
-        mainPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
-        mainPane.getColumnConstraints().get(0).setPrefWidth(SCREEN_WIDTH / 8);
+//        mainPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
+//        mainPane.getColumnConstraints().get(0).setPrefWidth(SCREEN_WIDTH / 8);
     }
 
     private GridPane createNumbersPane() {
@@ -1318,7 +1318,7 @@ public class MainStage extends Stage implements GUIInterface {
             paymentPane.getRowConstraints().add(row);
         }
 
-        paymentPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
+//        paymentPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
     }
 
     /**
@@ -1446,7 +1446,7 @@ public class MainStage extends Stage implements GUIInterface {
             loginPane.getRowConstraints().add(row);
         }
 
-        loginPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
+//        loginPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
 
         notLoggedIn = new Label("Not Logged In");
         notLoggedIn.setId("toplabel");
