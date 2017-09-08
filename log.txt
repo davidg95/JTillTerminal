@@ -1,28 +1,20 @@
-JTill log Fri Sep 08 14:34:04 BST 2017
-[14:34:04] [INFO] Starting JTill Terminal
-[14:34:04] [INFO] Initalising
-[14:34:05] [INFO] Loading properties file
-[14:34:05] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[14:34:05] [INFO] Max sales set to {0}
-[14:34:05] [INFO] Downloading products list from server
-[14:34:05] [INFO] Downloaded 6 products from the server
-[14:34:05] [INFO] Downloading plu list from server
-[14:34:05] [INFO] Downloaded 6 plus from the server
-[14:34:05] [INFO] Set discounts in cache
-[14:34:05] [INFO] Loading screen and button configurations from the server
-[14:34:05] [INFO] Got {0} screens from the server
-[14:34:05] [INFO] Getting buttons for {0} screen
-[14:34:05] [INFO] Got {0} buttons for this screen
-[14:34:06] [INFO] Getting buttons for {0} screen
-[14:34:06] [INFO] Got {0} buttons for this screen
-[14:34:06] [INFO] Saving properties file
-[14:34:08] [INFO] Getting all discounts from cache
-[14:34:10] [INFO] Item has been added to a sale
-[14:34:14] [INFO] Sale {0} sent to server
-[14:34:14] [INFO] Getting all discounts from cache
-[14:34:26] [INFO] Item has been added to a sale
-[14:34:38] [INFO] Sale {0} sent to server
-[14:34:38] [INFO] Getting all discounts from cache
-[14:34:46] [INFO] Item has been added to a sale
-[14:35:09] [INFO] Sale {0} sent to server
-[14:35:12] [INFO] Getting all discounts from cache
+JTill log Fri Sep 08 15:19:04 BST 2017
+[15:19:04] [INFO] Starting JTill Terminal
+[15:19:04] [INFO] Initalising
+[15:19:04] [INFO] Loading properties file
+[15:19:04] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[15:19:04] [INFO] Max sales set to {0}
+[15:19:04] [INFO] Downloading products list from server
+[15:19:05] [INFO] Downloaded 6 products from the server
+[15:19:05] [INFO] Downloading plu list from server
+[15:19:05] [INFO] Downloaded 6 plus from the server
+[15:19:05] [INFO] Set discounts in cache
+[15:19:05] [INFO] Loading screen and button configurations from the server
+[15:19:05] [INFO] Got {0} screens from the server
+[15:19:05] [INFO] Getting buttons for {0} screen
+[15:19:05] [INFO] Got {0} buttons for this screen
+[15:19:05] [INFO] Getting buttons for {0} screen
+[15:19:05] [INFO] Got {0} buttons for this screen
+[15:19:06] [INFO] Saving properties file
+[15:19:07] [INFO] Getting all discounts from cache
+[15:19:25] [INFO] Getting all discounts from cache

@@ -7,6 +7,7 @@ package io.github.davidg95.jtill.javafxjtill;
 
 import io.github.davidg95.JTill.jtill.ProductEvent;
 import io.github.davidg95.JTill.jtill.*;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -43,6 +44,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.scene.control.TableRow;
 import javafx.scene.image.Image;
@@ -58,6 +62,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import javax.swing.Timer;
 
 /**
  *
@@ -96,6 +101,9 @@ public class MainStage extends Stage implements GUIInterface {
 
     private Scene mainScene;
     private GridPane parentPane;
+
+    private Timer timer;
+    private int logoutTimeout;
 
     //Login Scene Components
     private GridPane loginPane;
@@ -249,6 +257,23 @@ public class MainStage extends Stage implements GUIInterface {
                 }
             }
         });
+        mainPane.addEventHandler(EventType.ROOT, new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                if (timer != null) {
+                    timer.restart();
+                }
+            }
+        });
+    }
+
+    public class TimerHandler implements ActionListener {
+
+        @Override
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            MainStage.this.logout();
+        }
+
     }
 
     private void tryConnect() throws IOException {
@@ -277,6 +302,7 @@ public class MainStage extends Stage implements GUIInterface {
             JavaFXJTill.settings = null;
             JavaFXJTill.settings = dc.getSettings();
             MAX_SALES = Integer.parseInt(JavaFXJTill.settings.getProperty("MAX_CACHE_SALES"));
+            logoutTimeout = Integer.parseInt(JavaFXJTill.settings.getProperty("LOGOUT_TIMEOUT"));
             LOG.log(Level.INFO, "Max sales set to {0}", MAX_SALES);
             try {
                 if (JavaFXJTill.settings.getProperty("SEND_PRODUCTS_START").equals("TRUE")) {
@@ -1377,6 +1403,11 @@ public class MainStage extends Stage implements GUIInterface {
                         MessageScreen.hideWindow();
                     });
                 }
+                if (logoutTimeout > 0) {
+                    timer = new Timer(logoutTimeout * 1000, new TimerHandler());
+                    timer.setRepeats(false);
+                    timer.start();
+                }
             } catch (IOException ex) {
                 if (staff != null) {
                     Platform.runLater(() -> {
@@ -1919,6 +1950,9 @@ public class MainStage extends Stage implements GUIInterface {
      * Log the member of staff off and return to the login screen.
      */
     private void logoff() {
+        if (timer != null) {
+            timer.stop();
+        }
         try {
             Platform.runLater(() -> {
                 MessageScreen.changeMessage("Logging off...");
