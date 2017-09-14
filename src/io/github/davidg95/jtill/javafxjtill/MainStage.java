@@ -42,10 +42,6 @@ import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -1181,7 +1177,7 @@ public class MainStage extends Stage implements GUIInterface {
                 SaleCache.getInstance().clearAll();
                 int res = CashUpDialog.showDialog(this, dc, till);
                 if (res == 1) {
-                    clearLoginScreen();
+//                    clearLoginScreen();
                     new Thread() {
                         @Override
                         public void run() {

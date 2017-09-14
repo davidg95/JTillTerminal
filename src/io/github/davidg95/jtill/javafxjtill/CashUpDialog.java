@@ -206,6 +206,7 @@ public class CashUpDialog extends Stage {
                             + "\nDifference: £" + difference.toString();
                     dc.sendEmail(message);
                 }
+                dc.cashUncashedSales(till.getId());
                 result = 1;
             } catch (IOException | SQLException ex) {
                 MessageDialog.showMessage(this, "Cash Up", "Server error");
