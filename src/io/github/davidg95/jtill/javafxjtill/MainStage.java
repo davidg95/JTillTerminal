@@ -40,6 +40,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -264,6 +265,22 @@ public class MainStage extends Stage implements GUIInterface {
                     timer.restart();
                 }
             }
+        });
+    }
+
+    @Override
+    public void requestUpdate() {
+        Platform.runLater(() -> {
+            MessageScreen.changeMessage("Downloading Update");
+            MessageScreen.showWindow();
+        });
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Platform.runLater(() -> {
+            MessageScreen.hideWindow();
         });
     }
 
@@ -1448,7 +1465,6 @@ public class MainStage extends Stage implements GUIInterface {
         }
 
 //        loginPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
-
         notLoggedIn = new Label("Not Logged In");
         notLoggedIn.setId("toplabel");
         notLoggedIn.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
