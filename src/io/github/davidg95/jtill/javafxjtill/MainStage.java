@@ -498,6 +498,7 @@ public class MainStage extends Stage implements GUIInterface {
                 final SaleItem item = (SaleItem) itemsTable.getSelectionModel().getSelectedItem();
                 sale.voidItem(item);
                 obTable.remove(item);
+                payObTable.remove(item);
                 final Product p = (Product) item.getItem();
                 double taxP = p.getTax().getValue() / 100;
                 setTotalLabel();
