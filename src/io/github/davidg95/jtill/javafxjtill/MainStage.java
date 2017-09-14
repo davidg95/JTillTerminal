@@ -41,6 +41,11 @@ import javafx.stage.StageStyle;
 import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -270,18 +275,34 @@ public class MainStage extends Stage implements GUIInterface {
 
     @Override
     public void requestUpdate() {
-        Platform.runLater(() -> {
-            MessageScreen.changeMessage("Downloading Update");
-            MessageScreen.showWindow();
-        });
         try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ex) {
+            this.logoff();
+            Platform.runLater(() -> {
+                MessageScreen.changeMessage("Downloading Update");
+                MessageScreen.showWindow();
+            });
+            List<byte[]> update = dc.downloadTerminalUpdate();
+            File file = new File(System.getProperty("java.io.tmpdir") + "terminalinstaller.exe");
+            FileOutputStream out = new FileOutputStream(file);
+            for (byte[] b : update) {
+                out.write(b);
+            }
+            out.close();
+            Runtime.getRuntime().exec(System.getProperty("java.io.tmpdir") + "terminalinstaller.exe", null, new File(System.getProperty("java.io.tmpdir")));
+            Platform.runLater(() -> {
+                MessageScreen.hideWindow();
+            });
+        } catch (Exception ex) {
+            Platform.runLater(() -> {
+                MessageScreen.hideWindow();
+                MessageDialog.showMessage(this, "Error", ex.getMessage());
+            });
             Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Platform.runLater(() -> {
+                MessageScreen.hideWindow();
+            });
         }
-        Platform.runLater(() -> {
-            MessageScreen.hideWindow();
-        });
     }
 
     public class TimerHandler implements ActionListener {

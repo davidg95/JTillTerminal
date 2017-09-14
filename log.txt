@@ -1,20 +1,19 @@
-JTill log Fri Sep 08 15:19:04 BST 2017
-[15:19:04] [INFO] Starting JTill Terminal
-[15:19:04] [INFO] Initalising
-[15:19:04] [INFO] Loading properties file
-[15:19:04] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[15:19:04] [INFO] Max sales set to {0}
-[15:19:04] [INFO] Downloading products list from server
-[15:19:05] [INFO] Downloaded 6 products from the server
-[15:19:05] [INFO] Downloading plu list from server
-[15:19:05] [INFO] Downloaded 6 plus from the server
-[15:19:05] [INFO] Set discounts in cache
-[15:19:05] [INFO] Loading screen and button configurations from the server
-[15:19:05] [INFO] Got {0} screens from the server
-[15:19:05] [INFO] Getting buttons for {0} screen
-[15:19:05] [INFO] Got {0} buttons for this screen
-[15:19:05] [INFO] Getting buttons for {0} screen
-[15:19:05] [INFO] Got {0} buttons for this screen
-[15:19:06] [INFO] Saving properties file
-[15:19:07] [INFO] Getting all discounts from cache
-[15:19:25] [INFO] Getting all discounts from cache
+JTill log Thu Sep 14 15:57:48 BST 2017
+[15:57:48] [INFO] Starting JTill Terminal
+[15:57:48] [INFO] Initalising
+[15:57:48] [INFO] Loading properties file
+[15:57:48] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[15:57:48] [INFO] Max sales set to {0}
+[15:57:48] [INFO] Downloading products list from server
+[15:57:48] [INFO] Downloaded 6 products from the server
+[15:57:48] [INFO] Downloading plu list from server
+[15:57:48] [INFO] Downloaded 6 plus from the server
+[15:57:48] [INFO] Set discounts in cache
+[15:57:48] [INFO] Loading screen and button configurations from the server
+[15:57:48] [INFO] Got {0} screens from the server
+[15:57:49] [INFO] Getting buttons for {0} screen
+[15:57:49] [INFO] Got {0} buttons for this screen
+[15:57:49] [INFO] Getting buttons for {0} screen
+[15:57:49] [INFO] Got {0} buttons for this screen
+[15:57:49] [INFO] Saving properties file
+[15:57:58] [INFO] Getting all discounts from cache
