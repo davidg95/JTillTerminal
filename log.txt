@@ -1,48 +1,23 @@
-JTill log Thu Sep 14 16:15:11 BST 2017
-[16:15:11] [INFO] Starting JTill Terminal
-[16:15:11] [INFO] Initalising
-[16:15:11] [INFO] Loading properties file
-[16:15:11] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[16:15:11] [INFO] Max sales set to {0}
-[16:15:11] [INFO] Downloading products list from server
-[16:15:12] [INFO] Downloaded 6 products from the server
-[16:15:12] [INFO] Downloading plu list from server
-[16:15:12] [INFO] Downloaded 6 plus from the server
-[16:15:12] [INFO] Set discounts in cache
-[16:15:12] [INFO] Loading screen and button configurations from the server
-[16:15:12] [INFO] Got {0} screens from the server
-[16:15:12] [INFO] Getting buttons for {0} screen
-[16:15:12] [INFO] Got {0} buttons for this screen
-[16:15:12] [INFO] Getting buttons for {0} screen
-[16:15:12] [INFO] Got {0} buttons for this screen
-[16:15:13] [INFO] Saving properties file
-[16:15:14] [INFO] Getting all discounts from cache
-[16:15:15] [INFO] Item has been added to a sale
-[16:15:16] [INFO] Item has been added to a sale
-[16:15:18] [INFO] Sale {0} sent to server
-[16:15:18] [INFO] Getting all discounts from cache
-[16:15:19] [INFO] Submitting all sales to the server
-[16:15:19] [INFO] Sending sales data to the server
-[16:15:19] [INFO] Getting all sales
-[16:15:19] [INFO] Sales data has been sent to the server
-[16:15:19] [INFO] Clearing all sales
-[16:15:19] [INFO] Clearing all sales
-[16:15:23] [INFO] Getting all discounts from cache
-[16:15:24] [INFO] Getting all discounts from cache
-[16:15:30] [INFO] Item has been added to a sale
-[16:15:31] [INFO] Sale {0} sent to server
-[16:15:31] [INFO] Getting all discounts from cache
-[16:15:32] [INFO] Submitting all sales to the server
-[16:15:32] [INFO] Sending sales data to the server
-[16:15:32] [INFO] Getting all sales
-[16:15:32] [INFO] Sales data has been sent to the server
-[16:15:32] [INFO] Clearing all sales
-[16:15:32] [INFO] Clearing all sales
-[16:15:36] [INFO] Getting all discounts from cache
-[16:15:38] [INFO] Getting all discounts from cache
-[16:15:44] [INFO] Getting all discounts from cache
-[16:15:45] [INFO] Getting all discounts from cache
-[16:15:46] [INFO] Item has been added to a sale
-[16:15:48] [INFO] Sale {0} sent to server
-[16:15:48] [INFO] Getting all discounts from cache
-[16:15:49] [INFO] Getting all discounts from cache
+JTill log Thu Sep 14 16:29:25 BST 2017
+[16:29:25] [INFO] Starting JTill Terminal
+[16:29:25] [INFO] Initalising
+[16:29:25] [INFO] Loading properties file
+[16:29:25] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[16:29:25] [INFO] Max sales set to {0}
+[16:29:25] [INFO] Downloading products list from server
+[16:29:26] [INFO] Downloaded 6 products from the server
+[16:29:26] [INFO] Downloading plu list from server
+[16:29:26] [INFO] Downloaded 6 plus from the server
+[16:29:26] [INFO] Set discounts in cache
+[16:29:26] [INFO] Loading screen and button configurations from the server
+[16:29:26] [INFO] Got {0} screens from the server
+[16:29:26] [INFO] Getting buttons for {0} screen
+[16:29:26] [INFO] Got {0} buttons for this screen
+[16:29:26] [INFO] Getting buttons for {0} screen
+[16:29:26] [INFO] Got {0} buttons for this screen
+[16:29:26] [INFO] Saving properties file
+[16:29:29] [INFO] Getting all discounts from cache
+[16:29:31] [INFO] Item has been added to a sale
+[16:29:32] [INFO] Sale {0} sent to server
+[16:29:32] [INFO] Getting all discounts from cache
+[16:29:32] [INFO] Getting all discounts from cache
