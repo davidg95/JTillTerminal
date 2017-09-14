@@ -269,7 +269,7 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     @Override
-    public void buildUpdate(File f) {
+    public void requestUpdate() {
         Platform.runLater(() -> {
             MessageScreen.changeMessage("Downloading Update");
             MessageScreen.showWindow();
