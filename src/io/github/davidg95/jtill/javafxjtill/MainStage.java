@@ -200,6 +200,8 @@ public class MainStage extends Stage implements GUIInterface {
 
     private List<Sale> saleCache;
 
+    private boolean newData = false;
+
     public MainStage(ServerConnection dc) {
         super();
         this.dc = dc;
@@ -297,6 +299,21 @@ public class MainStage extends Stage implements GUIInterface {
         } finally {
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
+            });
+        }
+    }
+
+    @Override
+    public void markNewData() {
+        newData = true;
+        if (staff == null) {
+            initTill();
+        } else {
+            Platform.runLater(() -> {
+                final String temp = terminalName + " (New Data)";
+                MainStage.this.mainVersion.setText(temp);
+                MainStage.this.paymentVersion.setText(temp);
+                MainStage.this.loginVersion.setText(temp);
             });
         }
     }
@@ -2019,6 +2036,9 @@ public class MainStage extends Stage implements GUIInterface {
                 loginNumber.requestFocus();
             }
         });
+        if (newData) {
+            initTill();
+        }
     }
 
     /**
@@ -2418,12 +2438,19 @@ public class MainStage extends Stage implements GUIInterface {
             MessageScreen.changeMessage("Initialising");
             MessageScreen.showWindow();
         });
-        MainStage.this.logoff();
+//        MainStage.this.logoff();
         MainStage.this.getServerData();
         Platform.runLater(() -> {
             MessageScreen.hideWindow();
             loginNumber.requestFocus();
         });
+        Platform.runLater(() -> {
+            final String temp = terminalName;
+            MainStage.this.mainVersion.setText(temp);
+            MainStage.this.paymentVersion.setText(temp);
+            MainStage.this.loginVersion.setText(temp);
+        });
+        newData = false;
     }
 
     @Override
