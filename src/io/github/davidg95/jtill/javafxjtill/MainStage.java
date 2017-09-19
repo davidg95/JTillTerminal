@@ -64,6 +64,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Window;
 import javax.swing.Timer;
 
 /**
@@ -2000,7 +2001,13 @@ public class MainStage extends Stage implements GUIInterface {
     /**
      * Log the member of staff off and return to the login screen.
      */
-    private void logoff() {
+    private boolean logoff() {
+        Window window = (Window) this;
+        if(!window.isFocused()){
+            this.showMessageAlert("Unable to log off", 5000);
+            MessageScreen.hideWindow();
+            return false;
+        }
         if (timer != null) {
             timer.stop();
         }
@@ -2039,6 +2046,7 @@ public class MainStage extends Stage implements GUIInterface {
         if (newData) {
             initTill();
         }
+        return true;
     }
 
     /**
