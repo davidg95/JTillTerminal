@@ -2426,9 +2426,9 @@ public class MainStage extends Stage implements GUIInterface {
     public void connectionReestablish() {
         sendSalesToServer();
         Platform.runLater(() -> {
-            MainStage.this.mainVersion.setText(terminalName);
-            MainStage.this.paymentVersion.setText(terminalName);
-            MainStage.this.loginVersion.setText(terminalName);
+            MainStage.this.mainVersion.setText(terminalName + (newData ? " (New Data)" : ""));
+            MainStage.this.paymentVersion.setText(terminalName + (newData ? " (New Data)" : ""));
+            MainStage.this.loginVersion.setText(terminalName + (newData ? " (New Data)" : ""));
         });
     }
 
