@@ -1985,7 +1985,6 @@ public class MainStage extends Stage implements GUIInterface {
      */
     private void logoff() {
         if (timer != null) {
-            timer.restart();
             timer.stop();
         }
         try {
