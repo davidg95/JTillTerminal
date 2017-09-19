@@ -2003,7 +2003,7 @@ public class MainStage extends Stage implements GUIInterface {
      */
     private boolean logoff() {
         Window window = (Window) this;
-        if(!window.isFocused()){
+        if (!window.isFocused()) {
             this.showMessageAlert("Unable to log off", 5000);
             MessageScreen.hideWindow();
             return false;
@@ -2260,6 +2260,84 @@ public class MainStage extends Stage implements GUIInterface {
                 row.setFillHeight(true);
                 row.setVgrow(Priority.ALWAYS);
                 grid.getRowConstraints().add(row);
+            }
+
+            if (s.getInherits() != -1) {
+                Screen parent = dc.getScreen(s.getInherits());
+                List<TillButton> parB = dc.getButtonsOnScreen(parent);
+                for (TillButton b : parB) {
+                    if (b.getType() == TillButton.SPACE) { //If the button is a space, add en empty box.
+                    } else { //If it is a button add a button.
+                        Button button = new Button(b.getName()); //Create the button for this button.
+                        button.wrapTextProperty().setValue(true);
+                        switch (b.getColorValue()) {
+                            case TillButton.BLUE:
+                                button.setId("cBlue");
+                                break;
+                            case TillButton.RED:
+                                button.setId("cRed");
+                                break;
+                            case TillButton.GREEN:
+                                button.setId("cGreen");
+                                break;
+                            case TillButton.YELLOW:
+                                button.setId("cYellow");
+                                break;
+                            case TillButton.ORANGE:
+                                button.setId("cOrange");
+                                break;
+                            case TillButton.PURPLE:
+                                button.setId("cPurple");
+                                break;
+                            case TillButton.WHITE:
+                                button.setId("cWhite");
+                                break;
+                            case TillButton.BLACK:
+                                button.setId("cBlack");
+                                break;
+                            default:
+                                button.setId("productButton");
+                                break;
+                        }
+                        int id = b.getItem();
+                        try {
+                            if (b.getType() == TillButton.ITEM) {
+                                final Item i = dc.getProduct(id); //Get the item associated with this product.
+                                button.setOnAction((ActionEvent e) -> {
+                                    Platform.runLater(() -> {
+                                        onProductButton(i); //When clicked, add the item to the sale.
+                                        barcode.setText("");
+                                        if (!barcode.isFocused()) {
+                                            barcode.requestFocus();
+                                        }
+                                    });
+                                });
+                            } else if (b.getType() == TillButton.SCREEN) {
+                                final Screen sc = getScreen(b.getItem());
+                                if (sc == null) {
+                                    throw new ScreenNotFoundException("Screen Missing");
+                                }
+                                button.setOnAction((ActionEvent e) -> {
+                                    changeScreen(sc);
+                                });
+                            } else if (b.getType() == TillButton.BACK) {
+                                button.setOnAction((ActionEvent e) -> {
+                                    changeScreen(last_screen);
+                                });
+                            } else if (b.getType() == TillButton.MAIN) {
+                                button.setOnAction((ActionEvent e) -> {
+                                    changeScreen(def_screen);
+                                });
+                            }
+                            button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                            GridPane.setFillHeight(button, true);
+                            GridPane.setFillWidth(button, true);
+                            grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
+                        } catch (IOException | ProductNotFoundException | SQLException | ScreenNotFoundException ex) {
+                            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
             }
             //Add the buttons on top.
             for (TillButton b : buttons) {
