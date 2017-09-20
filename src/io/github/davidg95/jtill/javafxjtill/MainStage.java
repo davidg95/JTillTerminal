@@ -360,7 +360,13 @@ public class MainStage extends Stage implements GUIInterface {
             MAX_SALES = Integer.parseInt(JavaFXJTill.settings.getProperty("MAX_CACHE_SALES"));
             logoutTimeout = Integer.parseInt(JavaFXJTill.settings.getProperty("LOGOUT_TIMEOUT"));
             if (!JavaFXJTill.settings.getProperty("UNLOCK_CODE", "OFF").equals("OFF")) {
-                loginPane.add(lock, 1, 14, 1, 2);
+                Platform.runLater(() -> {
+                    loginPane.add(lock, 1, 14, 1, 2);
+                });
+            } else{
+                Platform.runLater(()->{
+                    loginPane.getChildren().remove(lock);
+                });
             }
             LOG.log(Level.INFO, "Max sales set to {0}", MAX_SALES);
             try {
@@ -2060,7 +2066,9 @@ public class MainStage extends Stage implements GUIInterface {
         Window window = (Window) this;
         if (!window.isFocused()) {
             this.showMessageAlert("Unable to log off", 5000);
-            MessageScreen.hideWindow();
+            Platform.runLater(() -> {
+                MessageScreen.hideWindow();
+            });
             return false;
         }
         if (timer != null) {
