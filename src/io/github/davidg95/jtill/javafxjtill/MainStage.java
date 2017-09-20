@@ -246,13 +246,14 @@ public class MainStage extends Stage implements GUIInterface {
         time.setId("timeLabel");
         time.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
         ClockThread.addClockLabel(time);
+        ClockThread.setFormat(ClockThread.DATE_TIME_FORMAT);
         time.setTextAlignment(TextAlignment.RIGHT);
         
         GridPane topPane = new GridPane();
         
         for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();
-            col.setPercentWidth(50);
+            col.setPercentWidth(10);
             col.setFillWidth(true);
             col.setHgrow(Priority.ALWAYS);
             topPane.getColumnConstraints().add(col);
@@ -261,7 +262,7 @@ public class MainStage extends Stage implements GUIInterface {
         topPane.add(screenLabel, 0, 0, 2, 1);
         topPane.add(staffLabel, 2, 0, 2, 1);
         topPane.add(mainVersion, 4, 0, 3, 1);
-        topPane.add(time, 9, 0, 2, 1);
+        topPane.add(time, 9, 0, 1, 1);
         topPane.add(mainRefund, 7, 0);
         
         topPane.setOpacity(100);
