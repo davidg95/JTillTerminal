@@ -199,6 +199,8 @@ public class MainStage extends Stage implements GUIInterface {
     private List<Sale> saleCache;
 
     private boolean newData = false;
+    
+    private String lastScreen;
 
     public MainStage(ServerConnection dc) {
         super();
@@ -259,8 +261,10 @@ public class MainStage extends Stage implements GUIInterface {
         topPane.add(screenLabel, 0, 0, 2, 1);
         topPane.add(staffLabel, 2, 0, 2, 1);
         topPane.add(mainVersion, 4, 0, 3, 1);
-        topPane.add(time, 9, 0, 1, 1);
+        topPane.add(time, 9, 0, 2, 1);
         topPane.add(mainRefund, 7, 0);
+        
+        topPane.setOpacity(100);
         
         parentPane.setTop(topPane);
         
@@ -737,7 +741,7 @@ public class MainStage extends Stage implements GUIInterface {
 //        mainPane.add(time, 9, 0, 1, 1);
         mainPane.add(buttonPane, 0, 0, 7, 14);
         mainPane.add(itemsTable, 7, 0, 3, 5);
-        mainPane.add(pane, 7, 5, 2, 2);
+        mainPane.add(pane, 7, 5, 3, 2);
 //        mainPane.add(total, 7, 6, 2, 1);
 //        mainPane.add(totalItems, 9, 6);
 //        mainPane.add(quantity, 7, 7, 2, 1);
@@ -1115,6 +1119,7 @@ public class MainStage extends Stage implements GUIInterface {
         back.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         back.setOnAction((ActionEvent event) -> {
             setPanel(mainPane);
+            screenLabel.setText(lastScreen);
             barcode.requestFocus();
         });
 
@@ -2064,8 +2069,8 @@ public class MainStage extends Stage implements GUIInterface {
         staff = null;
         Platform.runLater(() -> {
             staffLabel.setText("Not Logged In");
-            screenLabel.setText("Login Screen");
             newSale();
+            screenLabel.setText("Login");
             setPanel(loginPane);
             if (type == CODE) {
                 loginNumber.requestFocus();
@@ -2463,6 +2468,7 @@ public class MainStage extends Stage implements GUIInterface {
         buttonPane.getChildren().clear();
         buttonPane.getChildren().add(sc.getPane());
         screenLabel.setText(sc.getName());
+        lastScreen = sc.getName();
         if (!barcode.isFocused()) {
             barcode.requestFocus();
         }
