@@ -106,7 +106,7 @@ public class MainStage extends Stage implements GUIInterface {
     private GridPane parentPane;
 
     private Timer timer;
-    private int logoutTimeout;
+    private volatile int logoutTimeout;
 
     //Login Scene Components
     private GridPane loginPane;

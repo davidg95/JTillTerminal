@@ -58,7 +58,7 @@ public class JavaFXJTill extends Application {
      */
     private static MainStage mainStage;
     
-    public static Properties settings;
+    public static volatile Properties settings;
 
     @Override
     public void start(Stage primaryStage) {
