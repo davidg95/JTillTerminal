@@ -190,7 +190,7 @@ public class MainStage extends Stage implements GUIInterface {
     private Button back;
     private Button paymentLogoff;
     private Button clockOff;
-    
+
     private GridPane lockPane;
 
     private final double SCREEN_WIDTH = javafx.stage.Screen.getPrimary().getBounds().getWidth();
@@ -359,6 +359,9 @@ public class MainStage extends Stage implements GUIInterface {
             JavaFXJTill.settings = dc.getSettings();
             MAX_SALES = Integer.parseInt(JavaFXJTill.settings.getProperty("MAX_CACHE_SALES"));
             logoutTimeout = Integer.parseInt(JavaFXJTill.settings.getProperty("LOGOUT_TIMEOUT"));
+            if (!JavaFXJTill.settings.getProperty("UNLOCK_CODE", "OFF").equals("OFF")) {
+                loginPane.add(lock, 1, 14, 1, 2);
+            }
             LOG.log(Level.INFO, "Max sales set to {0}", MAX_SALES);
             try {
                 if (JavaFXJTill.settings.getProperty("SEND_PRODUCTS_START").equals("TRUE")) {
@@ -1461,7 +1464,7 @@ public class MainStage extends Stage implements GUIInterface {
                     });
                 }
                 if (logoutTimeout > 0) {
-                    if(timer != null){
+                    if (timer != null) {
                         timer.stop();
                     }
                     timer = new Timer(logoutTimeout * 1000, new TimerHandler());
@@ -1539,7 +1542,7 @@ public class MainStage extends Stage implements GUIInterface {
                 }
             });
         });
-        
+
         lock = new Button("Lock");
         lock.setId("blue");
         lock.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -1611,7 +1614,6 @@ public class MainStage extends Stage implements GUIInterface {
         loginArea = new GridPane();
 
         loginPane.add(exit, 0, 14, 1, 2);
-        loginPane.add(lock, 1, 14, 1, 2);
         loginPane.add(print, 2, 14, 1, 2);
         loginPane.add(loginMessage, 4, 14, 3, 2);
         loginPane.add(loginTime, 9, 0, 1, 1);
@@ -1619,10 +1621,10 @@ public class MainStage extends Stage implements GUIInterface {
         loginPane.add(loginVersion, 4, 0, 3, 1);
         loginPane.add(loginArea, 1, 1, 8, 12);
     }
-    
-    private void initLock(){
+
+    private void initLock() {
         lockPane = new GridPane();
-        
+
         for (int i = 1; i <= 5; i++) {
             ColumnConstraints col = new ColumnConstraints();         //login pane columns
             col.setPrefWidth(SCREEN_WIDTH / 5);
@@ -1638,19 +1640,19 @@ public class MainStage extends Stage implements GUIInterface {
             row.setVgrow(Priority.ALWAYS);
             lockPane.getRowConstraints().add(row);
         }
-        
+
         Button button = new Button("Unlock");
         button.setId("blue");
         button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        button.setOnAction((ActionEvent e) ->{
+        button.setOnAction((ActionEvent e) -> {
             int code = NumberEntry.showNumberEntryDialog(this, "Enter code");
-            if(code == 1111){
-                Platform.runLater(()->{
+            if (code == Integer.parseInt(JavaFXJTill.settings.getProperty("UNLOCK_CODE"))) {
+                Platform.runLater(() -> {
                     setPanel(loginPane);
                 });
             }
         });
-        
+
         lockPane.add(button, 1, 1, 3, 3);
     }
 
@@ -2301,7 +2303,7 @@ public class MainStage extends Stage implements GUIInterface {
 
             for (int i = 1; i <= s.getWidth(); i++) {
                 ColumnConstraints col = new ColumnConstraints();
-                col.setPercentWidth(100D/s.getWidth());
+                col.setPercentWidth(100D / s.getWidth());
                 col.setFillWidth(true);
                 col.setHgrow(Priority.ALWAYS);
                 grid.getColumnConstraints().add(col);
@@ -2309,7 +2311,7 @@ public class MainStage extends Stage implements GUIInterface {
 
             for (int i = 1; i <= s.getHeight(); i++) {
                 RowConstraints row = new RowConstraints();
-                row.setPercentHeight(100D/s.getHeight());
+                row.setPercentHeight(100D / s.getHeight());
                 row.setFillHeight(true);
                 row.setVgrow(Priority.ALWAYS);
                 grid.getRowConstraints().add(row);
