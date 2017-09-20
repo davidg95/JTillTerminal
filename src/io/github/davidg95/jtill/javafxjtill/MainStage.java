@@ -1457,6 +1457,9 @@ public class MainStage extends Stage implements GUIInterface {
                     });
                 }
                 if (logoutTimeout > 0) {
+                    if(timer != null){
+                        timer.stop();
+                    }
                     timer = new Timer(logoutTimeout * 1000, new TimerHandler());
                     timer.setRepeats(false);
                     timer.start();
