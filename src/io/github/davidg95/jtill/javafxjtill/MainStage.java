@@ -111,6 +111,7 @@ public class MainStage extends Stage implements GUIInterface {
     //Login Scene Components
     private GridPane loginPane;
     private Button exit;
+    private Button lock;
     private Button login;
     private Button print;
     private Label loginMessage;
@@ -189,6 +190,8 @@ public class MainStage extends Stage implements GUIInterface {
     private Button back;
     private Button paymentLogoff;
     private Button clockOff;
+    
+    private GridPane lockPane;
 
     private final double SCREEN_WIDTH = javafx.stage.Screen.getPrimary().getBounds().getWidth();
     private final double SCREEN_HEIGHT = javafx.stage.Screen.getPrimary().getBounds().getHeight();
@@ -230,6 +233,7 @@ public class MainStage extends Stage implements GUIInterface {
         init();
         initPayment();
         initLogin();
+        initLock();
         parentPane = new GridPane();
         mainScene = new Scene(parentPane, SCREEN_WIDTH, SCREEN_HEIGHT);
         mainScene.getStylesheets().add(stylesheet);
@@ -1535,6 +1539,17 @@ public class MainStage extends Stage implements GUIInterface {
                 }
             });
         });
+        
+        lock = new Button("Lock");
+        lock.setId("blue");
+        lock.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        HBox hLock = new HBox(0);
+        hExit.getChildren().add(lock);
+        lock.setOnAction((ActionEvent event) -> {
+            Platform.runLater(() -> {
+                setPanel(lockPane);
+            });
+        });
 
         login = new Button("Login");
         login.setId("blue");
@@ -1596,12 +1611,47 @@ public class MainStage extends Stage implements GUIInterface {
         loginArea = new GridPane();
 
         loginPane.add(exit, 0, 14, 1, 2);
+        loginPane.add(lock, 1, 14, 1, 2);
         loginPane.add(print, 2, 14, 1, 2);
         loginPane.add(loginMessage, 4, 14, 3, 2);
         loginPane.add(loginTime, 9, 0, 1, 1);
         loginPane.add(notLoggedIn, 2, 0, 2, 1);
         loginPane.add(loginVersion, 4, 0, 3, 1);
         loginPane.add(loginArea, 1, 1, 8, 12);
+    }
+    
+    private void initLock(){
+        lockPane = new GridPane();
+        
+        for (int i = 1; i <= 5; i++) {
+            ColumnConstraints col = new ColumnConstraints();         //login pane columns
+            col.setPrefWidth(SCREEN_WIDTH / 5);
+            col.setFillWidth(true);
+            col.setHgrow(Priority.ALWAYS);
+            lockPane.getColumnConstraints().add(col);
+        }
+
+        for (int i = 1; i <= 5; i++) {
+            RowConstraints row = new RowConstraints();               //login pane rows
+            row.setPrefHeight(SCREEN_HEIGHT / 5);
+            row.setFillHeight(true);
+            row.setVgrow(Priority.ALWAYS);
+            lockPane.getRowConstraints().add(row);
+        }
+        
+        Button button = new Button("Unlock");
+        button.setId("blue");
+        button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        button.setOnAction((ActionEvent e) ->{
+            int code = NumberEntry.showNumberEntryDialog(this, "Enter code");
+            if(code == 1111){
+                Platform.runLater(()->{
+                    setPanel(loginPane);
+                });
+            }
+        });
+        
+        lockPane.add(button, 1, 1, 3, 3);
     }
 
     private GridPane getLoginPane() {
