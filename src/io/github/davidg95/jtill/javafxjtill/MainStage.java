@@ -2249,17 +2249,17 @@ public class MainStage extends Stage implements GUIInterface {
             LOG.log(Level.INFO, "Got {0} buttons for this screen", buttons.size());
             s.setPane(grid);
 
-            for (int i = 1; i <= 5; i++) {
+            for (int i = 1; i <= s.getWidth(); i++) {
                 ColumnConstraints col = new ColumnConstraints();
-                col.setPercentWidth(20);
+                col.setPercentWidth(100D/s.getWidth());
                 col.setFillWidth(true);
                 col.setHgrow(Priority.ALWAYS);
                 grid.getColumnConstraints().add(col);
             }
 
-            for (int i = 1; i <= 10; i++) {
+            for (int i = 1; i <= s.getHeight(); i++) {
                 RowConstraints row = new RowConstraints();
-                row.setPercentHeight(10);
+                row.setPercentHeight(100D/s.getHeight());
                 row.setFillHeight(true);
                 row.setVgrow(Priority.ALWAYS);
                 grid.getRowConstraints().add(row);
