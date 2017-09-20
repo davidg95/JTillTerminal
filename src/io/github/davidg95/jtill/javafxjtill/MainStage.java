@@ -58,6 +58,7 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Priority;
@@ -103,7 +104,7 @@ public class MainStage extends Stage implements GUIInterface {
     private List<Screen> screens;
 
     private Scene mainScene;
-    private GridPane parentPane;
+    private BorderPane parentPane;
 
     private Timer timer;
     private volatile int logoutTimeout;
@@ -116,9 +117,6 @@ public class MainStage extends Stage implements GUIInterface {
     private Button print;
     private Label loginMessage;
     private GridPane staffLayout;
-    private Label loginTime;
-    private Label notLoggedIn;
-    private Label loginVersion;
     private int x = 0;
     private int y = 0;
     private TextField loginNumber;
@@ -180,12 +178,8 @@ public class MainStage extends Stage implements GUIInterface {
     private Label paymentTotal;
 
     private Button settingsButton;
-
-    private Label paymentLoggedIn;
-    private Label paymentVersion;
-    private Label paymentTime;
+    
     private Label paymentMessages;
-    private Label paymentRefund;
 
     private Button back;
     private Button paymentLogoff;
@@ -220,21 +214,60 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     private void setPanel(Pane panel) {
-        parentPane.getChildren().clear();
-        parentPane.getChildren().add(panel);
+        parentPane.setCenter(panel);
         panel.requestLayout();
         parentPane.requestLayout();
     }
 
     public void initalise() {
-        paymentLoggedIn = new Label();
-        paymentLoggedIn.setId("toplabel");
-        paymentLoggedIn.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        
+        parentPane = new BorderPane();
+        
+        staffLabel = new Label("Not Logged In");
+        staffLabel.setId("toplabel");
+        staffLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
+
+        screenLabel = new Label("Login");
+        screenLabel.setId("toplabel");
+        screenLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
+
+        mainVersion = new Label("JTill Terminal");
+        mainVersion.setId("toplabel");
+        mainVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
+
+        mainRefund = new Label();
+        mainRefund.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        mainRefund.setMinSize(0, 0);
+        mainRefund.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+        time = new Label("--:-- --/--/----");
+        time.setId("timeLabel");
+        time.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
+        ClockThread.addClockLabel(time);
+        time.setTextAlignment(TextAlignment.RIGHT);
+        
+        GridPane topPane = new GridPane();
+        
+        for (int i = 1; i <= 10; i++) {
+            ColumnConstraints col = new ColumnConstraints();
+            col.setPercentWidth(50);
+            col.setFillWidth(true);
+            col.setHgrow(Priority.ALWAYS);
+            topPane.getColumnConstraints().add(col);
+        }
+        
+        topPane.add(screenLabel, 0, 0, 2, 1);
+        topPane.add(staffLabel, 2, 0, 2, 1);
+        topPane.add(mainVersion, 4, 0, 3, 1);
+        topPane.add(time, 9, 0, 1, 1);
+        topPane.add(mainRefund, 7, 0);
+        
+        parentPane.setTop(topPane);
+        
         init();
         initPayment();
         initLogin();
         initLock();
-        parentPane = new GridPane();
         mainScene = new Scene(parentPane, SCREEN_WIDTH, SCREEN_HEIGHT);
         mainScene.getStylesheets().add(stylesheet);
         setPanel(loginPane);
@@ -317,8 +350,6 @@ public class MainStage extends Stage implements GUIInterface {
             Platform.runLater(() -> {
                 final String temp = terminalName + " (New Data)";
                 MainStage.this.mainVersion.setText(temp);
-                MainStage.this.paymentVersion.setText(temp);
-                MainStage.this.loginVersion.setText(temp);
             });
         }
     }
@@ -401,9 +432,7 @@ public class MainStage extends Stage implements GUIInterface {
             symbol = JavaFXJTill.settings.getProperty("CURRENCY_SYMBOL");
             terminalName = till.getName() + " - " + JavaFXJTill.settings.getProperty("SITE_NAME");
             Platform.runLater(() -> {
-                loginVersion.setText(terminalName);
                 mainVersion.setText(terminalName);
-                paymentVersion.setText(terminalName);
                 ((TableColumn) itemsTable.getColumns().get(2)).setText(symbol);
                 ((TableColumn) paymentItemsTable.getColumns().get(2)).setText(symbol);
                 twentyPounds.setText(symbol + "20");
@@ -453,24 +482,6 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void init() {
         mainPane = new GridPane();
-
-        staffLabel = new Label("Staff: ");
-        staffLabel.setId("toplabel");
-        staffLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
-
-        screenLabel = new Label("Main");
-        screenLabel.setId("toplabel");
-        screenLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
-
-        mainVersion = new Label("JTill Terminal");
-        mainVersion.setId("toplabel");
-        mainVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
-
-        time = new Label("--:-- --/--/----");
-        time.setId("timeLabel");
-        time.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
-        ClockThread.addClockLabel(time);
-        time.setTextAlignment(TextAlignment.RIGHT);
 
         buttonPanes = new ArrayList<>();
         buttonPane = new StackPane();
@@ -595,6 +606,7 @@ public class MainStage extends Stage implements GUIInterface {
         payment.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         payment.setOnAction((ActionEvent event) -> {
             setPanel(paymentPane);
+            screenLabel.setText("Payment");
         });
 
         logoff = new Button("Logoff");
@@ -676,11 +688,6 @@ public class MainStage extends Stage implements GUIInterface {
         alertMessage.setMinSize(0, 0);
         alertMessage.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
-        mainRefund = new Label();
-        mainRefund.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-        mainRefund.setMinSize(0, 0);
-        mainRefund.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
         voidLast = new Button("Void Last");
         voidLast.setId("red");
         voidLast.setMinSize(0, 0);
@@ -725,26 +732,26 @@ public class MainStage extends Stage implements GUIInterface {
             pane.getRowConstraints().add(row);
         }
 
-        mainPane.add(staffLabel, 2, 0, 2, 1);
-        mainPane.add(mainVersion, 4, 0, 3, 1);
-        mainPane.add(time, 9, 0, 1, 1);
-        mainPane.add(buttonPane, 0, 1, 7, 13);
-        mainPane.add(itemsTable, 7, 1, 3, 5);
-        mainPane.add(pane, 7, 6, 3, 2);
+//        mainPane.add(staffLabel, 2, 0, 2, 1);
+//        mainPane.add(mainVersion, 4, 0, 3, 1);
+//        mainPane.add(time, 9, 0, 1, 1);
+        mainPane.add(buttonPane, 0, 0, 7, 14);
+        mainPane.add(itemsTable, 7, 0, 3, 5);
+        mainPane.add(pane, 7, 5, 2, 2);
 //        mainPane.add(total, 7, 6, 2, 1);
 //        mainPane.add(totalItems, 9, 6);
 //        mainPane.add(quantity, 7, 7, 2, 1);
 //        mainPane.add(voidSelected, 9, 7);
-        mainPane.add(barcode, 7, 8, 3, 1);
-        mainPane.add(numbers, 7, 9, 3, 5);
+        mainPane.add(barcode, 7, 7, 3, 1);
+        mainPane.add(numbers, 7, 8, 3, 6);
         mainPane.add(payment, 7, 14, 3, 2);
         mainPane.add(halfPrice, 2, 14, 1, 2);
         mainPane.add(logoff, 0, 14, 1, 2);
         mainPane.add(lookup, 1, 14, 1, 2);
         mainPane.add(assisstance, 3, 14, 1, 2);
         mainPane.add(alertMessage, 4, 14, 3, 2);
-        mainPane.add(mainRefund, 7, 0);
-        mainPane.add(screenLabel, 0, 0, 2, 1);
+//        mainPane.add(mainRefund, 7, 0);
+//        mainPane.add(screenLabel, 0, 0, 2, 1);
 
         for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();
@@ -981,16 +988,6 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void initPayment() {
         paymentPane = new GridPane();
-
-        paymentVersion = new Label("JTill Terminal");
-        paymentVersion.setId("toplabel");
-        paymentVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
-
-        paymentTime = new Label("--:-- --/--/----");
-        paymentTime.setId("timeLabel");
-        paymentTime.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
-        ClockThread.addClockLabel(paymentTime);
-        paymentTime.setTextAlignment(TextAlignment.RIGHT);
 
         fivePounds = new Button(symbol + "5");
         fivePounds.setId("paymentMethods");
@@ -1265,11 +1262,6 @@ public class MainStage extends Stage implements GUIInterface {
             setRefund(!refundMode);
         });
 
-        paymentRefund = new Label();
-        paymentRefund.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-        paymentRefund.setMinSize(0, 0);
-        paymentRefund.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
         loyaltyButton = new Button("Spend Points");
         loyaltyButton.setId("paymentMethods");
         loyaltyButton.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -1297,10 +1289,6 @@ public class MainStage extends Stage implements GUIInterface {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-
-        Label paymentScreenName = new Label("Payment");
-        paymentScreenName.setId("toplabel");
-        paymentScreenName.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
 
         GridPane pane = new GridPane();
 
@@ -1352,21 +1340,16 @@ public class MainStage extends Stage implements GUIInterface {
         pane.add(refundButton, 1, 3);
         pane.add(voidItem, 2, 3);
         pane.add(saveTransaction, 3, 3);
-
-        paymentPane.add(paymentLoggedIn, 2, 0, 2, 1);
-        paymentPane.add(paymentVersion, 4, 0, 3, 1);
-        paymentPane.add(paymentTime, 9, 0, 1, 1);
-        paymentPane.add(saleCustomer, 8, 7, 2, 1);
-        paymentPane.add(pane, 0, 1, 7, 10);
+        
+        paymentPane.add(saleCustomer, 8, 6, 2, 1);
+        paymentPane.add(pane, 0, 0, 7, 10);
         paymentPane.add(back, 7, 14, 3, 2);
-        paymentPane.add(paymentsList, 7, 9, 3, 5);
-        paymentPane.add(paymentItemsTable, 7, 1, 3, 5);
-        paymentPane.add(paymentTotal, 7, 6, 3, 1);
+        paymentPane.add(paymentsList, 7, 8, 3, 5);
+        paymentPane.add(paymentItemsTable, 7, 0, 3, 5);
+        paymentPane.add(paymentTotal, 7, 5, 3, 1);
         paymentPane.add(paymentMessages, 4, 14, 3, 2);
         paymentPane.add(clockOff, 1, 14, 1, 2);
         paymentPane.add(paymentLogoff, 0, 14, 1, 2);
-        paymentPane.add(paymentRefund, 7, 0);
-        paymentPane.add(paymentScreenName, 0, 0, 2, 1);
 
         for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();
@@ -1423,7 +1406,6 @@ public class MainStage extends Stage implements GUIInterface {
             }
             Platform.runLater(() -> {
                 staffLabel.setText(staff.getName());
-                paymentLoggedIn.setText(staff.getName());
                 if (!buttonPanes.isEmpty()) {
                     buttonPane.getChildren().clear();
                     buttonPane.getChildren().add(def_screen.getPane());
@@ -1516,20 +1498,6 @@ public class MainStage extends Stage implements GUIInterface {
         }
 
 //        loginPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
-        notLoggedIn = new Label("Not Logged In");
-        notLoggedIn.setId("toplabel");
-        notLoggedIn.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
-
-        loginVersion = new Label("JTill Terminal");
-        loginVersion.setId("toplabel");
-        loginVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
-
-        loginTime = new Label("--:-- --/--/----");
-        loginTime.setId("timeLabel");
-        loginTime.setTextAlignment(TextAlignment.RIGHT);
-        loginTime.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
-        ClockThread.addClockLabel(loginTime);
-        ClockThread.setFormat(ClockThread.DATE_TIME_FORMAT);
 
         exit = new Button("Exit JTill");
         exit.setId("blue");
@@ -1552,8 +1520,6 @@ public class MainStage extends Stage implements GUIInterface {
         lock = new Button("Lock");
         lock.setId("blue");
         lock.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        HBox hLock = new HBox(0);
-        hExit.getChildren().add(lock);
         lock.setOnAction((ActionEvent event) -> {
             Platform.runLater(() -> {
                 setPanel(lockPane);
@@ -1622,10 +1588,7 @@ public class MainStage extends Stage implements GUIInterface {
         loginPane.add(exit, 0, 14, 1, 2);
         loginPane.add(print, 2, 14, 1, 2);
         loginPane.add(loginMessage, 4, 14, 3, 2);
-        loginPane.add(loginTime, 9, 0, 1, 1);
-        loginPane.add(notLoggedIn, 2, 0, 2, 1);
-        loginPane.add(loginVersion, 4, 0, 3, 1);
-        loginPane.add(loginArea, 1, 1, 8, 12);
+        loginPane.add(loginArea, 1, 0, 8, 12);
     }
 
     private void initLock() {
@@ -2100,6 +2063,8 @@ public class MainStage extends Stage implements GUIInterface {
 
         staff = null;
         Platform.runLater(() -> {
+            staffLabel.setText("Not Logged In");
+            screenLabel.setText("Login Screen");
             newSale();
             setPanel(loginPane);
             if (type == CODE) {
@@ -2274,10 +2239,8 @@ public class MainStage extends Stage implements GUIInterface {
         refundMode = set;
         if (refundMode) {
             mainRefund.setText("REFUND");
-            paymentRefund.setText("REFUND");
         } else {
             mainRefund.setText("");
-            paymentRefund.setText("");
         }
     }
 
@@ -2566,8 +2529,6 @@ public class MainStage extends Stage implements GUIInterface {
         Platform.runLater(() -> {
             final String temp = terminalName + " (Offline)";
             MainStage.this.mainVersion.setText(temp);
-            MainStage.this.paymentVersion.setText(temp);
-            MainStage.this.loginVersion.setText(temp);
         });
     }
 
@@ -2576,8 +2537,6 @@ public class MainStage extends Stage implements GUIInterface {
         sendSalesToServer();
         Platform.runLater(() -> {
             MainStage.this.mainVersion.setText(terminalName + (newData ? " (New Data)" : ""));
-            MainStage.this.paymentVersion.setText(terminalName + (newData ? " (New Data)" : ""));
-            MainStage.this.loginVersion.setText(terminalName + (newData ? " (New Data)" : ""));
         });
     }
 
@@ -2596,8 +2555,6 @@ public class MainStage extends Stage implements GUIInterface {
         Platform.runLater(() -> {
             final String temp = terminalName;
             MainStage.this.mainVersion.setText(temp);
-            MainStage.this.paymentVersion.setText(temp);
-            MainStage.this.loginVersion.setText(temp);
         });
         newData = false;
     }
