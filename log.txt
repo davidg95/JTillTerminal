@@ -1,31 +1,73 @@
-JTill log Wed Sep 20 15:18:08 BST 2017
-[15:18:08] [INFO] Starting JTill Terminal
-[15:18:09] [INFO] Initalising
-[15:18:09] [INFO] Loading properties file
-[15:18:09] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[15:18:09] [INFO] Max sales set to {0}
-[15:18:09] [INFO] Downloading products list from server
-[15:18:09] [INFO] Downloaded 3 products from the server
-[15:18:09] [INFO] Downloading plu list from server
-[15:18:09] [INFO] Downloaded 3 plus from the server
-[15:18:09] [INFO] Set discounts in cache
-[15:18:09] [INFO] Loading screen and button configurations from the server
-[15:18:09] [INFO] Got {0} screens from the server
-[15:18:09] [INFO] Getting buttons for {0} screen
-[15:18:09] [INFO] Got {0} buttons for this screen
-[15:18:09] [INFO] Getting buttons for {0} screen
-[15:18:10] [INFO] Got {0} buttons for this screen
-[15:18:10] [INFO] Getting buttons for {0} screen
-[15:18:10] [INFO] Got {0} buttons for this screen
-[15:18:10] [INFO] Getting buttons for {0} screen
-[15:18:10] [INFO] Got {0} buttons for this screen
-[15:18:10] [INFO] Getting buttons for {0} screen
-[15:18:10] [INFO] Got {0} buttons for this screen
-[15:18:10] [INFO] Getting buttons for {0} screen
-[15:18:10] [INFO] Got {0} buttons for this screen
-[15:18:11] [INFO] Saving properties file
-[15:18:13] [INFO] Getting all discounts from cache
-[15:18:14] [INFO] Getting all discounts from cache
-[15:18:24] [INFO] Getting all discounts from cache
-[15:19:55] [INFO] Getting all discounts from cache
-[15:19:56] [INFO] Getting all discounts from cache
+JTill log Thu Sep 21 11:48:52 BST 2017
+[11:48:52] [INFO] Starting JTill Terminal
+[11:48:52] [INFO] Initalising
+[11:48:52] [INFO] Loading properties file
+[11:48:52] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[11:48:52] [INFO] Max sales set to {0}
+[11:48:52] [INFO] Downloading products list from server
+[11:48:53] [INFO] Downloaded 3 products from the server
+[11:48:53] [INFO] Downloading plu list from server
+[11:48:53] [INFO] Downloaded 3 plus from the server
+[11:48:53] [INFO] Set discounts in cache
+[11:48:53] [INFO] Loading screen and button configurations from the server
+[11:48:53] [INFO] Got {0} screens from the server
+[11:48:53] [INFO] Getting buttons for {0} screen
+[11:48:53] [INFO] Got {0} buttons for this screen
+[11:48:53] [INFO] Getting buttons for {0} screen
+[11:48:53] [INFO] Got {0} buttons for this screen
+[11:48:53] [INFO] Getting buttons for {0} screen
+[11:48:53] [INFO] Got {0} buttons for this screen
+[11:48:54] [INFO] Getting buttons for {0} screen
+[11:48:54] [INFO] Got {0} buttons for this screen
+[11:48:54] [INFO] Getting buttons for {0} screen
+[11:48:54] [INFO] Got {0} buttons for this screen
+[11:48:54] [INFO] Getting buttons for {0} screen
+[11:48:54] [INFO] Got {0} buttons for this screen
+[11:48:54] [INFO] Saving properties file
+[11:48:58] [INFO] Getting all discounts from cache
+[11:49:01] [INFO] Getting all discounts from cache
+[11:49:11] [INFO] Getting all discounts from cache
+[11:49:29] [INFO] Getting all discounts from cache
+[11:49:30] [INFO] Getting all discounts from cache
+[11:49:32] [INFO] Getting all discounts from cache
+[11:49:33] [INFO] Getting all discounts from cache
+[11:49:34] [INFO] Getting all discounts from cache
+[11:49:43] [INFO] Item has been added to a sale
+[11:49:45] [INFO] Item has been added to a sale
+[11:49:46] [INFO] Item has been added to a sale
+[11:49:47] [INFO] Sale {0} sent to server
+[11:49:47] [INFO] Getting all discounts from cache
+[11:49:50] [INFO] Checking cache for {0}
+[11:49:50] [INFO] Checking for Plu for product {0}
+[11:49:50] [INFO] Plu found in cache
+[11:49:50] [INFO] Checking for Plu for product {0}
+[11:49:50] [INFO] Plu found in cache
+[11:49:50] [INFO] Checking for Plu for product {0}
+[11:49:50] [INFO] Plu found in cache
+[11:49:50] [INFO] Product not found in cache
+[11:49:50] [INFO] Checking server for product {0}
+[11:49:50] [WARNING] Product not found on server
+[11:50:02] [INFO] Item has been added to a sale
+[11:50:08] [INFO] Sale {0} sent to server
+[11:50:08] [INFO] Getting all discounts from cache
+[11:50:11] [INFO] Getting all discounts from cache
+[11:50:32] [INFO] Getting all discounts from cache
+[11:50:34] [INFO] Item has been added to a sale
+[11:50:35] [INFO] Sale {0} sent to server
+[11:50:35] [INFO] Getting all discounts from cache
+[11:50:44] [INFO] Getting all discounts from cache
+[11:50:45] [INFO] Getting all discounts from cache
+[11:51:27] [INFO] Checking cache for {0}
+[11:51:27] [INFO] Checking for Plu for product {0}
+[11:51:27] [INFO] Plu found in cache
+[11:51:27] [INFO] Checking for Plu for product {0}
+[11:51:27] [INFO] Plu found in cache
+[11:51:27] [INFO] Checking for Plu for product {0}
+[11:51:27] [INFO] Plu found in cache
+[11:51:27] [INFO] Product not found in cache
+[11:51:27] [INFO] Checking server for product {0}
+[11:51:27] [WARNING] Product not found on server
+[11:51:28] [INFO] Item has been added to a sale
+[11:51:30] [INFO] Sale {0} sent to server
+[11:51:30] [INFO] Getting all discounts from cache
+[11:51:46] [INFO] Getting all discounts from cache
