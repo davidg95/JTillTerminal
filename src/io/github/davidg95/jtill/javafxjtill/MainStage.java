@@ -212,6 +212,11 @@ public class MainStage extends Stage implements GUIInterface {
         }
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
+        try {
+            getIcons().add(new Image(getClass().getResource("/io/github/davidg95/jtill/resources/tillIcon.png").openStream()));
+        } catch (IOException ex) {
+            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+        }
         saleCache = new LinkedList<>();
     }
 
