@@ -1,27 +1,16 @@
-JTill log Thu Sep 21 14:10:36 BST 2017
-[14:10:36] [INFO] Starting JTill Terminal
-[14:10:36] [INFO] Initalising
-[14:10:37] [INFO] Loading properties file
-[14:10:37] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[14:10:37] [INFO] Max sales set to {0}
-[14:10:37] [INFO] Downloading products list from server
-[14:10:37] [INFO] Downloaded 2 products from the server
-[14:10:37] [INFO] Downloading plu list from server
-[14:10:37] [INFO] Downloaded 2 plus from the server
-[14:10:37] [INFO] Set discounts in cache
-[14:10:37] [INFO] Loading screen and button configurations from the server
-[14:10:37] [INFO] Got {0} screens from the server
-[14:10:37] [INFO] Getting buttons for {0} screen
-[14:10:37] [INFO] Got {0} buttons for this screen
-[14:10:38] [INFO] Saving properties file
-[14:10:39] [INFO] Getting all discounts from cache
-[14:10:42] [INFO] Item has been added to a sale
-[14:10:43] [INFO] Sale {0} sent to server
-[14:10:43] [INFO] Getting all discounts from cache
-[14:10:45] [INFO] Submitting all sales to the server
-[14:10:45] [INFO] Sending sales data to the server
-[14:10:45] [INFO] Getting all sales
-[14:10:45] [INFO] Sales data has been sent to the server
-[14:10:45] [INFO] Clearing all sales
-[14:10:45] [INFO] Clearing all sales
-[14:10:49] [INFO] Getting all discounts from cache
+JTill log Thu Sep 21 16:03:13 BST 2017
+[16:03:13] [INFO] Starting JTill Terminal
+[16:03:13] [INFO] Initalising
+[16:03:13] [INFO] Loading properties file
+[16:03:13] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[16:03:13] [INFO] Max sales set to {0}
+[16:03:13] [INFO] Downloading products list from server
+[16:03:13] [INFO] Downloaded 2 products from the server
+[16:03:13] [INFO] Downloading plu list from server
+[16:03:13] [INFO] Downloaded 2 plus from the server
+[16:03:13] [INFO] Set discounts in cache
+[16:03:13] [INFO] Loading screen and button configurations from the server
+[16:03:13] [INFO] Got {0} screens from the server
+[16:03:13] [INFO] Getting buttons for {0} screen
+[16:03:13] [INFO] Got {0} buttons for this screen
+[16:03:14] [INFO] Saving properties file
