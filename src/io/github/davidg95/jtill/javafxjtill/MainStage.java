@@ -178,7 +178,7 @@ public class MainStage extends Stage implements GUIInterface {
     private Label paymentTotal;
 
     private Button settingsButton;
-    
+
     private Label paymentMessages;
 
     private Button back;
@@ -199,7 +199,7 @@ public class MainStage extends Stage implements GUIInterface {
     private List<Sale> saleCache;
 
     private boolean newData = false;
-    
+
     private String lastScreen;
 
     public MainStage(ServerConnection dc) {
@@ -222,9 +222,9 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     public void initalise() {
-        
+
         parentPane = new BorderPane();
-        
+
         staffLabel = new Label("Not Logged In");
         staffLabel.setId("toplabel");
         staffLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
@@ -248,9 +248,9 @@ public class MainStage extends Stage implements GUIInterface {
         ClockThread.addClockLabel(time);
         ClockThread.setFormat(ClockThread.DATE_TIME_FORMAT);
         time.setTextAlignment(TextAlignment.RIGHT);
-        
+
         GridPane topPane = new GridPane();
-        
+
         for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();
             col.setPercentWidth(10);
@@ -258,17 +258,17 @@ public class MainStage extends Stage implements GUIInterface {
             col.setHgrow(Priority.ALWAYS);
             topPane.getColumnConstraints().add(col);
         }
-        
+
         topPane.add(screenLabel, 0, 0, 2, 1);
         topPane.add(staffLabel, 2, 0, 2, 1);
         topPane.add(mainVersion, 4, 0, 3, 1);
         topPane.add(time, 9, 0, 1, 1);
         topPane.add(mainRefund, 7, 0);
-        
+
         topPane.setOpacity(100);
-        
+
         parentPane.setTop(topPane);
-        
+
         init();
         initPayment();
         initLogin();
@@ -399,8 +399,8 @@ public class MainStage extends Stage implements GUIInterface {
                 Platform.runLater(() -> {
                     loginPane.add(lock, 1, 14, 1, 2);
                 });
-            } else{
-                Platform.runLater(()->{
+            } else {
+                Platform.runLater(() -> {
                     loginPane.getChildren().remove(lock);
                 });
             }
@@ -1206,21 +1206,28 @@ public class MainStage extends Stage implements GUIInterface {
         cashUp.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         cashUp.setOnAction((ActionEvent event) -> {
             if (staff.getPosition() >= 3) {
-                LOG.log(Level.INFO, "Submitting all sales to the server");
-                sendSalesToServer();
-                SaleCache.getInstance().clearAll();
-                int res = CashUpDialog.showDialog(this, dc, till);
-                if (res == 1) {
-//                    clearLoginScreen();
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            logoff();
-                            Platform.runLater(() -> {
-                                MessageScreen.hideWindow();
-                            });
-                        }
-                    }.start();
+                try {
+                    LOG.log(Level.INFO, "Submitting all sales to the server");
+                    sendSalesToServer();
+                    SaleCache.getInstance().clearAll();
+                    if (dc.getTerminalSales(till.getId(), true).isEmpty()) {
+                        MessageDialog.showMessage(this, "Cash Up", "No sales since last cashup");
+                        return;
+                    }
+                    int res = CashUpDialog.showDialog(this, dc, till);
+                    if (res == 1) {
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                logoff();
+                                Platform.runLater(() -> {
+                                    MessageScreen.hideWindow();
+                                });
+                            }
+                        }.start();
+                    }
+                } catch (IOException | SQLException | JTillException ex) {
+                    MessageDialog.showMessage(this, "Cash Up", ex.getMessage());
                 }
             } else {
                 MessageDialog.showMessage(this, "Cash Up", "You are not allowed to view this screen");
@@ -1346,7 +1353,7 @@ public class MainStage extends Stage implements GUIInterface {
         pane.add(refundButton, 1, 3);
         pane.add(voidItem, 2, 3);
         pane.add(saveTransaction, 3, 3);
-        
+
         paymentPane.add(saleCustomer, 8, 6, 2, 1);
         paymentPane.add(pane, 0, 0, 7, 10);
         paymentPane.add(back, 7, 14, 3, 2);
@@ -1504,7 +1511,6 @@ public class MainStage extends Stage implements GUIInterface {
         }
 
 //        loginPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
-
         exit = new Button("Exit JTill");
         exit.setId("blue");
         exit.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);

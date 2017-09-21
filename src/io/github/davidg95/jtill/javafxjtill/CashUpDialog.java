@@ -26,6 +26,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import io.github.davidg95.JTill.jtill.*;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
 
 /**
  *
@@ -46,7 +50,7 @@ public class CashUpDialog extends Stage {
     private Label differenceLabel;
     private TextField differenceField;
     private Button close;
-    
+
     private static int result;
 
     public CashUpDialog(Window parent, DataConnect dc, Till t) {
@@ -109,31 +113,6 @@ public class CashUpDialog extends Stage {
         textFivep.setOnAction(new MoneyFieldEvent(textFivep));
         textTwop.setOnAction(new MoneyFieldEvent(textTwop));
         textOnep.setOnAction(new MoneyFieldEvent(textOnep));
-
-//        pane.add(fifty, 1, 1);
-//        pane.add(textFifty, 2, 1);
-//        pane.add(twenty, 1, 2);
-//        pane.add(textTwenty, 2, 2);
-//        pane.add(ten, 1, 3);
-//        pane.add(textTen, 2, 3);
-//        pane.add(five, 1, 4);
-//        pane.add(textFive, 2, 4);
-//        pane.add(two, 1, 5);
-//        pane.add(textTwo, 2, 5);
-//        pane.add(one, 1, 6);
-//        pane.add(textOne, 2, 6);
-//        pane.add(fiftyp, 1, 7);
-//        pane.add(textFiftyp, 2, 7);
-//        pane.add(twentyp, 1, 8);
-//        pane.add(textTwentyp, 2, 8);
-//        pane.add(tenp, 1, 9);
-//        pane.add(textTenp, 2, 9);
-//        pane.add(fivep, 1, 10);
-//        pane.add(textFivep, 2, 10);
-//        pane.add(twop, 1, 11);
-//        pane.add(textTwop, 2, 11);
-//        pane.add(onep, 1, 12);
-//        pane.add(textOnep, 2, 12);
         cashLabel = new Label("Enter value of cash:");
         cashLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -178,39 +157,12 @@ public class CashUpDialog extends Stage {
         HBox hDeclare = new HBox(0);
         hDeclare.getChildren().add(declare);
         declare.setOnAction((ActionEvent event) -> {
-            try {
-                cashValue.setDisable(true);
-                BigDecimal takings = dc.getTillTakings(till.getId());
-                takings = takings.setScale(2);
-                BigDecimal valueCounted = new BigDecimal(cashValue.getText());
-                valueCounted = valueCounted.setScale(2);
-                BigDecimal difference = valueCounted.subtract(takings);
-                difference = difference.setScale(2);
-                DecimalFormat df;
-                if (takings.compareTo(BigDecimal.ONE) >= 1) {
-                    df = new DecimalFormat("#.00");
-                } else {
-                    df = new DecimalFormat("0.00");
+            new Thread() {
+                @Override
+                public void run() {
+                    declare();
                 }
-                takingsField.setText(df.format(takings.doubleValue()));
-                if (difference.compareTo(BigDecimal.ONE) >= 1) {
-                    df = new DecimalFormat("#.00");
-                } else {
-                    df = new DecimalFormat("0.00");
-                }
-                differenceField.setText(df.format(difference.doubleValue()));
-                if (YesNoDialog.showDialog(this, "Cash up", "Do you want the report emailed?") == YesNoDialog.YES) {
-                    String message = "Cashup for terminal " + JavaFXJTill.NAME
-                            + "\nValue counted: £" + valueCounted.toString()
-                            + "\nActual takings: £" + takings.toString()
-                            + "\nDifference: £" + difference.toString();
-                    dc.sendEmail(message);
-                }
-                dc.cashUncashedSales(till.getId());
-                result = 1;
-            } catch (IOException | SQLException ex) {
-                MessageDialog.showMessage(this, "Cash Up", "Server error");
-            }
+            }.start();
         });
 
         close = new Button("Close");
@@ -236,6 +188,57 @@ public class CashUpDialog extends Stage {
         scene.getStylesheets().add(stylesheet);
         setScene(scene);
 
+    }
+
+    private void declare() {
+        try {
+            Platform.runLater(() -> {
+                cashValue.setDisable(true);
+                MessageScreen.changeMessage("Declaring...");
+                MessageScreen.showWindow();
+            });
+            List<Sale> sales = dc.getTerminalSales(till.getId(), true);
+            BigDecimal takings = BigDecimal.ZERO;
+            BigDecimal tax = BigDecimal.ZERO;
+            for (Sale s : sales) {
+                takings = takings.add(s.getTotal());
+                for (SaleItem si : s.getSaleItems()) {
+                    tax = tax.add(si.getTaxValue());
+                }
+            }
+            takings = takings.setScale(2);
+            tax = tax.setScale(2);
+            BigDecimal valueCounted = new BigDecimal(cashValue.getText());
+            valueCounted = valueCounted.setScale(2);
+            BigDecimal difference = valueCounted.subtract(takings);
+            difference = difference.setScale(2);
+            final DecimalFormat df = new DecimalFormat("0.00");
+            dc.cashUncashedSales(till.getId());
+            result = 1;
+            final BigDecimal fTakings = takings;
+            final BigDecimal fDiff = difference;
+            Platform.runLater(() -> {
+                takingsField.setText(df.format(fTakings.doubleValue()));
+                differenceField.setText(df.format(fDiff.doubleValue()));
+                MessageScreen.hideWindow();
+            });
+            final BigDecimal fValCou = valueCounted;
+            Platform.runLater(() -> {
+                if (YesNoDialog.showDialog(this, "Cash up", "Do you want the report emailed?") == YesNoDialog.YES) {
+                    try {
+                        String message = "Cashup for terminal " + JavaFXJTill.NAME
+                                + "\nValue counted: £" + fValCou.toString()
+                                + "\nActual takings: £" + fTakings.toString()
+                                + "\nDifference: £" + fDiff.toString();
+                        dc.sendEmail(message);
+                    } catch (IOException ex) {
+                        MessageDialog.showMessage(this, "Cash Up", "Error sending email");
+                    }
+                }
+            });
+        } catch (IOException | SQLException | JTillException ex) {
+            MessageDialog.showMessage(this, "Cash Up", "Server error");
+        }
     }
 
     private class MoneyFieldEvent implements EventHandler {
