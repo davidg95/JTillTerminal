@@ -2551,11 +2551,16 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     @Override
-    public void connectionReestablish() {
+    public Staff connectionReestablish() {
         sendSalesToServer();
         Platform.runLater(() -> {
             MainStage.this.mainVersion.setText(terminalName + (newData ? " (New Data)" : ""));
         });
+        if (staff != null) {
+            return staff;
+        } else {
+            return null;
+        }
     }
 
     @Override

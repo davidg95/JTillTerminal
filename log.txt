@@ -1,16 +1,25 @@
-JTill log Thu Sep 21 19:48:44 BST 2017
-[19:48:44] [INFO] Starting JTill Terminal
-[19:48:44] [INFO] Initalising
-[19:48:44] [INFO] Loading properties file
-[19:48:44] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[19:48:44] [INFO] Max sales set to {0}
-[19:48:44] [INFO] Downloading products list from server
-[19:48:44] [INFO] Downloaded 2 products from the server
-[19:48:44] [INFO] Downloading plu list from server
-[19:48:44] [INFO] Downloaded 2 plus from the server
-[19:48:45] [INFO] Set discounts in cache
-[19:48:45] [INFO] Loading screen and button configurations from the server
-[19:48:45] [INFO] Got {0} screens from the server
-[19:48:45] [INFO] Getting buttons for {0} screen
-[19:48:45] [INFO] Got {0} buttons for this screen
-[19:48:45] [INFO] Saving properties file
+JTill log Thu Sep 28 12:26:21 BST 2017
+[12:26:21] [INFO] Starting JTill Terminal
+[12:26:21] [INFO] Initalising
+[12:26:22] [INFO] Loading properties file
+[12:26:22] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[12:26:22] [INFO] Max sales set to {0}
+[12:26:22] [INFO] Downloading products list from server
+[12:26:22] [INFO] Downloaded 2 products from the server
+[12:26:22] [INFO] Downloading plu list from server
+[12:26:22] [INFO] Downloaded 2 plus from the server
+[12:26:22] [INFO] Set discounts in cache
+[12:26:22] [INFO] Loading screen and button configurations from the server
+[12:26:22] [INFO] Got {0} screens from the server
+[12:26:22] [INFO] Getting buttons for {0} screen
+[12:26:22] [INFO] Got {0} buttons for this screen
+[12:26:22] [INFO] Saving properties file
+[12:26:24] [INFO] Getting all discounts from cache
+[12:26:35] [INFO] Sending sales data to the server
+[12:26:35] [INFO] Getting all sales
+[12:26:35] [INFO] Sales data has been sent to the server
+[12:26:35] [INFO] Clearing all sales
+[12:26:35] [INFO] Sending sales data to the server
+[12:26:35] [INFO] Getting all sales
+[12:26:35] [INFO] Sales data has been sent to the server
+[12:26:35] [INFO] Clearing all sales
