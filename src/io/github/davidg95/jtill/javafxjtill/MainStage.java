@@ -2371,6 +2371,10 @@ public class MainStage extends Stage implements GUIInterface {
                                 button.setOnAction((ActionEvent e) -> {
                                     changeScreen(def_screen);
                                 });
+                            } else if (b.getType() == TillButton.LOGOFF) {
+                                button.setOnAction((ActionEvent e) -> {
+                                    this.logout();
+                                });
                             }
                             button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                             GridPane.setFillHeight(button, true);
@@ -2445,6 +2449,10 @@ public class MainStage extends Stage implements GUIInterface {
                         } else if (b.getType() == TillButton.MAIN) {
                             button.setOnAction((ActionEvent e) -> {
                                 changeScreen(def_screen);
+                            });
+                        } else if (b.getType() == TillButton.LOGOFF) {
+                            button.setOnAction((ActionEvent e) -> {
+                                this.logout();
                             });
                         }
                         button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
