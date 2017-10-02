@@ -2349,7 +2349,18 @@ public class MainStage extends Stage implements GUIInterface {
                                 });
                             } else if (b.getType() == TillButton.LOGOFF) {
                                 button.setOnAction((ActionEvent e) -> {
-                                    this.logout();
+                                    new Thread() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                logoff();
+                                            } finally {
+                                                Platform.runLater(() -> {
+                                                    MessageScreen.hideWindow();
+                                                });
+                                            }
+                                        }
+                                    }.start();
                                 });
                             } else if (b.getType() == TillButton.PAYMENT) {
                                 button.setOnAction((ActionEvent e) -> {
@@ -2408,9 +2419,18 @@ public class MainStage extends Stage implements GUIInterface {
                                 changeScreen(def_screen);
                             });
                         } else if (b.getType() == TillButton.LOGOFF) {
-                            button.setOnAction((ActionEvent e) -> {
-                                this.logout();
-                            });
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        logoff();
+                                    } finally {
+                                        Platform.runLater(() -> {
+                                            MessageScreen.hideWindow();
+                                        });
+                                    }
+                                }
+                            }.start();
                         } else if (b.getType() == TillButton.PAYMENT) {
                             button.setOnAction((ActionEvent e) -> {
                                 setPanel(paymentPane);
