@@ -580,18 +580,7 @@ public class MainStage extends Stage implements GUIInterface {
         voidSelected.setMinSize(0, 0);
         voidSelected.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         voidSelected.setOnAction((ActionEvent event) -> {
-            if (itemsTable.getSelectionModel().getSelectedIndex() > -1) {
-                final SaleItem item = (SaleItem) itemsTable.getSelectionModel().getSelectedItem();
-                sale.voidItem(item);
-                obTable.remove(item);
-                payObTable.remove(item);
-                final Product p = (Product) item.getItem();
-                double taxP = p.getTax().getValue() / 100;
-                setTotalLabel();
-            }
-            if (!barcode.isFocused()) {
-                barcode.requestFocus();
-            }
+            voidSelected();
         });
 
         barcode = new TextField();
@@ -2261,6 +2250,21 @@ public class MainStage extends Stage implements GUIInterface {
         }
     }
 
+    private void voidSelected() {
+        if (itemsTable.getSelectionModel().getSelectedIndex() > -1) {
+            final SaleItem item = (SaleItem) itemsTable.getSelectionModel().getSelectedItem();
+            sale.voidItem(item);
+            obTable.remove(item);
+            payObTable.remove(item);
+            final Product p = (Product) item.getItem();
+            double taxP = p.getTax().getValue() / 100;
+            setTotalLabel();
+        }
+        if (!barcode.isFocused()) {
+            barcode.requestFocus();
+        }
+    }
+
     private void addScreens(List<Screen> screens) {
         LOG.log(Level.INFO, "Got {0} screens from the server", screens.size());
 
@@ -2352,6 +2356,10 @@ public class MainStage extends Stage implements GUIInterface {
                                     setPanel(paymentPane);
                                     screenLabel.setText("Payment");
                                 });
+                            } else if (b.getType() == TillButton.VOID) {
+                                button.setOnAction((ActionEvent e) -> {
+                                    voidSelected();
+                                });
                             }
                             button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                             GridPane.setFillHeight(button, true);
@@ -2407,6 +2415,10 @@ public class MainStage extends Stage implements GUIInterface {
                             button.setOnAction((ActionEvent e) -> {
                                 setPanel(paymentPane);
                                 screenLabel.setText("Payment");
+                            });
+                        } else if (b.getType() == TillButton.VOID) {
+                            button.setOnAction((ActionEvent e) -> {
+                                voidSelected();
                             });
                         }
                         button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
