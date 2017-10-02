@@ -2313,35 +2313,7 @@ public class MainStage extends Stage implements GUIInterface {
                     } else { //If it is a button add a button.
                         Button button = new Button(b.getName()); //Create the button for this button.
                         button.wrapTextProperty().setValue(true);
-                        switch (b.getColorValue()) {
-                            case TillButton.BLUE:
-                                button.setId("cBlue");
-                                break;
-                            case TillButton.RED:
-                                button.setId("cRed");
-                                break;
-                            case TillButton.GREEN:
-                                button.setId("cGreen");
-                                break;
-                            case TillButton.YELLOW:
-                                button.setId("cYellow");
-                                break;
-                            case TillButton.ORANGE:
-                                button.setId("cOrange");
-                                break;
-                            case TillButton.PURPLE:
-                                button.setId("cPurple");
-                                break;
-                            case TillButton.WHITE:
-                                button.setId("cWhite");
-                                break;
-                            case TillButton.BLACK:
-                                button.setId("cBlack");
-                                break;
-                            default:
-                                button.setId("productButton");
-                                break;
-                        }
+                        button.setStyle("-fx-background-color: #" + b.getColorValue() + ";-fx-text-fill: #" + b.getFontColor() + ";");
                         int id = b.getItem();
                         try {
                             if (b.getType() == TillButton.ITEM) {
@@ -2392,35 +2364,7 @@ public class MainStage extends Stage implements GUIInterface {
                 } else { //If it is a button add a button.
                     Button button = new Button(b.getName()); //Create the button for this button.
                     button.wrapTextProperty().setValue(true);
-                    switch (b.getColorValue()) {
-                        case TillButton.BLUE:
-                            button.setId("cBlue");
-                            break;
-                        case TillButton.RED:
-                            button.setId("cRed");
-                            break;
-                        case TillButton.GREEN:
-                            button.setId("cGreen");
-                            break;
-                        case TillButton.YELLOW:
-                            button.setId("cYellow");
-                            break;
-                        case TillButton.ORANGE:
-                            button.setId("cOrange");
-                            break;
-                        case TillButton.PURPLE:
-                            button.setId("cPurple");
-                            break;
-                        case TillButton.WHITE:
-                            button.setId("cWhite");
-                            break;
-                        case TillButton.BLACK:
-                            button.setId("cBlack");
-                            break;
-                        default:
-                            button.setId("productButton");
-                            break;
-                    }
+                    button.setStyle("-fx-background-color: #" + b.getColorValue() + ";-fx-text-fill: #" + b.getFontColor() + ";");
                     int id = b.getItem();
                     try {
                         if (b.getType() == TillButton.ITEM) {
