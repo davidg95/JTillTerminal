@@ -2419,18 +2419,20 @@ public class MainStage extends Stage implements GUIInterface {
                                 changeScreen(def_screen);
                             });
                         } else if (b.getType() == TillButton.LOGOFF) {
-                            new Thread() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        logoff();
-                                    } finally {
-                                        Platform.runLater(() -> {
-                                            MessageScreen.hideWindow();
-                                        });
+                            button.setOnAction((ActionEvent e) -> {
+                                new Thread() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            logoff();
+                                        } finally {
+                                            Platform.runLater(() -> {
+                                                MessageScreen.hideWindow();
+                                            });
+                                        }
                                     }
-                                }
-                            }.start();
+                                }.start();
+                            });
                         } else if (b.getType() == TillButton.PAYMENT) {
                             button.setOnAction((ActionEvent e) -> {
                                 setPanel(paymentPane);
