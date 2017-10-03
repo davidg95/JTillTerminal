@@ -2283,6 +2283,84 @@ public class MainStage extends Stage implements GUIInterface {
         }
     }
 
+    private void checkInheritance(GridPane grid, Screen s) throws IOException, IOException, SQLException, ScreenNotFoundException {
+        if (s.getInherits() == -1) {
+            return;
+        }
+        Screen parent = dc.getScreen(s.getInherits());
+        checkInheritance(grid, parent);
+        List<TillButton> parB = dc.getButtonsOnScreen(parent);
+        for (TillButton b : parB) {
+            if (b.getType() == TillButton.SPACE) { //If the button is a space, add en empty box.
+            } else { //If it is a button add a button.
+                Button button = new Button(b.getName()); //Create the button for this button.
+                button.wrapTextProperty().setValue(true);
+                button.setStyle("-fx-background-color: #" + b.getColorValue() + ";-fx-text-fill: #" + b.getFontColor() + ";");
+                int id = b.getItem();
+                try {
+                    if (b.getType() == TillButton.ITEM) {
+                        final Item i = dc.getProduct(id); //Get the item associated with this product.
+                        button.setOnAction((ActionEvent e) -> {
+                            Platform.runLater(() -> {
+                                onProductButton(i); //When clicked, add the item to the sale.
+                                barcode.setText("");
+                                if (!barcode.isFocused()) {
+                                    barcode.requestFocus();
+                                }
+                            });
+                        });
+                    } else if (b.getType() == TillButton.SCREEN) {
+                        final Screen sc = getScreen(b.getItem());
+                        if (sc == null) {
+                            throw new ScreenNotFoundException("Screen Missing");
+                        }
+                        button.setOnAction((ActionEvent e) -> {
+                            changeScreen(sc);
+                        });
+                    } else if (b.getType() == TillButton.BACK) {
+                        button.setOnAction((ActionEvent e) -> {
+                            changeScreen(last_screen);
+                        });
+                    } else if (b.getType() == TillButton.MAIN) {
+                        button.setOnAction((ActionEvent e) -> {
+                            changeScreen(def_screen);
+                        });
+                    } else if (b.getType() == TillButton.LOGOFF) {
+                        button.setOnAction((ActionEvent e) -> {
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        logoff();
+                                    } finally {
+                                        Platform.runLater(() -> {
+                                            MessageScreen.hideWindow();
+                                        });
+                                    }
+                                }
+                            }.start();
+                        });
+                    } else if (b.getType() == TillButton.PAYMENT) {
+                        button.setOnAction((ActionEvent e) -> {
+                            setPanel(paymentPane);
+                            screenLabel.setText("Payment");
+                        });
+                    } else if (b.getType() == TillButton.VOID) {
+                        button.setOnAction((ActionEvent e) -> {
+                            voidSelected();
+                        });
+                    }
+                    button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                    GridPane.setFillHeight(button, true);
+                    GridPane.setFillWidth(button, true);
+                    grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
+                } catch (IOException | ProductNotFoundException | SQLException | ScreenNotFoundException ex) {
+                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
     private GridPane setScreenButtons(Screen s) {
         GridPane grid = new GridPane(); //Create a new GridPane for this screen.
         grid.setId("productsgrid");
@@ -2309,79 +2387,8 @@ public class MainStage extends Stage implements GUIInterface {
                 grid.getRowConstraints().add(row);
             }
 
-            if (s.getInherits() != -1) {
-                Screen parent = dc.getScreen(s.getInherits());
-                List<TillButton> parB = dc.getButtonsOnScreen(parent);
-                for (TillButton b : parB) {
-                    if (b.getType() == TillButton.SPACE) { //If the button is a space, add en empty box.
-                    } else { //If it is a button add a button.
-                        Button button = new Button(b.getName()); //Create the button for this button.
-                        button.wrapTextProperty().setValue(true);
-                        button.setStyle("-fx-background-color: #" + b.getColorValue() + ";-fx-text-fill: #" + b.getFontColor() + ";");
-                        int id = b.getItem();
-                        try {
-                            if (b.getType() == TillButton.ITEM) {
-                                final Item i = dc.getProduct(id); //Get the item associated with this product.
-                                button.setOnAction((ActionEvent e) -> {
-                                    Platform.runLater(() -> {
-                                        onProductButton(i); //When clicked, add the item to the sale.
-                                        barcode.setText("");
-                                        if (!barcode.isFocused()) {
-                                            barcode.requestFocus();
-                                        }
-                                    });
-                                });
-                            } else if (b.getType() == TillButton.SCREEN) {
-                                final Screen sc = getScreen(b.getItem());
-                                if (sc == null) {
-                                    throw new ScreenNotFoundException("Screen Missing");
-                                }
-                                button.setOnAction((ActionEvent e) -> {
-                                    changeScreen(sc);
-                                });
-                            } else if (b.getType() == TillButton.BACK) {
-                                button.setOnAction((ActionEvent e) -> {
-                                    changeScreen(last_screen);
-                                });
-                            } else if (b.getType() == TillButton.MAIN) {
-                                button.setOnAction((ActionEvent e) -> {
-                                    changeScreen(def_screen);
-                                });
-                            } else if (b.getType() == TillButton.LOGOFF) {
-                                button.setOnAction((ActionEvent e) -> {
-                                    new Thread() {
-                                        @Override
-                                        public void run() {
-                                            try {
-                                                logoff();
-                                            } finally {
-                                                Platform.runLater(() -> {
-                                                    MessageScreen.hideWindow();
-                                                });
-                                            }
-                                        }
-                                    }.start();
-                                });
-                            } else if (b.getType() == TillButton.PAYMENT) {
-                                button.setOnAction((ActionEvent e) -> {
-                                    setPanel(paymentPane);
-                                    screenLabel.setText("Payment");
-                                });
-                            } else if (b.getType() == TillButton.VOID) {
-                                button.setOnAction((ActionEvent e) -> {
-                                    voidSelected();
-                                });
-                            }
-                            button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                            GridPane.setFillHeight(button, true);
-                            GridPane.setFillWidth(button, true);
-                            grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
-                        } catch (IOException | ProductNotFoundException | SQLException | ScreenNotFoundException ex) {
-                            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-            }
+            checkInheritance(grid, s);
+
             //Add the buttons on top.
             for (TillButton b : buttons) {
                 if (b.getType() == TillButton.SPACE) { //If the button is a space, add en empty box.
