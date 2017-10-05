@@ -27,8 +27,6 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import io.github.davidg95.JTill.jtill.*;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 
 /**
@@ -75,44 +73,6 @@ public class CashUpDialog extends Stage {
         pane.setHgap(10);
         pane.setPadding(new Insets(10));
 
-        Label fifty = new Label("£50");
-        Label twenty = new Label("£20");
-        Label ten = new Label("£10");
-        Label five = new Label("£5");
-        Label two = new Label("£2");
-        Label one = new Label("£1");
-        Label fiftyp = new Label("50p");
-        Label twentyp = new Label("20p");
-        Label tenp = new Label("10p");
-        Label fivep = new Label("5p");
-        Label twop = new Label("2p");
-        Label onep = new Label("1p");
-
-        TextField textFifty = new TextField();
-        TextField textTwenty = new TextField();
-        TextField textTen = new TextField();
-        TextField textFive = new TextField();
-        TextField textTwo = new TextField();
-        TextField textOne = new TextField();
-        TextField textFiftyp = new TextField();
-        TextField textTwentyp = new TextField();
-        TextField textTenp = new TextField();
-        TextField textFivep = new TextField();
-        TextField textTwop = new TextField();
-        TextField textOnep = new TextField();
-
-        textFifty.setOnAction(new MoneyFieldEvent(textFifty));
-        textTwenty.setOnAction(new MoneyFieldEvent(textTwenty));
-        textTen.setOnAction(new MoneyFieldEvent(textTen));
-        textFive.setOnAction(new MoneyFieldEvent(textFive));
-        textTwo.setOnAction(new MoneyFieldEvent(textTwo));
-        textOne.setOnAction(new MoneyFieldEvent(textOne));
-        textFiftyp.setOnAction(new MoneyFieldEvent(textFiftyp));
-        textTwentyp.setOnAction(new MoneyFieldEvent(textTwentyp));
-        textTenp.setOnAction(new MoneyFieldEvent(textTenp));
-        textFivep.setOnAction(new MoneyFieldEvent(textFivep));
-        textTwop.setOnAction(new MoneyFieldEvent(textTwop));
-        textOnep.setOnAction(new MoneyFieldEvent(textOnep));
         cashLabel = new Label("Enter value of cash:");
         cashLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -236,24 +196,11 @@ public class CashUpDialog extends Stage {
                     }
                 }
             });
-        } catch (IOException | SQLException | JTillException ex) {
-            MessageDialog.showMessage(this, "Cash Up", "Server error");
-        }
-    }
-
-    private class MoneyFieldEvent implements EventHandler {
-
-        private final TextField field;
-
-        public MoneyFieldEvent(TextField field) {
-            this.field = field;
-        }
-
-        @Override
-        public void handle(Event event) {
-            int value = NumberEntry.showNumberEntryDialog(CashUpDialog.this, "Enter Value");
-            double d = (double) value;
-            field.setText((value / 100) + "");
+        } catch (Exception ex) {
+            MessageScreen.hideWindow();
+            MessageDialog.showMessage(this, "Cash Up", ex.getMessage());
+        } finally {
+            MessageScreen.hideWindow();
         }
     }
 }
