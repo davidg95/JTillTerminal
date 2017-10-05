@@ -198,7 +198,7 @@ public class MainStage extends Stage implements GUIInterface {
 
     private List<Staff> staffCache;
 
-    private List<Sale> saleCache;
+    private final List<Sale> saleCache;
 
     private boolean newData = false;
 
@@ -481,8 +481,8 @@ public class MainStage extends Stage implements GUIInterface {
             try {
                 BackgroundImage myBi = new BackgroundImage(new Image(dc.getLoginBackground().toURI().toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
                 loginPane.setBackground(new Background(myBi));
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException | JTillException e) {
+                
             }
             staffCache = dc.getAllStaff();
         } catch (IOException | SQLException ex) {
