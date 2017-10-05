@@ -157,6 +157,20 @@ and open the template in the editor.
     -fx-background-color: #1a27ac;
 }
 
+#payRed{
+    -fx-background-color: red;
+    -fx-text-fill: white;
+}
+
+#payRed:hover{
+    -fx-background-color: #c11e1e;
+}
+
+#reporting{
+    -fx-background-color: orange;
+    -fx-text-fill: black;
+}
+
 #total{
     -fx-font-size: 28px;
     -fx-font-family: "Tahoma";
