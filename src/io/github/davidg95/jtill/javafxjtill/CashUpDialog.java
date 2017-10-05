@@ -26,6 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import io.github.davidg95.JTill.jtill.*;
+import java.math.RoundingMode;
 import java.util.List;
 import javafx.application.Platform;
 
@@ -158,31 +159,32 @@ public class CashUpDialog extends Stage {
                 MessageScreen.showWindow();
             });
             List<Sale> sales = dc.getTerminalSales(till.getId(), true);
-            BigDecimal takings = BigDecimal.ZERO;
-            BigDecimal tax = BigDecimal.ZERO;
+            TillReport tr = new TillReport();
             for (Sale s : sales) {
-                takings = takings.add(s.getTotal());
+                tr.actualTakings = tr.actualTakings.add(s.getTotal());
                 for (SaleItem si : s.getSaleItems()) {
-                    tax = tax.add(si.getTaxValue());
+                    tr.tax = tr.tax.add(si.getTaxValue());
                 }
             }
-            takings = takings.setScale(2);
-            tax = tax.setScale(2);
-            BigDecimal valueCounted = new BigDecimal(cashValue.getText());
-            valueCounted = valueCounted.setScale(2);
-            BigDecimal difference = valueCounted.subtract(takings);
-            difference = difference.setScale(2);
+            tr.terminal = till.getName();
+            tr.transactions = sales.size();
+            tr.actualTakings = tr.actualTakings.setScale(2);
+            tr.tax = tr.tax.setScale(2);
+            tr.declared = new BigDecimal(cashValue.getText());
+            tr.declared = tr.declared.setScale(2);
+            tr.difference = tr.declared.subtract(tr.actualTakings);
             final DecimalFormat df = new DecimalFormat("0.00");
             dc.cashUncashedSales(till.getId());
             result = 1;
-            final BigDecimal fTakings = takings;
-            final BigDecimal fDiff = difference;
+            final BigDecimal fTakings = tr.actualTakings;
+            final BigDecimal fDiff = tr.difference;
             Platform.runLater(() -> {
                 takingsField.setText(df.format(fTakings.doubleValue()));
                 differenceField.setText(df.format(fDiff.doubleValue()));
                 MessageScreen.hideWindow();
             });
-            final BigDecimal fValCou = valueCounted;
+            tr.averageSpend = tr.actualTakings.divide(new BigDecimal(tr.transactions), RoundingMode.HALF_DOWN);
+            final BigDecimal fValCou = tr.declared;
             Platform.runLater(() -> {
                 if (YesNoDialog.showDialog(this, "Cash up", "Do you want the report emailed?") == YesNoDialog.YES) {
                     try {
@@ -196,11 +198,18 @@ public class CashUpDialog extends Stage {
                     }
                 }
             });
+
+            ReportPrinter.initPrinter();
+            ReportPrinter.print(tr);
         } catch (Exception ex) {
-            MessageScreen.hideWindow();
+            Platform.runLater(() -> {
+                MessageScreen.hideWindow();
+            });
             MessageDialog.showMessage(this, "Cash Up", ex.getMessage());
         } finally {
-            MessageScreen.hideWindow();
+            Platform.runLater(() -> {
+                MessageScreen.hideWindow();
+            });
         }
     }
 }
