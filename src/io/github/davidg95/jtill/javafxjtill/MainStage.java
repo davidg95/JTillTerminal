@@ -155,22 +155,24 @@ public class MainStage extends Stage implements GUIInterface {
     private Button fivePounds;
     private Button tenPounds;
     private Button twentyPounds;
-    private Button customValue;
-
+    private Button fiftyPounds;
+    
     private Button exactValue;
+    private Button customValue;
     private Button card;
     private Button cheque;
-    private Button voidItem;
+    
 
     private Button addCustomer;
     private Button chargeAccount;
-    private Button loyaltyButton;
-    private Button coupon;
+//    private Button loyaltyButton;
+//    private Button coupon;
 
-    private Button voidSale;
-    private Button refundButton;
     private Button cashUp;
-    private Button saveTransaction;
+    private Button refundButton;
+    private Button voidSale;
+    private Button voidItem;
+//    private Button saveTransaction;
 
     private ListView<PaymentItem> paymentsList;
     private ObservableList<PaymentItem> obPayments;
@@ -445,6 +447,7 @@ public class MainStage extends Stage implements GUIInterface {
                 mainVersion.setText(terminalName);
                 ((TableColumn) itemsTable.getColumns().get(2)).setText(symbol);
                 ((TableColumn) paymentItemsTable.getColumns().get(2)).setText(symbol);
+                fiftyPounds.setText(symbol + "50");
                 twentyPounds.setText(symbol + "20");
                 tenPounds.setText(symbol + "10");
                 fivePounds.setText(symbol + "5");
@@ -1020,6 +1023,17 @@ public class MainStage extends Stage implements GUIInterface {
                 });
             }
         });
+        
+        fiftyPounds = new Button(symbol + "50");
+        fiftyPounds.setId("paymentMethods");
+        fiftyPounds.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        fiftyPounds.setOnAction((ActionEvent event) -> {
+            if (!sale.getSaleItems().isEmpty()) {
+                Platform.runLater(() -> {
+                    addMoney(PaymentItem.PaymentType.CASH, new BigDecimal("50.00"));
+                });
+            }
+        });
 
         customValue = new Button("Custom Value");
         customValue.setId("paymentMethods");
@@ -1066,7 +1080,7 @@ public class MainStage extends Stage implements GUIInterface {
                     if (sale.getCustomerID() != 1) {
                         setCustomer(null);
                         chargeAccount.setDisable(true);
-                        loyaltyButton.setDisable(true);
+//                        loyaltyButton.setDisable(true);
                         addCustomer.setText("Add Customer");
                         return;
                     }
@@ -1074,7 +1088,7 @@ public class MainStage extends Stage implements GUIInterface {
                     if (c != null) {
                         setCustomer(c);
                         chargeAccount.setDisable(false);
-                        loyaltyButton.setDisable(false);
+//                        loyaltyButton.setDisable(false);
                         addCustomer.setText("Remove Customer");
                     }
                 });
@@ -1269,33 +1283,33 @@ public class MainStage extends Stage implements GUIInterface {
             setRefund(!refundMode);
         });
 
-        loyaltyButton = new Button("Spend Points");
-        loyaltyButton.setId("paymentMethods");
-        loyaltyButton.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-        loyaltyButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        loyaltyButton.setDisable(true);
-        loyaltyButton.setOnAction((ActionEvent event) -> {
-            try {
-                final Customer c = dc.getCustomer(sale.getCustomerID());
-                int maxSpend = sale.getTotal().divide(new BigDecimal(JavaFXJTill.settings.getProperty("TOTAL_SPEND_VALE"))).intValue();
-                if (c.getLoyaltyPoints() < maxSpend) {
-                    maxSpend = c.getLoyaltyPoints();
-                }
-                final int toSpend = NumberEntry.showNumberEntryDialog(this, "Points remaining: " + c.getLoyaltyPoints() + ". Max for sale: " + maxSpend + ".", maxSpend);
-                final int res = c.removeLoyaltyPoints(toSpend);
-                if (res == -1) {
-                    MessageDialog.showMessage(this, "Error", "Not Enough Points");
-                    return;
-                }
-                double value = Double.parseDouble(JavaFXJTill.settings.getProperty("LOYALTY_VALUE"));
-                BigDecimal roRemove = new BigDecimal(Double.toString(toSpend * value));
-                sale.setTotal(sale.getTotal().subtract(roRemove));
-                setTotalLabel();
-                dc.updateCustomer(c);
-            } catch (IOException | CustomerNotFoundException | SQLException ex) {
-                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
+//        loyaltyButton = new Button("Spend Points");
+//        loyaltyButton.setId("paymentMethods");
+//        loyaltyButton.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+//        loyaltyButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+//        loyaltyButton.setDisable(true);
+//        loyaltyButton.setOnAction((ActionEvent event) -> {
+//            try {
+//                final Customer c = dc.getCustomer(sale.getCustomerID());
+//                int maxSpend = sale.getTotal().divide(new BigDecimal(JavaFXJTill.settings.getProperty("TOTAL_SPEND_VALE"))).intValue();
+//                if (c.getLoyaltyPoints() < maxSpend) {
+//                    maxSpend = c.getLoyaltyPoints();
+//                }
+//                final int toSpend = NumberEntry.showNumberEntryDialog(this, "Points remaining: " + c.getLoyaltyPoints() + ". Max for sale: " + maxSpend + ".", maxSpend);
+//                final int res = c.removeLoyaltyPoints(toSpend);
+//                if (res == -1) {
+//                    MessageDialog.showMessage(this, "Error", "Not Enough Points");
+//                    return;
+//                }
+//                double value = Double.parseDouble(JavaFXJTill.settings.getProperty("LOYALTY_VALUE"));
+//                BigDecimal roRemove = new BigDecimal(Double.toString(toSpend * value));
+//                sale.setTotal(sale.getTotal().subtract(roRemove));
+//                setTotalLabel();
+//                dc.updateCustomer(c);
+//            } catch (IOException | CustomerNotFoundException | SQLException ex) {
+//                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        });
 
         GridPane pane = new GridPane();
 
@@ -1315,38 +1329,39 @@ public class MainStage extends Stage implements GUIInterface {
             pane.getRowConstraints().add(row);
         }
 
-        coupon = new Button("Coupon");
-        coupon.setId("paymentMethods");
-        coupon.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-        coupon.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        coupon.setOnAction((ActionEvent) -> {
+//        coupon = new Button("Coupon");
+//        coupon.setId("paymentMethods");
+//        coupon.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+//        coupon.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+//        coupon.setOnAction((ActionEvent) -> {
+//
+//        });
 
-        });
-
-        saveTransaction = new Button("Save Transaction");
-        saveTransaction.setId("paymentMethods");
-        saveTransaction.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-        saveTransaction.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        saveTransaction.setOnAction((ActionEvent) -> {
-
-        });
+//        saveTransaction = new Button("Save Transaction");
+//        saveTransaction.setId("paymentMethods");
+//        saveTransaction.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+//        saveTransaction.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+//        saveTransaction.setOnAction((ActionEvent) -> {
+//
+//        });
 
         pane.add(fivePounds, 0, 0);
         pane.add(tenPounds, 1, 0);
         pane.add(twentyPounds, 2, 0);
-        pane.add(customValue, 3, 0);
+        pane.add(fiftyPounds, 3, 0);
         pane.add(exactValue, 0, 1);
-        pane.add(card, 1, 1);
-        pane.add(cheque, 2, 1);
-        pane.add(coupon, 3, 1);
+        pane.add(customValue, 1, 1);
+        pane.add(card, 2, 1);
+        pane.add(cheque, 3, 1);
+//        pane.add(coupon, 3, 1);
         pane.add(addCustomer, 0, 2);
         pane.add(chargeAccount, 1, 2);
-        pane.add(loyaltyButton, 2, 2);
-        pane.add(cashUp, 3, 2);
-        pane.add(voidSale, 0, 3);
+//        pane.add(loyaltyButton, 2, 2);
+        pane.add(cashUp, 0, 3);
         pane.add(refundButton, 1, 3);
-        pane.add(voidItem, 2, 3);
-        pane.add(saveTransaction, 3, 3);
+        pane.add(voidSale, 2, 3);
+        pane.add(voidItem, 3, 3);
+//        pane.add(saveTransaction, 3, 3);
 
         paymentPane.add(saleCustomer, 8, 6, 2, 1);
         paymentPane.add(pane, 0, 0, 7, 10);
@@ -1923,11 +1938,11 @@ public class MainStage extends Stage implements GUIInterface {
         if (s.getCustomer() == null) {
             addCustomer.setText("Add Customer");
             chargeAccount.setDisable(true);
-            loyaltyButton.setDisable(true);
+//            loyaltyButton.setDisable(true);
         } else {
             addCustomer.setText("Remove Customer");
             chargeAccount.setDisable(false);
-            loyaltyButton.setDisable(false);
+//            loyaltyButton.setDisable(false);
         }
     }
 
@@ -2112,7 +2127,7 @@ public class MainStage extends Stage implements GUIInterface {
         saleCustomer.setText("No Customer");
         addCustomer.setText("Add Customer");
         chargeAccount.setDisable(true);
-        loyaltyButton.setDisable(true);
+//        loyaltyButton.setDisable(true);
         buttonPane.getChildren().clear();
         if (def_screen != null) {
             changeScreen(def_screen);
