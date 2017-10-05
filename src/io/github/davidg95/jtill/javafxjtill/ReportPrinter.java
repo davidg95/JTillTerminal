@@ -50,7 +50,7 @@ public class ReportPrinter implements Printable {
             return NO_SUCH_PAGE;
         }
 
-        final String header = "Cashup for terminal " + report.terminal;
+        final String header = "Cashup for terminal " + report.getTerminal();
 
         Graphics2D g = (Graphics2D) graphics;
         g.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
@@ -62,17 +62,17 @@ public class ReportPrinter implements Printable {
 
         y += 30;
 
-        g.drawString("Declared takings: £" + report.declared.toString(), x, y);
+        g.drawString("Declared takings: £" + report.getDeclared().toString(), x, y);
         y += 30;
-        g.drawString("Expected takings: £" + report.actualTakings.toString(), x, y);
+        g.drawString("Expected takings: £" + report.getExpected().toString(), x, y);
         y += 30;
-        g.drawString("Difference: £" + report.difference, x, y);
+        g.drawString("Difference: £" + report.getDifference(), x, y);
         y += 30;
-        g.drawString("Transaction count: " + report.transactions, x, y);
+        g.drawString("Transaction count: " + report.getTransactions(), x, y);
         y += 30;
-        g.drawString("Average spend: £" + report.averageSpend, x, y);
+        g.drawString("Average spend: £" + report.getAverageSpend(), x, y);
         y += 30;
-        g.drawString("Tax value: £" + report.tax, x, y);
+        g.drawString("Tax value: £" + report.getTax(), x, y);
 
         return PAGE_EXISTS;
     }

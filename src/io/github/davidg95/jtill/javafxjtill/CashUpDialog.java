@@ -155,40 +155,16 @@ public class CashUpDialog extends Stage {
                 MessageScreen.changeMessage("Declaring...");
                 MessageScreen.showWindow();
             });
-            List<Sale> sales = dc.getTerminalSales(till.getId(), true);
-            TillReport tr = new TillReport();
-            for (Sale s : sales) {
-                tr.actualTakings = tr.actualTakings.add(s.getTotal());
-                for (SaleItem si : s.getSaleItems()) {
-                    tr.tax = tr.tax.add(si.getTaxValue());
-                }
-            }
-            tr.terminal = till.getName();
-            tr.transactions = sales.size();
-            tr.actualTakings = tr.actualTakings.setScale(2);
-            tr.tax = tr.tax.setScale(2, RoundingMode.HALF_DOWN);
-            tr.declared = new BigDecimal(cashValue.getText());
-            tr.declared = tr.declared.setScale(2, RoundingMode.HALF_DOWN);
-            tr.difference = tr.declared.subtract(tr.actualTakings);
-            final DecimalFormat df = new DecimalFormat("0.00");
-            dc.cashUncashedSales(till.getId());
-            result = 1;
-            final BigDecimal fTakings = tr.actualTakings;
-            final BigDecimal fDiff = tr.difference;
+            BigDecimal declared = new BigDecimal(cashValue.getText());
+            final TillReport tr = dc.zReport(till.getId(), declared);
             Platform.runLater(() -> {
-                takingsField.setText(df.format(fTakings.doubleValue()));
-                differenceField.setText(df.format(fDiff.doubleValue()));
                 MessageScreen.hideWindow();
-            });
-            tr.averageSpend = tr.actualTakings.divide(new BigDecimal(tr.transactions), RoundingMode.HALF_DOWN);
-            final BigDecimal fValCou = tr.declared;
-            Platform.runLater(() -> {
                 if (YesNoDialog.showDialog(this, "Cash up", "Do you want the report emailed?") == YesNoDialog.YES) {
                     try {
                         String message = "Cashup for terminal " + JavaFXJTill.NAME
-                                + "\nValue counted: £" + fValCou.toString()
-                                + "\nActual takings: £" + fTakings.toString()
-                                + "\nDifference: £" + fDiff.toString();
+                                + "\nValue counted: £" + tr.getDeclared().toString()
+                                + "\nExpected takings: £" + tr.getExpected().toString()
+                                + "\nDifference: £" + tr.getDifference().toString();
                         dc.sendEmail(message);
                     } catch (IOException ex) {
                         MessageDialog.showMessage(this, "Cash Up", "Error sending email");
