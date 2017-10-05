@@ -156,12 +156,11 @@ public class MainStage extends Stage implements GUIInterface {
     private Button tenPounds;
     private Button twentyPounds;
     private Button fiftyPounds;
-    
+
     private Button exactValue;
     private Button customValue;
     private Button card;
     private Button cheque;
-    
 
     private Button addCustomer;
     private Button chargeAccount;
@@ -169,7 +168,7 @@ public class MainStage extends Stage implements GUIInterface {
     private Button zReport;
 //    private Button loyaltyButton;
 //    private Button coupon;
-    
+
     private Button refundButton;
     private Button voidSale;
     private Button voidItem;
@@ -1024,7 +1023,7 @@ public class MainStage extends Stage implements GUIInterface {
                 });
             }
         });
-        
+
         fiftyPounds = new Button(symbol + "50");
         fiftyPounds.setId("paymentMethods");
         fiftyPounds.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -1311,7 +1310,6 @@ public class MainStage extends Stage implements GUIInterface {
 //                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
 //            }
 //        });
-
         GridPane pane = new GridPane();
 
         for (int i = 1; i <= 4; i++) {
@@ -1337,7 +1335,6 @@ public class MainStage extends Stage implements GUIInterface {
 //        coupon.setOnAction((ActionEvent) -> {
 //
 //        });
-
 //        saveTransaction = new Button("Save Transaction");
 //        saveTransaction.setId("paymentMethods");
 //        saveTransaction.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -1345,7 +1342,6 @@ public class MainStage extends Stage implements GUIInterface {
 //        saveTransaction.setOnAction((ActionEvent) -> {
 //
 //        });
-
         pane.add(fivePounds, 0, 0);
         pane.add(tenPounds, 1, 0);
         pane.add(twentyPounds, 2, 0);
@@ -2317,13 +2313,15 @@ public class MainStage extends Stage implements GUIInterface {
                     if (b.getType() == TillButton.ITEM) {
                         final Item i = dc.getProduct(id); //Get the item associated with this product.
                         button.setOnAction((ActionEvent e) -> {
-                            Platform.runLater(() -> {
+                            if (staff.getPosition() >= b.getAccessLevel()) {
                                 onProductButton(i); //When clicked, add the item to the sale.
                                 barcode.setText("");
                                 if (!barcode.isFocused()) {
                                     barcode.requestFocus();
                                 }
-                            });
+                            } else {
+                                showMessageAlert("You are not allowed to add this item", 5000);
+                            }
                         });
                     } else if (b.getType() == TillButton.SCREEN) {
                         final Screen sc = getScreen(b.getItem());
@@ -2331,7 +2329,11 @@ public class MainStage extends Stage implements GUIInterface {
                             throw new ScreenNotFoundException("Screen Missing");
                         }
                         button.setOnAction((ActionEvent e) -> {
-                            changeScreen(sc);
+                            if (staff.getPosition() >= b.getAccessLevel()) {
+                                changeScreen(sc);
+                            } else {
+                                showMessageAlert("You are not allowed to use this screen", 5000);
+                            }
                         });
                     } else if (b.getType() == TillButton.BACK) {
                         button.setOnAction((ActionEvent e) -> {
@@ -2417,13 +2419,11 @@ public class MainStage extends Stage implements GUIInterface {
                         if (b.getType() == TillButton.ITEM) {
                             final Item i = dc.getProduct(id); //Get the item associated with this product.
                             button.setOnAction((ActionEvent e) -> {
-                                Platform.runLater(() -> {
-                                    onProductButton(i); //When clicked, add the item to the sale.
-                                    barcode.setText("");
-                                    if (!barcode.isFocused()) {
-                                        barcode.requestFocus();
-                                    }
-                                });
+                                onProductButton(i); //When clicked, add the item to the sale.
+                                barcode.setText("");
+                                if (!barcode.isFocused()) {
+                                    barcode.requestFocus();
+                                }
                             });
                         } else if (b.getType() == TillButton.SCREEN) {
                             final Screen sc = getScreen(b.getItem());
@@ -2431,7 +2431,11 @@ public class MainStage extends Stage implements GUIInterface {
                                 throw new ScreenNotFoundException("Screen Missing");
                             }
                             button.setOnAction((ActionEvent e) -> {
-                                changeScreen(sc);
+                                if (staff.getPosition() >= b.getAccessLevel()) {
+                                    changeScreen(sc);
+                                } else {
+                                    showMessageAlert("You are not allowed to use this screen", 5000);
+                                }
                             });
                         } else if (b.getType() == TillButton.BACK) {
                             button.setOnAction((ActionEvent e) -> {
