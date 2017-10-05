@@ -165,10 +165,11 @@ public class MainStage extends Stage implements GUIInterface {
 
     private Button addCustomer;
     private Button chargeAccount;
+    private Button xReport;
+    private Button zReport;
 //    private Button loyaltyButton;
 //    private Button coupon;
-
-    private Button cashUp;
+    
     private Button refundButton;
     private Button voidSale;
     private Button voidItem;
@@ -1144,7 +1145,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentTotal.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         voidItem = new Button("Void");
-        voidItem.setId("paymentMethods");
+        voidItem.setId("payRed");
         voidItem.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         voidItem.setOnAction((ActionEvent event) -> {
             if (paymentsList.getSelectionModel().getSelectedIndex() > -1) {
@@ -1189,7 +1190,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         voidSale = new Button("Void Sale");
-        voidSale.setId("paymentMethods");
+        voidSale.setId("payRed");
         voidSale.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         voidSale.setOnAction((ActionEvent event) -> {
             if (YesNoDialog.showDialog(this, "Void Sale", "Are you sure you want to void the sale?") == YesNoDialog.YES) {
@@ -1209,10 +1210,10 @@ public class MainStage extends Stage implements GUIInterface {
             }
         });
 
-        cashUp = new Button("Cash Up");
-        cashUp.setId("paymentMethods");
-        cashUp.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        cashUp.setOnAction((ActionEvent event) -> {
+        zReport = new Button("Z Report");
+        zReport.setId("reporting");
+        zReport.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        zReport.setOnAction((ActionEvent event) -> {
             if (staff.getPosition() >= 3) {
                 try {
                     LOG.log(Level.INFO, "Submitting all sales to the server");
@@ -1277,7 +1278,7 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         refundButton = new Button("Refund");
-        refundButton.setId("paymentMethods");
+        refundButton.setId("payRed");
         refundButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         refundButton.setOnAction((ActionEvent event) -> {
             setRefund(!refundMode);
@@ -1356,9 +1357,9 @@ public class MainStage extends Stage implements GUIInterface {
 //        pane.add(coupon, 3, 1);
         pane.add(addCustomer, 0, 2);
         pane.add(chargeAccount, 1, 2);
+        pane.add(zReport, 3, 2);
 //        pane.add(loyaltyButton, 2, 2);
-        pane.add(cashUp, 0, 3);
-        pane.add(refundButton, 1, 3);
+        pane.add(refundButton, 0, 3);
         pane.add(voidSale, 2, 3);
         pane.add(voidItem, 3, 3);
 //        pane.add(saveTransaction, 3, 3);
