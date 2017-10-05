@@ -7,11 +7,8 @@ package io.github.davidg95.jtill.javafxjtill;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -169,9 +166,9 @@ public class CashUpDialog extends Stage {
             tr.terminal = till.getName();
             tr.transactions = sales.size();
             tr.actualTakings = tr.actualTakings.setScale(2);
-            tr.tax = tr.tax.setScale(2);
+            tr.tax = tr.tax.setScale(2, RoundingMode.HALF_DOWN);
             tr.declared = new BigDecimal(cashValue.getText());
-            tr.declared = tr.declared.setScale(2);
+            tr.declared = tr.declared.setScale(2, RoundingMode.HALF_DOWN);
             tr.difference = tr.declared.subtract(tr.actualTakings);
             final DecimalFormat df = new DecimalFormat("0.00");
             dc.cashUncashedSales(till.getId());
@@ -204,8 +201,8 @@ public class CashUpDialog extends Stage {
         } catch (Exception ex) {
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
+                MessageDialog.showMessage(this, "Cash Up", ex.getMessage());
             });
-            MessageDialog.showMessage(this, "Cash Up", ex.getMessage());
         } finally {
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
