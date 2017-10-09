@@ -1,32 +1,27 @@
-JTill log Mon Oct 09 12:17:23 BST 2017
-[12:17:23] [INFO] Starting JTill Terminal
-[12:17:23] [INFO] Initalising
-[12:17:23] [INFO] Loading properties file
-[12:17:23] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[12:17:24] [INFO] Max sales set to {0}
-[12:17:24] [INFO] Downloading products list from server
-[12:17:24] [INFO] Downloaded 2 products from the server
-[12:17:24] [INFO] Downloading plu list from server
-[12:17:24] [INFO] Downloaded 2 plus from the server
-[12:17:24] [INFO] Set discounts in cache
-[12:17:24] [INFO] Loading screen and button configurations from the server
-[12:17:24] [INFO] Got {0} screens from the server
-[12:17:24] [INFO] Getting buttons for {0} screen
-[12:17:24] [INFO] Got {0} buttons for this screen
-[12:17:24] [INFO] Getting buttons for {0} screen
-[12:17:24] [INFO] Got {0} buttons for this screen
-[12:17:24] [INFO] Saving properties file
-[12:17:26] [INFO] Getting all discounts from cache
-[12:17:39] [INFO] Getting all discounts from cache
-[12:17:40] [INFO] Max sales set to {0}
-[12:17:40] [INFO] Downloading products list from server
-[12:17:40] [INFO] Downloaded 2 products from the server
-[12:17:40] [INFO] Downloading plu list from server
-[12:17:40] [INFO] Downloaded 2 plus from the server
-[12:17:40] [INFO] Set discounts in cache
-[12:17:40] [INFO] Loading screen and button configurations from the server
-[12:17:40] [INFO] Got {0} screens from the server
-[12:17:40] [INFO] Getting buttons for {0} screen
-[12:17:40] [INFO] Got {0} buttons for this screen
-[12:17:40] [INFO] Getting buttons for {0} screen
-[12:17:40] [INFO] Got {0} buttons for this screen
+JTill log Mon Oct 09 13:17:31 BST 2017
+[13:17:31] [INFO] Starting JTill Terminal
+[13:17:31] [INFO] Initalising
+[13:17:31] [INFO] Loading properties file
+[13:17:31] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[13:17:31] [INFO] Max sales set to {0}
+[13:17:31] [INFO] Downloading products list from server
+[13:17:31] [INFO] Downloaded 2 products from the server
+[13:17:31] [INFO] Downloading plu list from server
+[13:17:31] [INFO] Downloaded 2 plus from the server
+[13:17:31] [INFO] Set discounts in cache
+[13:17:31] [INFO] Loading screen and button configurations from the server
+[13:17:31] [INFO] Got {0} screens from the server
+[13:17:32] [INFO] Getting buttons for {0} screen
+[13:17:32] [INFO] Got {0} buttons for this screen
+[13:17:32] [INFO] Getting buttons for {0} screen
+[13:17:32] [INFO] Got {0} buttons for this screen
+[13:17:32] [INFO] Saving properties file
+[13:17:34] [INFO] Getting all discounts from cache
+[13:17:34] [INFO] Item has been added to a sale
+[13:17:35] [INFO] Item has been added to a sale
+[13:17:35] [INFO] Item has been added to a sale
+[13:17:35] [INFO] Item has been added to a sale
+[13:17:36] [INFO] Item has been added to a sale
+[13:17:37] [INFO] Sale {0} sent to server
+[13:17:37] [INFO] Getting all discounts from cache
+[13:17:38] [INFO] Getting all discounts from cache
