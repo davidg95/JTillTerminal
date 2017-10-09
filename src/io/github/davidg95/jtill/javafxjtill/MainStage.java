@@ -1945,6 +1945,7 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void completeCurrentSale() {
         sale.setDate(new Date());
+        sale.setTerminal(till);
         Runnable printRun = () -> {
             try {
                 ReceiptPrinter.print(dc, sale);
