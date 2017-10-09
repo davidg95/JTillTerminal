@@ -7,6 +7,7 @@ package io.github.davidg95.jtill.javafxjtill;
 
 import io.github.davidg95.JTill.jtill.ProductEvent;
 import io.github.davidg95.JTill.jtill.*;
+import java.awt.Desktop;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -42,6 +43,8 @@ import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.URI;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -2363,6 +2366,14 @@ public class MainStage extends Stage implements GUIInterface {
                         button.setOnAction((ActionEvent e) -> {
                             voidSelected();
                         });
+                    } else if (b.getType() == TillButton.LINK) {
+                        button.setOnAction((ActionEvent e) -> {
+                            try {
+                                Desktop.getDesktop().browse(URI.create(b.getLink()));
+                            } catch (IOException ex) {
+                                MessageDialog.showMessage(this, "Link", ex.getMessage());
+                            }
+                        });
                     }
                     button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                     GridPane.setFillHeight(button, true);
@@ -2464,6 +2475,14 @@ public class MainStage extends Stage implements GUIInterface {
                         } else if (b.getType() == TillButton.VOID) {
                             button.setOnAction((ActionEvent e) -> {
                                 voidSelected();
+                            });
+                        } else if (b.getType() == TillButton.LINK) {
+                            button.setOnAction((ActionEvent e) -> {
+                                try {
+                                    Desktop.getDesktop().browse(URI.create(b.getLink()));
+                                } catch (IOException ex) {
+                                    MessageDialog.showMessage(this, "Link", ex.getMessage());
+                                }
                             });
                         }
                         button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
