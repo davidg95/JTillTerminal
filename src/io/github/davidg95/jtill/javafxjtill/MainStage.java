@@ -404,6 +404,7 @@ public class MainStage extends Stage implements GUIInterface {
             logoutTimeout = Integer.parseInt(JavaFXJTill.settings.getProperty("LOGOUT_TIMEOUT"));
             if (!JavaFXJTill.settings.getProperty("UNLOCK_CODE", "OFF").equals("OFF")) {
                 Platform.runLater(() -> {
+                    loginPane.getChildren().remove(lock);
                     loginPane.add(lock, 1, 14, 1, 2);
                 });
             } else {
@@ -2593,7 +2594,6 @@ public class MainStage extends Stage implements GUIInterface {
             MessageScreen.changeMessage("Initialising");
             MessageScreen.showWindow();
         });
-//        MainStage.this.logoff();
         MainStage.this.getServerData();
         Platform.runLater(() -> {
             MessageScreen.hideWindow();

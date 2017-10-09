@@ -1,284 +1,32 @@
-JTill log Mon Oct 09 11:36:17 BST 2017
-[11:36:17] [INFO] Starting JTill Terminal
-[11:36:17] [INFO] Initalising
-[11:36:17] [INFO] Loading properties file
-[11:36:17] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[11:36:17] [INFO] Max sales set to {0}
-[11:36:17] [INFO] Downloading products list from server
-[11:36:17] [INFO] Downloaded 2 products from the server
-[11:36:17] [INFO] Downloading plu list from server
-[11:36:18] [INFO] Downloaded 2 plus from the server
-[11:36:18] [INFO] Set discounts in cache
-[11:36:18] [INFO] Loading screen and button configurations from the server
-[11:36:18] [INFO] Got {0} screens from the server
-[11:36:18] [INFO] Getting buttons for {0} screen
-[11:36:18] [INFO] Got {0} buttons for this screen
-[11:36:18] [INFO] Getting buttons for {0} screen
-[11:36:18] [INFO] Got {0} buttons for this screen
-[11:36:18] [INFO] Saving properties file
-[11:36:21] [INFO] Getting all discounts from cache
-[11:36:33] [INFO] Getting all discounts from cache
-[11:36:33] [INFO] Max sales set to {0}
-[11:36:33] [INFO] Downloading products list from server
-[11:36:33] [INFO] Downloaded 2 products from the server
-[11:36:33] [INFO] Downloading plu list from server
-[11:36:33] [INFO] Downloaded 2 plus from the server
-[11:36:33] [INFO] Set discounts in cache
-[11:36:33] [INFO] Loading screen and button configurations from the server
-[11:36:33] [INFO] Got {0} screens from the server
-[11:36:33] [INFO] Getting buttons for {0} screen
-[11:36:33] [INFO] Got {0} buttons for this screen
-[11:36:33] [INFO] Getting buttons for {0} screen
-[11:36:34] [INFO] Got {0} buttons for this screen
-[11:36:38] [INFO] Max sales set to {0}
-[11:36:38] [INFO] Downloading products list from server
-[11:36:38] [INFO] Downloaded 2 products from the server
-[11:36:38] [INFO] Downloading plu list from server
-[11:36:38] [INFO] Downloaded 2 plus from the server
-[11:36:38] [INFO] Set discounts in cache
-[11:36:38] [INFO] Loading screen and button configurations from the server
-[11:36:38] [INFO] Got {0} screens from the server
-[11:36:38] [INFO] Getting buttons for {0} screen
-[11:36:38] [INFO] Got {0} buttons for this screen
-[11:36:38] [INFO] Getting buttons for {0} screen
-[11:36:38] [INFO] Got {0} buttons for this screen
-[11:36:39] [INFO] Max sales set to {0}
-[11:36:39] [INFO] Downloading products list from server
-[11:36:39] [INFO] Downloaded 2 products from the server
-[11:36:39] [INFO] Downloading plu list from server
-[11:36:39] [INFO] Downloaded 2 plus from the server
-[11:36:40] [INFO] Set discounts in cache
-[11:36:40] [INFO] Loading screen and button configurations from the server
-[11:36:40] [INFO] Got {0} screens from the server
-[11:36:40] [INFO] Getting buttons for {0} screen
-[11:36:40] [INFO] Got {0} buttons for this screen
-[11:36:40] [INFO] Getting buttons for {0} screen
-[11:36:40] [INFO] Got {0} buttons for this screen
-[11:36:40] [INFO] Max sales set to {0}
-[11:36:40] [INFO] Downloading products list from server
-[11:36:41] [INFO] Downloaded 2 products from the server
-[11:36:41] [INFO] Downloading plu list from server
-[11:36:41] [INFO] Downloaded 2 plus from the server
-[11:36:41] [INFO] Set discounts in cache
-[11:36:41] [INFO] Loading screen and button configurations from the server
-[11:36:41] [INFO] Got {0} screens from the server
-[11:36:41] [INFO] Getting buttons for {0} screen
-[11:36:41] [INFO] Got {0} buttons for this screen
-[11:36:41] [INFO] Getting buttons for {0} screen
-[11:36:41] [INFO] Got {0} buttons for this screen
-[11:36:42] [INFO] Max sales set to {0}
-[11:36:42] [INFO] Downloading products list from server
-[11:36:42] [INFO] Downloaded 2 products from the server
-[11:36:42] [INFO] Downloading plu list from server
-[11:36:42] [INFO] Downloaded 2 plus from the server
-[11:36:42] [INFO] Set discounts in cache
-[11:36:42] [INFO] Loading screen and button configurations from the server
-[11:36:42] [INFO] Got {0} screens from the server
-[11:36:42] [INFO] Getting buttons for {0} screen
-[11:36:42] [INFO] Got {0} buttons for this screen
-[11:36:42] [INFO] Getting buttons for {0} screen
-[11:36:42] [INFO] Got {0} buttons for this screen
-[11:36:43] [INFO] Max sales set to {0}
-[11:36:43] [INFO] Downloading products list from server
-[11:36:43] [INFO] Downloaded 2 products from the server
-[11:36:43] [INFO] Downloading plu list from server
-[11:36:43] [INFO] Downloaded 2 plus from the server
-[11:36:43] [INFO] Set discounts in cache
-[11:36:43] [INFO] Loading screen and button configurations from the server
-[11:36:43] [INFO] Got {0} screens from the server
-[11:36:43] [INFO] Getting buttons for {0} screen
-[11:36:43] [INFO] Got {0} buttons for this screen
-[11:36:43] [INFO] Getting buttons for {0} screen
-[11:36:43] [INFO] Got {0} buttons for this screen
-[11:36:43] [INFO] Max sales set to {0}
-[11:36:43] [INFO] Downloading products list from server
-[11:36:44] [INFO] Downloaded 2 products from the server
-[11:36:44] [INFO] Downloading plu list from server
-[11:36:44] [INFO] Downloaded 2 plus from the server
-[11:36:44] [INFO] Max sales set to {0}
-[11:36:44] [INFO] Downloading products list from server
-[11:36:44] [INFO] Downloaded 2 products from the server
-[11:36:44] [INFO] Downloading plu list from server
-[11:36:44] [INFO] Set discounts in cache
-[11:36:44] [INFO] Loading screen and button configurations from the server
-[11:36:44] [INFO] Downloaded 2 plus from the server
-[11:36:44] [INFO] Got {0} screens from the server
-[11:36:44] [INFO] Getting buttons for {0} screen
-[11:36:44] [INFO] Got {0} buttons for this screen
-[11:36:44] [INFO] Set discounts in cache
-[11:36:44] [INFO] Loading screen and button configurations from the server
-[11:36:44] [INFO] Got {0} screens from the server
-[11:36:44] [INFO] Getting buttons for {0} screen
-[11:36:44] [INFO] Getting buttons for {0} screen
-[11:36:44] [INFO] Max sales set to {0}
-[11:36:44] [INFO] Downloading products list from server
-[11:36:44] [INFO] Got {0} buttons for this screen
-[11:36:44] [INFO] Got {0} buttons for this screen
-[11:36:44] [INFO] Downloaded 2 products from the server
-[11:36:44] [INFO] Downloading plu list from server
-[11:36:44] [INFO] Downloaded 2 plus from the server
-[11:36:44] [INFO] Getting buttons for {0} screen
-[11:36:44] [INFO] Got {0} buttons for this screen
-[11:36:44] [INFO] Max sales set to {0}
-[11:36:44] [INFO] Downloading products list from server
-[11:36:44] [INFO] Downloaded 2 products from the server
-[11:36:44] [INFO] Downloading plu list from server
-[11:36:44] [INFO] Downloaded 2 plus from the server
-[11:36:44] [INFO] Max sales set to {0}
-[11:36:44] [INFO] Downloading products list from server
-[11:36:45] [INFO] Downloaded 2 products from the server
-[11:36:45] [INFO] Downloading plu list from server
-[11:36:45] [INFO] Downloaded 2 plus from the server
-[11:36:45] [INFO] Max sales set to {0}
-[11:36:45] [INFO] Downloading products list from server
-[11:36:45] [INFO] Set discounts in cache
-[11:36:45] [INFO] Loading screen and button configurations from the server
-[11:36:45] [INFO] Downloaded 2 products from the server
-[11:36:45] [INFO] Downloading plu list from server
-[11:36:45] [INFO] Got {0} screens from the server
-[11:36:45] [INFO] Downloaded 2 plus from the server
-[11:36:45] [INFO] Getting buttons for {0} screen
-[11:36:45] [INFO] Got {0} buttons for this screen
-[11:36:45] [INFO] Max sales set to {0}
-[11:36:45] [INFO] Downloading products list from server
-[11:36:45] [INFO] Downloaded 2 products from the server
-[11:36:45] [INFO] Downloading plu list from server
-[11:36:45] [INFO] Getting buttons for {0} screen
-[11:36:45] [INFO] Downloaded 2 plus from the server
-[11:36:45] [INFO] Got {0} buttons for this screen
-[11:36:45] [INFO] Max sales set to {0}
-[11:36:45] [INFO] Downloading products list from server
-[11:36:45] [INFO] Downloaded 2 products from the server
-[11:36:45] [INFO] Downloading plu list from server
-[11:36:45] [INFO] Set discounts in cache
-[11:36:45] [INFO] Loading screen and button configurations from the server
-[11:36:45] [INFO] Downloaded 2 plus from the server
-[11:36:45] [INFO] Got {0} screens from the server
-[11:36:45] [INFO] Getting buttons for {0} screen
-[11:36:45] [INFO] Max sales set to {0}
-[11:36:45] [INFO] Downloading products list from server
-[11:36:45] [INFO] Got {0} buttons for this screen
-[11:36:45] [INFO] Downloaded 2 products from the server
-[11:36:45] [INFO] Downloading plu list from server
-[11:36:45] [INFO] Downloaded 2 plus from the server
-[11:36:45] [INFO] Getting buttons for {0} screen
-[11:36:45] [INFO] Got {0} buttons for this screen
-[11:36:46] [INFO] Set discounts in cache
-[11:36:46] [INFO] Loading screen and button configurations from the server
-[11:36:46] [INFO] Got {0} screens from the server
-[11:36:46] [INFO] Getting buttons for {0} screen
-[11:36:46] [INFO] Max sales set to {0}
-[11:36:46] [INFO] Downloading products list from server
-[11:36:46] [INFO] Got {0} buttons for this screen
-[11:36:46] [INFO] Downloaded 2 products from the server
-[11:36:46] [INFO] Downloading plu list from server
-[11:36:46] [INFO] Downloaded 2 plus from the server
-[11:36:46] [INFO] Getting buttons for {0} screen
-[11:36:46] [INFO] Got {0} buttons for this screen
-[11:36:46] [INFO] Max sales set to {0}
-[11:36:46] [INFO] Downloading products list from server
-[11:36:46] [INFO] Downloaded 2 products from the server
-[11:36:46] [INFO] Downloading plu list from server
-[11:36:46] [INFO] Downloaded 2 plus from the server
-[11:36:46] [INFO] Max sales set to {0}
-[11:36:46] [INFO] Downloading products list from server
-[11:36:46] [INFO] Downloaded 2 products from the server
-[11:36:46] [INFO] Downloading plu list from server
-[11:36:46] [INFO] Set discounts in cache
-[11:36:46] [INFO] Loading screen and button configurations from the server
-[11:36:46] [INFO] Downloaded 2 plus from the server
-[11:36:46] [INFO] Got {0} screens from the server
-[11:36:46] [INFO] Getting buttons for {0} screen
-[11:36:46] [INFO] Sending sales data to the server
-[11:36:46] [INFO] Getting all sales
-[11:36:46] [INFO] Sales data has been sent to the server
-[11:36:46] [INFO] Clearing all sales
-[11:36:46] [INFO] Max sales set to {0}
-[11:36:46] [INFO] Downloading products list from server
-[11:36:47] [INFO] Downloaded 2 products from the server
-[11:36:47] [INFO] Downloading plu list from server
-[11:36:47] [INFO] Downloaded 2 plus from the server
-[11:36:47] [INFO] Max sales set to {0}
-[11:36:47] [INFO] Downloading products list from server
-[11:36:47] [INFO] Downloaded 2 products from the server
-[11:36:47] [INFO] Downloading plu list from server
-[11:36:47] [INFO] Set discounts in cache
-[11:36:47] [INFO] Loading screen and button configurations from the server
-[11:36:47] [INFO] Downloaded 2 plus from the server
-[11:36:47] [INFO] Got {0} screens from the server
-[11:36:47] [INFO] Getting buttons for {0} screen
-[11:36:47] [INFO] Max sales set to {0}
-[11:36:47] [INFO] Downloading products list from server
-[11:36:47] [INFO] Got {0} buttons for this screen
-[11:36:47] [INFO] Downloaded 2 products from the server
-[11:36:47] [INFO] Downloading plu list from server
-[11:36:47] [INFO] Set discounts in cache
-[11:36:47] [INFO] Loading screen and button configurations from the server
-[11:36:47] [INFO] Downloaded 2 plus from the server
-[11:36:47] [INFO] Got {0} screens from the server
-[11:36:47] [INFO] Getting buttons for {0} screen
-[11:36:47] [INFO] Getting buttons for {0} screen
-[11:36:47] [INFO] Got {0} buttons for this screen
-[11:36:47] [INFO] Got {0} buttons for this screen
-[11:36:47] [INFO] Set discounts in cache
-[11:36:47] [INFO] Loading screen and button configurations from the server
-[11:36:47] [INFO] Got {0} screens from the server
-[11:36:47] [INFO] Getting buttons for {0} screen
-[11:36:47] [INFO] Getting buttons for {0} screen
-[11:36:47] [INFO] Got {0} buttons for this screen
-[11:36:47] [INFO] Got {0} buttons for this screen
-[11:36:47] [INFO] Getting buttons for {0} screen
-[11:36:47] [INFO] Got {0} buttons for this screen
-[11:37:00] [INFO] Max sales set to {0}
-[11:37:00] [INFO] Downloading products list from server
-[11:37:00] [INFO] Downloaded 2 products from the server
-[11:37:00] [INFO] Downloading plu list from server
-[11:37:00] [INFO] Downloaded 2 plus from the server
-[11:37:00] [INFO] Set discounts in cache
-[11:37:00] [INFO] Loading screen and button configurations from the server
-[11:37:00] [INFO] Got {0} screens from the server
-[11:37:00] [INFO] Getting buttons for {0} screen
-[11:37:00] [INFO] Got {0} buttons for this screen
-[11:37:00] [INFO] Getting buttons for {0} screen
-[11:37:00] [INFO] Got {0} buttons for this screen
-[11:37:01] [INFO] Max sales set to {0}
-[11:37:01] [INFO] Downloading products list from server
-[11:37:01] [INFO] Downloaded 2 products from the server
-[11:37:01] [INFO] Downloading plu list from server
-[11:37:01] [INFO] Downloaded 2 plus from the server
-[11:37:01] [INFO] Max sales set to {0}
-[11:37:01] [INFO] Downloading products list from server
-[11:37:01] [INFO] Downloaded 2 products from the server
-[11:37:01] [INFO] Downloading plu list from server
-[11:37:02] [INFO] Downloaded 2 plus from the server
-[11:37:02] [INFO] Max sales set to {0}
-[11:37:02] [INFO] Downloading products list from server
-[11:37:02] [INFO] Downloaded 2 products from the server
-[11:37:02] [INFO] Downloading plu list from server
-[11:37:02] [INFO] Set discounts in cache
-[11:37:02] [INFO] Loading screen and button configurations from the server
-[11:37:02] [INFO] Downloaded 2 plus from the server
-[11:37:02] [INFO] Got {0} screens from the server
-[11:37:02] [INFO] Getting buttons for {0} screen
-[11:37:02] [INFO] Got {0} buttons for this screen
-[11:37:02] [INFO] Set discounts in cache
-[11:37:02] [INFO] Loading screen and button configurations from the server
-[11:37:02] [INFO] Got {0} screens from the server
-[11:37:02] [INFO] Getting buttons for {0} screen
-[11:37:02] [INFO] Getting buttons for {0} screen
-[11:37:02] [INFO] Got {0} buttons for this screen
-[11:37:02] [INFO] Got {0} buttons for this screen
-[11:37:02] [INFO] Getting buttons for {0} screen
-[11:37:02] [INFO] Got {0} buttons for this screen
-[11:37:13] [INFO] Max sales set to {0}
-[11:37:13] [INFO] Downloading products list from server
-[11:37:13] [INFO] Downloaded 2 products from the server
-[11:37:13] [INFO] Downloading plu list from server
-[11:37:13] [INFO] Downloaded 2 plus from the server
-[11:37:14] [INFO] Set discounts in cache
-[11:37:14] [INFO] Loading screen and button configurations from the server
-[11:37:14] [INFO] Got {0} screens from the server
-[11:37:14] [INFO] Getting buttons for {0} screen
-[11:37:14] [INFO] Got {0} buttons for this screen
-[11:37:14] [INFO] Getting buttons for {0} screen
-[11:37:14] [INFO] Got {0} buttons for this screen
+JTill log Mon Oct 09 12:17:23 BST 2017
+[12:17:23] [INFO] Starting JTill Terminal
+[12:17:23] [INFO] Initalising
+[12:17:23] [INFO] Loading properties file
+[12:17:23] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[12:17:24] [INFO] Max sales set to {0}
+[12:17:24] [INFO] Downloading products list from server
+[12:17:24] [INFO] Downloaded 2 products from the server
+[12:17:24] [INFO] Downloading plu list from server
+[12:17:24] [INFO] Downloaded 2 plus from the server
+[12:17:24] [INFO] Set discounts in cache
+[12:17:24] [INFO] Loading screen and button configurations from the server
+[12:17:24] [INFO] Got {0} screens from the server
+[12:17:24] [INFO] Getting buttons for {0} screen
+[12:17:24] [INFO] Got {0} buttons for this screen
+[12:17:24] [INFO] Getting buttons for {0} screen
+[12:17:24] [INFO] Got {0} buttons for this screen
+[12:17:24] [INFO] Saving properties file
+[12:17:26] [INFO] Getting all discounts from cache
+[12:17:39] [INFO] Getting all discounts from cache
+[12:17:40] [INFO] Max sales set to {0}
+[12:17:40] [INFO] Downloading products list from server
+[12:17:40] [INFO] Downloaded 2 products from the server
+[12:17:40] [INFO] Downloading plu list from server
+[12:17:40] [INFO] Downloaded 2 plus from the server
+[12:17:40] [INFO] Set discounts in cache
+[12:17:40] [INFO] Loading screen and button configurations from the server
+[12:17:40] [INFO] Got {0} screens from the server
+[12:17:40] [INFO] Getting buttons for {0} screen
+[12:17:40] [INFO] Got {0} buttons for this screen
+[12:17:40] [INFO] Getting buttons for {0} screen
+[12:17:40] [INFO] Got {0} buttons for this screen
