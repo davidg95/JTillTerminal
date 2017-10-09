@@ -419,7 +419,6 @@ public class MainStage extends Stage implements GUIInterface {
                     ProductCache.getInstance().setProducts(dc.getAllProducts());
                     LOG.log(Level.INFO, "Downloaded " + ProductCache.getInstance().getAllProducts().size() + " products from the server");
                     LOG.log(Level.INFO, "Downloading plu list from server");
-                    ProductCache.getInstance().setPlus(dc.getAllPlus());
                     LOG.log(Level.INFO, "Downloaded " + ProductCache.getInstance().getAllProducts().size() + " plus from the server");
                 }
             } catch (SQLException ex) {
@@ -483,7 +482,7 @@ public class MainStage extends Stage implements GUIInterface {
                 BackgroundImage myBi = new BackgroundImage(new Image(dc.getLoginBackground().toURI().toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
                 loginPane.setBackground(new Background(myBi));
             } catch (IOException | JTillException e) {
-                
+
             }
             staffCache = dc.getAllStaff();
         } catch (IOException | SQLException ex) {
@@ -2149,12 +2148,7 @@ public class MainStage extends Stage implements GUIInterface {
                 LOG.log(Level.INFO, "Checking server for product {0}", barcode);
                 p = dc.getProductByBarcode(barcode);
                 LOG.log(Level.INFO, "Product was found on server");
-                try {
-                    final Plu pl = dc.getPluByProduct(p.getId());
-                    ProductCache.getInstance().addProductAndPlu(p, pl);
-                } catch (JTillException ex1) {
-                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex1);
-                }
+                ProductCache.getInstance().addProductToCache(p);
             }
             addItemToSale(p);
         } catch (IOException | ProductNotFoundException | SQLException ex) {

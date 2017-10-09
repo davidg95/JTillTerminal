@@ -24,19 +24,15 @@ public class ProductCache {
     private static final Logger LOG = Logger.getGlobal(); //Logger.
 
     private List<Product> products; //The Products in the cache.
-    private List<Plu> plus; //The Plus in the cache.
 
     private final StampedLock lock; //Lock for products.
-    private final StampedLock pLock; //Lock for plus.
 
     /**
      * Default constructor.
      */
     public ProductCache() {
         products = new LinkedList<>();
-        plus = new LinkedList<>();
         lock = new StampedLock();
-        pLock = new StampedLock();
     }
 
     /**
@@ -71,40 +67,6 @@ public class ProductCache {
     }
 
     /**
-     * Adds a plu to the cache.
-     *
-     * @param p the plu to add.
-     */
-    public void addPluToCache(Plu p) {
-        LOG.log(Level.INFO, "Adding plu to cache");
-        long stamp = pLock.writeLock();
-        try {
-            plus.add(p);
-        } finally {
-            pLock.unlockWrite(stamp);
-        }
-    }
-
-    /**
-     * Method to add a product and plu to the cache.
-     *
-     * @param p the product to add.
-     * @param pl the plu to add.
-     */
-    public void addProductAndPlu(Product p, Plu pl) {
-        LOG.log(Level.INFO, "Adding Product and Plu to cache");
-        long stampP = lock.writeLock();
-        long stampPl = pLock.writeLock();
-        try {
-            products.add(p);
-            plus.add(pl);
-        } finally {
-            lock.unlockWrite(stampP);
-            pLock.unlockWrite(stampPl);
-        }
-    }
-
-    /**
      * Searches for a product in the cache. Will return a
      * ProductNotFoundException if none was found.
      *
@@ -130,48 +92,6 @@ public class ProductCache {
     }
 
     /**
-     * Searches for a plu in the cache. Will return a JTillException if none was
-     * found.
-     *
-     * @param id the ID to search for.
-     * @return the PLU that was found.
-     * @throws JTillException if none was found.
-     */
-    public Plu getPlu(int id) throws JTillException {
-        LOG.log(Level.INFO, "Checking cache for {0}", id);
-        long stamp = pLock.readLock();
-        try {
-            for (Plu p : plus) {
-                if (p.getId() == id) {
-                    LOG.log(Level.INFO, "Plu found in cache");
-                    return p;
-                }
-            }
-        } finally {
-            pLock.unlockRead(stamp);
-        }
-        LOG.log(Level.INFO, "Plu not found in cache");
-        throw new JTillException("Plu " + id + " not found");
-    }
-
-    public Plu getPluByProduct(int id) throws JTillException {
-        LOG.log(Level.INFO, "Checking for Plu for product {0}", id);
-        long stamp = pLock.readLock();
-        try {
-            for (Plu p : plus) {
-                if (p.getId() == id) {
-                    LOG.log(Level.INFO, "Plu found in cache");
-                    return p;
-                }
-            }
-        } finally {
-            pLock.unlockRead(stamp);
-        }
-        LOG.log(Level.INFO, "Plu not found for product");
-        throw new JTillException("Plu " + id + " not found");
-    }
-
-    /**
      * Searches the cache for a product matching the barcode. Will throw a
      * ProductNotfoundException if none was fonud.
      *
@@ -186,14 +106,9 @@ public class ProductCache {
         try {
             LOG.log(Level.INFO, "Checking cache for {0}", barcode);
             for (Product p : products) {
-                try {
-                    final Plu plu = getPluByProduct(p.getId());
-                    if (plu.getCode().equals(barcode)) {
-                        LOG.log(Level.INFO, "Product found in cache");
-                        return p;
-                    }
-                } catch (JTillException ex) {
-
+                if (p.getBarcode().equals(barcode)) {
+                    LOG.log(Level.INFO, "Product found in cache");
+                    return p;
                 }
             }
         } finally {
@@ -214,12 +129,6 @@ public class ProductCache {
         } finally {
             lock.unlockWrite(stamp);
         }
-        stamp = pLock.writeLock();
-        try {
-            plus.clear();
-        } finally {
-            pLock.unlockWrite(stamp);
-        }
         LOG.log(Level.INFO, "Cache clear");
     }
 
@@ -238,20 +147,6 @@ public class ProductCache {
     }
 
     /**
-     * Returns a list of all plus in the cache.
-     *
-     * @return a List of type Plu.
-     */
-    public List<Plu> getAllPlus() {
-        long stamp = pLock.readLock();
-        try {
-            return plus;
-        } finally {
-            pLock.unlockRead(stamp);
-        }
-    }
-
-    /**
      * Sets the List of products in the cache.
      *
      * @param products the List to set.
@@ -262,20 +157,6 @@ public class ProductCache {
             this.products = products;
         } finally {
             lock.unlockWrite(stamp);
-        }
-    }
-
-    /**
-     * Sets the list of plus in the cache.
-     *
-     * @param plus the plus to set.
-     */
-    public void setPlus(List<Plu> plus) {
-        long stamp = pLock.writeLock();
-        try {
-            this.plus = plus;
-        } finally {
-            pLock.unlockWrite(stamp);
         }
     }
 }
