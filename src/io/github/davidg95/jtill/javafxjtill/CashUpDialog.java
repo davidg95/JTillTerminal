@@ -157,6 +157,8 @@ public class CashUpDialog extends Stage {
             final TillReport tr = dc.zReport(till, declared, MainStage.staff);
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
+                takingsField.setText(tr.getExpected().toString());
+                differenceField.setText(tr.getDifference().toString());
                 if (YesNoDialog.showDialog(this, "Cash up", "Do you want the report emailed?") == YesNoDialog.YES) {
                     try {
                         String message = "Cashup for terminal " + JavaFXJTill.NAME
