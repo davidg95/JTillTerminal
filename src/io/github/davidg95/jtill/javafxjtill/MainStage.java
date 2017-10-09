@@ -44,7 +44,6 @@ import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -88,7 +87,7 @@ public class MainStage extends Stage implements GUIInterface {
     private Screen last_screen;
     private Screen currentScreen;
 
-    private Staff staff;
+    public static Staff staff;
     private Till till;
     private Sale sale;
     private Sale lastSale;

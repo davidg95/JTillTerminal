@@ -23,8 +23,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import io.github.davidg95.JTill.jtill.*;
-import java.math.RoundingMode;
-import java.util.List;
 import javafx.application.Platform;
 
 /**
@@ -156,7 +154,7 @@ public class CashUpDialog extends Stage {
                 MessageScreen.showWindow();
             });
             BigDecimal declared = new BigDecimal(cashValue.getText());
-            final TillReport tr = dc.zReport(till.getId(), declared);
+            final TillReport tr = dc.zReport(till, declared, MainStage.staff);
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
                 if (YesNoDialog.showDialog(this, "Cash up", "Do you want the report emailed?") == YesNoDialog.YES) {
