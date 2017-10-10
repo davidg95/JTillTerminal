@@ -2188,7 +2188,7 @@ public class MainStage extends Stage implements GUIInterface {
             if (p.isOpen()) { //Check if the product is open price
                 int value;
                 if (barcode.getText().equals("")) {
-                    value = NumberEntry.showNumberEntryDialog(this, "Enter price"); //Show the dialog asking for the price
+                    value = NumberEntry.showNumberEntryDialog(this, "Enter " + p.getScaleName()); //Show the dialog asking for the price
                 } else {
                     final String bc = barcode.getText();
                     if (bc.contains(".") || !Utilities.isNumber(bc)) {
@@ -2201,7 +2201,13 @@ public class MainStage extends Stage implements GUIInterface {
                 if (value == 0) {
                     return; //Exit the method if nothing was entered
                 }
-                p.setPrice(new BigDecimal(Double.toString((double) value / 100)));
+                if (p.getScale() == -1) {
+                    double pr = (double) value / 100;
+                    p.setPrice(new BigDecimal(pr).setScale(2, BigDecimal.ROUND_HALF_DOWN));
+                } else {
+                    double pr = (double) value;
+                    p.setPrice(new BigDecimal(p.priceFromScale(pr)).setScale(2, BigDecimal.ROUND_HALF_DOWN));
+                }
             }
 
             if (refundMode) {
