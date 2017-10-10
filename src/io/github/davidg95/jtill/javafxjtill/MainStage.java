@@ -43,6 +43,7 @@ import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.ConnectException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -384,7 +385,15 @@ public class MainStage extends Stage implements GUIInterface {
             ServerConnection sc = (ServerConnection) dc;
             MessageScreen.changeMessage("Connecting to server");
             LOG.log(Level.INFO, "Attempting connection to the server on IP address " + JavaFXJTill.SERVER);
-            till = sc.connect(JavaFXJTill.SERVER, JavaFXJTill.PORT, JavaFXJTill.NAME, JavaFXJTill.uuid);
+            try {
+                till = sc.connect(JavaFXJTill.SERVER, JavaFXJTill.PORT, JavaFXJTill.NAME, JavaFXJTill.uuid);
+            } catch (ConnectException ex) {
+                MessageDialog.showMessage(this, "Error", ex.getMessage());
+                System.exit(0);
+            } catch (JTillException ex) {
+                MessageDialog.showMessage(this, "Already Connected", ex.getMessage());
+                System.exit(0);
+            }
             JavaFXJTill.uuid = till.getUuid();
             JavaFXJTill.saveProperties();
             if (staff == null) {
