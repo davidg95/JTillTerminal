@@ -388,9 +388,11 @@ public class MainStage extends Stage implements GUIInterface {
             try {
                 till = sc.connect(JavaFXJTill.SERVER, JavaFXJTill.PORT, JavaFXJTill.NAME, JavaFXJTill.uuid);
             } catch (ConnectException ex) {
+                MessageScreen.hideWindow();
                 MessageDialog.showMessage(this, "Error", ex.getMessage());
                 System.exit(0);
             } catch (JTillException ex) {
+                MessageScreen.hideWindow();
                 MessageDialog.showMessage(this, "Already Connected", ex.getMessage());
                 System.exit(0);
             }
