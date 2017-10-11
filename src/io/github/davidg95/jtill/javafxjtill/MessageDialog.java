@@ -6,7 +6,6 @@
 package io.github.davidg95.jtill.javafxjtill;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -56,7 +55,7 @@ public class MessageDialog extends Stage {
         label.setAlignment(Pos.CENTER);
         label.setMinHeight(100);
         label.setMaxHeight(100);
-        label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 40));
+        label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
         pane.add(label, 0, 0);
 
         Button button = new Button("Ok");

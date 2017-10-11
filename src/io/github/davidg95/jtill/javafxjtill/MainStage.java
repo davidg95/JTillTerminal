@@ -393,7 +393,7 @@ public class MainStage extends Stage implements GUIInterface {
                 System.exit(0);
             } catch (JTillException ex) {
                 MessageScreen.hideWindow();
-                MessageDialog.showMessage(this, "Already Connected", ex.getMessage());
+                MessageDialog.showMessage(this, "Connection", ex.getMessage());
                 System.exit(0);
             }
             JavaFXJTill.uuid = till.getUuid();
