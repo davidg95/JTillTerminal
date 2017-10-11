@@ -2283,8 +2283,6 @@ public class MainStage extends Stage implements GUIInterface {
             sale.voidItem(item);
             obTable.remove(item);
             payObTable.remove(item);
-            final Product p = (Product) item.getItem();
-            double taxP = p.getTax().getValue() / 100;
             setTotalLabel();
         }
         if (!barcode.isFocused()) {

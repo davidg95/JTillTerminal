@@ -120,10 +120,10 @@ public class ReceiptPrinter implements Printable {
         //Print the sale items.
         for (SaleItem it : sale.getSaleItems()) {
             if (it.getType() == SaleItem.PRODUCT) {
-                final Product p = (Product) it.getItem();
+                final Product p = (Product) it.getProduct();
                 g2.drawString(p.getName(), item, y);
             } else {
-                final Discount d = (Discount) it.getItem();
+                final Discount d = (Discount) it.getProduct();
                 g2.drawString(d.getName(), item, y);
             }
             g2.drawString("" + it.getQuantity(), quantity, y);
