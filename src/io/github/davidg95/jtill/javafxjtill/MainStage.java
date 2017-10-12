@@ -2215,6 +2215,7 @@ public class MainStage extends Stage implements GUIInterface {
                 if (p.getScale() == -1) {
                     double pr = (double) value / 100;
                     p.setPrice(new BigDecimal(pr).setScale(2, BigDecimal.ROUND_HALF_DOWN));
+                    
                 } else {
                     double pr = (double) value;
                     p.setPrice(new BigDecimal(p.priceFromScale(pr)).setScale(2, BigDecimal.ROUND_HALF_DOWN));
