@@ -1,24 +1,44 @@
-JTill log Fri Oct 13 13:16:59 BST 2017
-[13:16:59] [INFO] Starting JTill Terminal
-[13:16:59] [INFO] Initalising
-[13:16:59] [INFO] Loading properties file
-[13:16:59] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[13:17:00] [INFO] Max sales set to {0}
-[13:17:00] [INFO] Downloading products list from server
-[13:17:00] [INFO] Downloaded 4 products from the server
-[13:17:00] [INFO] Downloading plu list from server
-[13:17:00] [INFO] Downloaded 4 plus from the server
-[13:17:00] [INFO] Set discounts in cache
-[13:17:00] [INFO] Loading screen and button configurations from the server
-[13:17:00] [INFO] Got {0} screens from the server
-[13:17:00] [INFO] Getting buttons for {0} screen
-[13:17:00] [INFO] Got {0} buttons for this screen
-[13:17:00] [INFO] Saving properties file
-[13:17:02] [INFO] Getting all discounts from cache
-[13:17:11] [INFO] Item has been added to a sale
-[13:17:11] [INFO] Item has been added to a sale
-[13:17:12] [INFO] Item has been added to a sale
-[13:17:12] [INFO] Item has been added to a sale
-[13:17:14] [INFO] Item has been added to a sale
-[13:17:15] [INFO] Sale {0} sent to server
-[13:17:15] [INFO] Getting all discounts from cache
+JTill log Fri Oct 13 16:15:48 BST 2017
+[16:15:49] [INFO] Starting JTill Terminal
+[16:15:49] [INFO] Initalising
+[16:15:49] [INFO] Loading properties file
+[16:15:49] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[16:15:49] [INFO] Max sales set to {0}
+[16:15:49] [INFO] Downloading products list from server
+[16:15:49] [INFO] Downloaded 5 products from the server
+[16:15:49] [INFO] Downloading plu list from server
+[16:15:49] [INFO] Downloaded 5 plus from the server
+[16:15:49] [INFO] Set discounts in cache
+[16:15:49] [INFO] Loading screen and button configurations from the server
+[16:15:49] [INFO] Got {0} screens from the server
+[16:15:49] [INFO] Getting buttons for {0} screen
+[16:15:49] [INFO] Got {0} buttons for this screen
+[16:15:50] [INFO] Saving properties file
+[16:15:52] [INFO] Getting all discounts from cache
+[16:16:09] [INFO] Item has been added to a sale
+[16:16:13] [INFO] Sale {0} sent to server
+[16:16:13] [INFO] Getting all discounts from cache
+[16:16:33] [INFO] Item has been added to a sale
+[16:16:35] [INFO] Sale {0} sent to server
+[16:16:35] [INFO] Getting all discounts from cache
+[16:16:53] [INFO] Item has been added to a sale
+[16:16:59] [INFO] Item has been added to a sale
+[16:17:02] [INFO] Sale {0} sent to server
+[16:17:02] [INFO] Getting all discounts from cache
+[16:17:07] [INFO] Getting all discounts from cache
+[16:18:18] [INFO] Getting all discounts from cache
+[16:18:30] [INFO] Item has been added to a sale
+[16:18:36] [INFO] Sale {0} sent to server
+[16:18:36] [INFO] Getting all discounts from cache
+[16:18:44] [INFO] Item has been added to a sale
+[16:18:47] [INFO] Sale {0} sent to server
+[16:18:47] [INFO] Getting all discounts from cache
+[16:20:55] [INFO] Item has been added to a sale
+[16:20:58] [INFO] Sale {0} sent to server
+[16:20:58] [INFO] Getting all discounts from cache
+[16:21:04] [INFO] Item has been added to a sale
+[16:21:07] [INFO] Sale {0} sent to server
+[16:21:07] [INFO] Getting all discounts from cache
+[16:21:32] [INFO] Item has been added to a sale
+[16:21:35] [INFO] Sale {0} sent to server
+[16:21:35] [INFO] Getting all discounts from cache
