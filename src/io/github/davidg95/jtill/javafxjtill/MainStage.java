@@ -210,11 +210,6 @@ public class MainStage extends Stage implements GUIInterface {
     public MainStage(ServerConnection dc) {
         super();
         this.dc = dc;
-        if (staff == null) {
-            this.sale = new Sale(0, 0);
-        } else {
-            this.sale = new Sale(0, staff.getId());
-        }
         setTitle("JTill Terminal");
         stylesheet = MainStage.class.getResource("style.css").toExternalForm();
         try {
@@ -399,9 +394,9 @@ public class MainStage extends Stage implements GUIInterface {
             JavaFXJTill.uuid = till.getUuid();
             JavaFXJTill.saveProperties();
             if (staff == null) {
-                this.sale = new Sale(till.getId(), 0);
+                this.sale = new Sale(till, null);
             } else {
-                this.sale = new Sale(till.getId(), staff.getId());
+                this.sale = new Sale(till, staff);
             }
         }
     }
@@ -1090,7 +1085,7 @@ public class MainStage extends Stage implements GUIInterface {
         addCustomer.setOnAction((ActionEvent event) -> {
             if (!sale.getSaleItems().isEmpty()) {
                 Platform.runLater(() -> {
-                    if (sale.getCustomerID() != 1) {
+                    if (sale.getCustomer() != null) {
                         setCustomer(null);
                         chargeAccount.setDisable(true);
 //                        loyaltyButton.setDisable(true);
@@ -1151,7 +1146,7 @@ public class MainStage extends Stage implements GUIInterface {
         paymentsList.setItems(obPayments);
         paymentsList.setId("PAYMENT_LIST");
 
-        paymentTotal = new Label("Total: " + symbol + sale.getTotal().toString());
+        paymentTotal = new Label("Total: " + symbol + "0.00");
         paymentTotal.setId("total");
         paymentTotal.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         paymentTotal.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -1469,14 +1464,10 @@ public class MainStage extends Stage implements GUIInterface {
                         setTotalLabel();
                         resumeSale(frs);
                     });
-                    try {
-                        final Customer c = dc.getCustomer(rs.getCustomerID());
-                        Platform.runLater(() -> {
-                            setCustomer(c);
-                        });
-                    } catch (CustomerNotFoundException | IOException | SQLException ex) {
-                        Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    final Customer c = rs.getCustomer();
+                    Platform.runLater(() -> {
+                        setCustomer(c);
+                    });
                 } else {
                     Platform.runLater(() -> {
                         newSale();
@@ -1897,23 +1888,17 @@ public class MainStage extends Stage implements GUIInterface {
         return staffLayout;
     }
 
-    private void clearLoginScreen() {
-        staffLayout.getChildren().clear();
-        x = 0;
-        y = 0;
-    }
-
     private void setCustomer(Customer c) {
         if (c != null) {
             saleCustomer.setText(c.getName());
             addCustomer.setText("Remove Customer");
             chargeAccount.setDisable(false);
-            sale.setCustomerID(c.getId());
+            sale.setCustomer(c);
         } else {
             saleCustomer.setText("No Customer");
             addCustomer.setText("Add Customer");
             chargeAccount.setDisable(true);
-            sale.setCustomerID(1);
+            sale.setCustomer(null);
         }
     }
 
@@ -1958,7 +1943,7 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void completeCurrentSale() {
         sale.setDate(new Date());
-        sale.setTerminal(till);
+        sale.setTill(till);
         Runnable printRun = () -> {
             try {
                 ReceiptPrinter.print(dc, sale);
@@ -1973,7 +1958,6 @@ public class MainStage extends Stage implements GUIInterface {
         lastSale = sale.clone();
         sale.complete();
         sale.setStaff(staff);
-        sale.setStaffID(staff.getId());
         try {
             try {
                 Sale s = dc.addSale(sale);
@@ -1985,13 +1969,9 @@ public class MainStage extends Stage implements GUIInterface {
             }
             if (JavaFXJTill.settings.getProperty("ASK_EMAIL_RECEIPT").equals("TRUE")) {
                 if (YesNoDialog.showDialog(this, "Email Receipt", "Email Customer Receipt?") == YesNoDialog.YES) {
-                    if (sale.getCustomerID() != 0) {
-                        try {
-                            final Customer c = dc.getCustomer(sale.getCustomerID());
-                            dc.emailReceipt(c.getEmail(), sale);
-                        } catch (CustomerNotFoundException ex) {
-                            this.showMessage("Email", ex.getMessage());
-                        }
+                    if (sale.getCustomer() != null) {
+                        final Customer c = sale.getCustomer();
+                        dc.emailReceipt(c.getEmail(), sale);
                     } else {
                         String email = Keyboard.show(this, "Enter email");
                         dc.emailReceipt(email, sale);
@@ -2114,11 +2094,10 @@ public class MainStage extends Stage implements GUIInterface {
      */
     private void newSale() {
         if (staff == null) {
-            sale = new Sale(till.getId(), 0);
+            sale = new Sale(till, null);
         } else {
-            sale = new Sale(till.getId(), staff.getId());
+            sale = new Sale(till, staff);
         }
-        sale.setCustomerID(1);
         List<Discount> discounts = DiscountCache.getInstance().getAllDiscounts();
         //Create the discount checkers for the discounts.
         discounts.stream().map((d) -> new DiscountChecker(this, d)).forEachOrdered((checker) -> {
@@ -2215,7 +2194,7 @@ public class MainStage extends Stage implements GUIInterface {
                 if (p.getScale() == -1) {
                     double pr = (double) value / 100;
                     p.setPrice(new BigDecimal(pr).setScale(2, BigDecimal.ROUND_HALF_DOWN));
-                    
+
                 } else {
                     double pr = (double) value;
                     p.setPrice(new BigDecimal(p.priceFromScale(pr)).setScale(2, BigDecimal.ROUND_HALF_DOWN));

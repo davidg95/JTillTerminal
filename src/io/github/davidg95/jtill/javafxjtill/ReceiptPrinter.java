@@ -85,15 +85,15 @@ public class ReceiptPrinter implements Printable {
                 y += 30;
             }
             if (dc.getSetting("SHOW_RECEIPT_STAFF").equals("TRUE")) {
-                final Staff s = dc.getStaff(sale.getStaffID());
+                final Staff s = sale.getStaff();
                 g2.drawString("You were served by: " + s.getName(), x, y);
                 y += 30;
             }
             if (dc.getSetting("SHOW_RECEIPT_TERMINAL").equals("TRUE")) {
-                g2.drawString("Terminal " + sale.getTerminalID(), x, y);
+                g2.drawString("Terminal " + sale.getTill().getName(), x, y);
                 y += 30;
             }
-        } catch (IOException | StaffNotFoundException | SQLException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(ReceiptPrinter.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -102,7 +102,7 @@ public class ReceiptPrinter implements Printable {
         y += 20;
         g2.drawString("Time: " + sale.getDate(), x, y);
         y += 20;
-        g2.drawString("Served by " + sale.getStaffID(), x, y);
+        g2.drawString("Served by " + sale.getStaff().getName(), x, y);
 
         final int item = x + 30;
         final int quantity = x + 230;
