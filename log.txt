@@ -1,21 +1,46 @@
-JTill log Tue Oct 17 13:48:27 BST 2017
-[13:48:27] [INFO] Starting JTill Terminal
-[13:48:27] [INFO] Initalising
-[13:48:27] [INFO] Loading properties file
-[13:48:27] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[13:48:27] [INFO] Max sales set to {0}
-[13:48:27] [INFO] Downloading products list from server
-[13:48:27] [INFO] Downloaded 6 products from the server
-[13:48:27] [INFO] Downloading plu list from server
-[13:48:27] [INFO] Downloaded 6 plus from the server
-[13:48:27] [INFO] Set discounts in cache
-[13:48:27] [INFO] Loading screen and button configurations from the server
-[13:48:27] [INFO] Got {0} screens from the server
-[13:48:28] [INFO] Getting buttons for {0} screen
-[13:48:28] [INFO] Got {0} buttons for this screen
-[13:48:28] [INFO] Saving properties file
-[13:48:30] [INFO] Getting all discounts from cache
-[13:48:33] [INFO] Item has been added to a sale
-[13:48:36] [INFO] Item has been added to a sale
-[13:48:37] [INFO] Sale {0} sent to server
-[13:48:37] [INFO] Getting all discounts from cache
+JTill log Tue Oct 17 15:55:26 BST 2017
+[15:55:26] [INFO] Starting JTill Terminal
+[15:55:26] [INFO] Initalising
+[15:55:26] [INFO] Loading properties file
+[15:55:26] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[15:55:33] [INFO] Max sales set to {0}
+[15:55:33] [INFO] Set discounts in cache
+[15:55:33] [INFO] Loading screen and button configurations from the server
+[15:55:33] [INFO] Got {0} screens from the server
+[15:55:33] [INFO] Getting buttons for {0} screen
+[15:55:33] [INFO] Got {0} buttons for this screen
+[15:55:34] [INFO] Getting buttons for {0} screen
+[15:55:34] [INFO] Got {0} buttons for this screen
+[15:55:34] [INFO] Getting buttons for {0} screen
+[15:55:34] [INFO] Got {0} buttons for this screen
+[15:55:35] [INFO] Getting buttons for {0} screen
+[15:55:35] [INFO] Got {0} buttons for this screen
+[15:55:35] [INFO] Getting buttons for {0} screen
+[15:55:35] [INFO] Got {0} buttons for this screen
+[15:55:35] [INFO] Getting buttons for {0} screen
+[15:55:35] [INFO] Got {0} buttons for this screen
+[15:55:36] [INFO] Getting buttons for {0} screen
+[15:55:36] [INFO] Got {0} buttons for this screen
+[15:55:36] [INFO] Getting buttons for {0} screen
+[15:55:36] [INFO] Got {0} buttons for this screen
+[15:55:36] [INFO] Getting buttons for {0} screen
+[15:55:36] [INFO] Got {0} buttons for this screen
+[15:55:37] [INFO] Getting buttons for {0} screen
+[15:55:37] [INFO] Got {0} buttons for this screen
+[15:55:37] [INFO] Getting buttons for {0} screen
+[15:55:38] [INFO] Got {0} buttons for this screen
+[15:55:38] [INFO] Getting buttons for {0} screen
+[15:55:38] [INFO] Got {0} buttons for this screen
+[15:55:39] [INFO] Getting buttons for {0} screen
+[15:55:39] [INFO] Got {0} buttons for this screen
+[15:55:39] [INFO] Getting buttons for {0} screen
+[15:55:39] [INFO] Got {0} buttons for this screen
+[15:55:40] [INFO] Getting buttons for {0} screen
+[15:55:40] [INFO] Got {0} buttons for this screen
+[15:55:41] [INFO] Saving properties file
+[15:55:55] [INFO] Getting all discounts from cache
+[15:55:57] [INFO] Getting all discounts from cache
+[15:55:58] [INFO] Getting all discounts from cache
+[15:56:02] [INFO] Item has been added to a sale
+[15:56:03] [INFO] Sale {0} sent to server
+[15:56:03] [INFO] Getting all discounts from cache
