@@ -2204,6 +2204,9 @@ public class MainStage extends Stage implements GUIInterface {
             if (refundMode) {
                 itemQuantity = -itemQuantity; //If in refund mode, set the quantity to negative.
             }
+            if (p.getMaxCon() > 0) {
+                CondimentDialog.showDialog(this, p);
+            }
         } else { //If the item was a discount
             final Discount d = (Discount) i;
             //Check to see if it is a percentage discount for a price discount
