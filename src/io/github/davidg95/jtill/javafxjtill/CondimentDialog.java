@@ -68,11 +68,12 @@ public class CondimentDialog extends Stage {
         Button startAgain = new Button("Start Again");
         Button complete = new Button("Complete");
 
-        int pos = 1;
+        int row = 1;
+        int col = 1;
         for (Condiment c : product.getCondiments()) {
             Button b = new Button(c.getName());
             b.setMinSize(250, 150);
-            b.setFont(Font.font("Tahoma", FontWeight.NORMAL, 35));
+            b.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
             HBox hb = new HBox(0);
             hb.getChildren().add(b);
             b.setOnAction((ActionEvent e) -> {
@@ -84,9 +85,14 @@ public class CondimentDialog extends Stage {
                     hide();
                 }
             });
-            pane.add(hb, 1, pos, 3, 1);
-            pos++;
+            pane.add(hb, col, row);
+            col++;
+            if (col == 5) {
+                col = 1;
+                row++;
+            }
         }
+        row++;
         cancel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 35));
         HBox hCancel = new HBox(0);
         hCancel.getChildren().add(cancel);
@@ -122,11 +128,11 @@ public class CondimentDialog extends Stage {
             hide();
         });
 
-        pane.add(hCancel, 1, pos, 2, 1);
-        pane.add(hStart, 3, pos);
-        pane.add(hComplete, 4, pos);
+        pane.add(hCancel, 1, row, 2, 1);
+        pane.add(hStart, 3, row);
+        pane.add(hComplete, 4, row);
 
-        Scene scene = new Scene(pane, 800, 600);
+        Scene scene = new Scene(pane, 1000, 700);
 //        String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
 //        scene.getStylesheets().add(stylesheet);
         setScene(scene);

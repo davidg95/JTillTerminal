@@ -2208,12 +2208,9 @@ public class MainStage extends Stage implements GUIInterface {
                 try {
                     p.setCondiments(dc.getProductsCondiments(p.getId()));
                     List<Condiment> condiments = CondimentDialog.showDialog(this, p);
+                    p.setSaleCondiments(condiments);
                     if (condiments == null) {
                         return;
-                    }
-                    for (Condiment c : condiments) {
-                        p.setPrice(p.getPrice().add(c.getValue()));
-                        p.setName(p.getName() + "\n    - " + c.getName());
                     }
                 } catch (IOException | SQLException ex) {
                     Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
