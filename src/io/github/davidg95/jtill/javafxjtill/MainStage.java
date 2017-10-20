@@ -2205,15 +2205,10 @@ public class MainStage extends Stage implements GUIInterface {
                 itemQuantity = -itemQuantity; //If in refund mode, set the quantity to negative.
             }
             if (p.getMaxCon() > 0) {
-                try {
-                    p.setCondiments(dc.getProductsCondiments(p.getId()));
-                    List<Condiment> condiments = CondimentDialog.showDialog(this, p);
-                    p.setSaleCondiments(condiments);
-                    if (condiments == null) {
-                        return;
-                    }
-                } catch (IOException | SQLException ex) {
-                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                List<Condiment> condiments = CondimentDialog.showDialog(this, p);
+                p.setSaleCondiments(condiments);
+                if (condiments == null) {
+                    return;
                 }
             }
         } else { //If the item was a discount
