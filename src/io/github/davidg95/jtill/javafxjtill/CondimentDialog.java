@@ -5,7 +5,9 @@
  */
 package io.github.davidg95.jtill.javafxjtill;
 
-import io.github.davidg95.JTill.jtill.Product;
+import io.github.davidg95.JTill.jtill.*;
+import java.util.LinkedList;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -27,6 +29,7 @@ import javafx.stage.Window;
 public class CondimentDialog extends Stage {
 
     private static CondimentDialog dialog;
+    private static List<Condiment> condiments;
 
     private final Product product;
 
@@ -38,13 +41,14 @@ public class CondimentDialog extends Stage {
         initModality(Modality.APPLICATION_MODAL);
     }
 
-    public static void showDialog(Window parent, Product p) {
+    public static List<Condiment> showDialog(Window parent, Product p) {
         dialog = new CondimentDialog(parent, p);
+        condiments = new LinkedList<>();
         dialog.showAndWait();
+        return condiments;
     }
 
     private void init() {
-        final int WIDTH = 700;
         GridPane pane = new GridPane();
 
         String message;
@@ -58,20 +62,57 @@ public class CondimentDialog extends Stage {
         label.setMinHeight(100);
         label.setMaxHeight(100);
         label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
-        pane.add(label, 0, 0);
+        pane.add(label, 0, 0, 4, 1);
 
         Button cancel = new Button("Cancel");
+        Button startAgain = new Button("Start Again");
+        Button complete = new Button("Complete");
+
+        int pos = 1;
+        for (Condiment c : product.getCondiments()) {
+            Button b = new Button(c.getName());
+            b.setMinSize(250, 150);
+            b.setFont(Font.font("Tahoma", FontWeight.NORMAL, 35));
+            HBox hb = new HBox(0);
+            hb.getChildren().add(b);
+            b.setOnAction((ActionEvent e) -> {
+                condiments.add(c);
+                if (condiments.size() >= product.getMinCon()) {
+                    complete.setDisable(false);
+                }
+                if (condiments.size() == product.getMaxCon()) {
+                    hide();
+                }
+            });
+            pane.add(hb, 1, pos, 3, 1);
+            pos++;
+        }
+        cancel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 35));
         HBox hCancel = new HBox(0);
         hCancel.getChildren().add(cancel);
+        cancel.setOnAction((ActionEvent event) -> {
+            condiments = null;
+            hide();
+        });
 
-        Button startAgain = new Button("Start Again");
+        startAgain.setFont(Font.font("Tahoma", FontWeight.NORMAL, 35));
         HBox hStart = new HBox(0);
         hStart.getChildren().add(startAgain);
+        startAgain.setOnAction((ActionEvent e) -> {
+            condiments.clear();
+            if (product.getMinCon() == 0) {
+                complete.setDisable(false);
+            } else {
+                complete.setDisable(true);
+            }
+        });
 
-        Button complete = new Button("Complete");
-        complete.setMaxSize(WIDTH, 100);
-        complete.setMinSize(WIDTH, 100);
-        complete.setFont(Font.font("Tahoma", FontWeight.NORMAL, 40));
+        complete.setFont(Font.font("Tahoma", FontWeight.NORMAL, 35));
+        if (product.getMinCon() == 0) {
+            complete.setDisable(false);
+        } else {
+            complete.setDisable(true);
+        }
         HBox hComplete = new HBox(0);
         hComplete.getChildren().add(complete);
         complete.setOnAction((ActionEvent event) -> {
@@ -81,13 +122,13 @@ public class CondimentDialog extends Stage {
             hide();
         });
 
-        pane.add(hCancel, 4, 2);
-        pane.add(hStart, 4, 3);
-        pane.add(hComplete, 4, 4);
+        pane.add(hCancel, 1, pos, 2, 1);
+        pane.add(hStart, 3, pos);
+        pane.add(hComplete, 4, pos);
 
-        Scene scene = new Scene(pane, WIDTH, 200);
-        String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
-        scene.getStylesheets().add(stylesheet);
+        Scene scene = new Scene(pane, 800, 600);
+//        String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
+//        scene.getStylesheets().add(stylesheet);
         setScene(scene);
     }
 
