@@ -8,11 +8,14 @@ package io.github.davidg95.jtill.javafxjtill;
 import io.github.davidg95.JTill.jtill.*;
 import java.util.LinkedList;
 import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -51,11 +54,20 @@ public class CondimentDialog extends Stage {
     private void init() {
         GridPane pane = new GridPane();
 
+        ListView<Condiment> items = new ListView();
+        items.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        ObservableList<Condiment> obItems = FXCollections.observableArrayList();
+        items.setItems(obItems);
+
+        items.setStyle("-fx-text-fill: white;\n"
+                + "    -fx-font-family: \"Tahoma\";\n"
+                + "    -fx-font-size: 28;");
+
         String message;
         if (product.getMaxCon() == product.getMinCon()) {
-            message = "Select " + product.getMaxCon();
+            message = "Select " + product.getMaxCon() + (product.getMaxCon() == 1 ? " item" : " items");
         } else {
-            message = "Select between " + product.getMinCon() + " and " + product.getMaxCon();
+            message = "Select between " + product.getMinCon() + " and " + product.getMaxCon() + " items";
         }
         Label label = new Label(message);
         label.setAlignment(Pos.CENTER);
@@ -78,6 +90,8 @@ public class CondimentDialog extends Stage {
             hb.getChildren().add(b);
             b.setOnAction((ActionEvent e) -> {
                 condiments.add(c);
+                obItems.add(c);
+                items.refresh();
                 if (condiments.size() >= product.getMinCon()) {
                     complete.setDisable(false);
                 }
@@ -106,6 +120,8 @@ public class CondimentDialog extends Stage {
         hStart.getChildren().add(startAgain);
         startAgain.setOnAction((ActionEvent e) -> {
             condiments.clear();
+            obItems.clear();
+            items.refresh();
             if (product.getMinCon() == 0) {
                 complete.setDisable(false);
             } else {
@@ -131,11 +147,16 @@ public class CondimentDialog extends Stage {
         pane.add(hCancel, 1, row, 2, 1);
         pane.add(hStart, 3, row);
         pane.add(hComplete, 4, row);
+        pane.add(items, 1, row + 1, 2, 2);
 
         Scene scene = new Scene(pane, 1000, 700);
 //        String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
 //        scene.getStylesheets().add(stylesheet);
         setScene(scene);
+        
+        this.setOnCloseRequest(event ->{
+            condiments.clear();
+        });
     }
 
 }
