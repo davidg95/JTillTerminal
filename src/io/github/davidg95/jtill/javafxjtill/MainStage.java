@@ -55,6 +55,7 @@ import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.scene.control.TableRow;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -220,6 +221,40 @@ public class MainStage extends Stage implements GUIInterface {
         saleCache = new LinkedList<>();
     }
 
+    private void keyListeners() {
+        mainScene.setOnKeyReleased(event -> {
+            if (event.isControlDown()) {
+                if (null != event.getCode()) {
+                    switch (event.getCode()) {
+                        case BACK_SPACE:
+                            voidSelected();
+                            break;
+                        case P:
+                            setPanel(paymentPane);
+                            screenLabel.setText("Payment");
+                            break;
+                        case M:
+                            setPanel(mainPane);
+                            screenLabel.setText(lastScreen);
+                            barcode.requestFocus();
+                        default:
+                            break;
+                    }
+                }
+            } else {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    try {
+                        logoff();
+                    } finally {
+                        Platform.runLater(() -> {
+                            MessageScreen.hideWindow();
+                        });
+                    }
+                }
+            }
+        });
+    }
+
     private void setPanel(Pane panel) {
         parentPane.setCenter(panel);
         panel.requestLayout();
@@ -317,6 +352,7 @@ public class MainStage extends Stage implements GUIInterface {
                 }
             }
         });
+        keyListeners();
     }
 
     @Override
