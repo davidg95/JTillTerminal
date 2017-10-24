@@ -64,7 +64,9 @@ public class CondimentDialog extends Stage {
                 + "    -fx-font-size: 28;");
 
         String message;
-        if (product.getMaxCon() == product.getMinCon()) {
+        if (product.getMaxCon() == -2) {
+            message = "Select a minimum of " + product.getMinCon() + " items";
+        } else if (product.getMaxCon() == product.getMinCon()) {
             message = "Select " + product.getMaxCon() + (product.getMaxCon() == 1 ? " item" : " items");
         } else {
             message = "Select between " + product.getMinCon() + " and " + product.getMaxCon() + " items";
@@ -153,8 +155,8 @@ public class CondimentDialog extends Stage {
 //        String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
 //        scene.getStylesheets().add(stylesheet);
         setScene(scene);
-        
-        this.setOnCloseRequest(event ->{
+
+        this.setOnCloseRequest(event -> {
             condiments.clear();
         });
     }

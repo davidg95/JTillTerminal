@@ -1,18 +1,35 @@
-JTill log Mon Oct 23 17:01:12 BST 2017
-[17:01:13] [INFO] Starting JTill Terminal
-[17:01:13] [INFO] Initalising
-[17:01:13] [INFO] Loading properties file
-[17:01:13] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[17:01:13] [INFO] Max sales set to {0}
-[17:01:13] [INFO] Set discounts in cache
-[17:01:13] [INFO] Loading screen and button configurations from the server
-[17:01:13] [INFO] Got {0} screens from the server
-[17:01:13] [INFO] Getting buttons for {0} screen
-[17:01:13] [INFO] Got {0} buttons for this screen
-[17:01:13] [INFO] Getting buttons for {0} screen
-[17:01:13] [INFO] Got {0} buttons for this screen
-[17:01:14] [INFO] Saving properties file
-[17:01:16] [INFO] Getting all discounts from cache
-[17:01:19] [INFO] Item has been added to a sale
-[17:01:20] [INFO] Getting all discounts from cache
-[17:01:25] [INFO] Getting all discounts from cache
+JTill log Tue Oct 24 11:53:39 BST 2017
+[11:53:39] [INFO] Starting JTill Terminal
+[11:53:39] [INFO] Initalising
+[11:53:40] [INFO] Loading properties file
+[11:53:40] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[11:53:40] [INFO] Max sales set to {0}
+[11:53:40] [INFO] Set discounts in cache
+[11:53:40] [INFO] Loading screen and button configurations from the server
+[11:53:40] [INFO] Got {0} screens from the server
+[11:53:40] [INFO] Getting buttons for {0} screen
+[11:53:40] [INFO] Got {0} buttons for this screen
+[11:53:40] [INFO] Getting buttons for {0} screen
+[11:53:40] [INFO] Got {0} buttons for this screen
+[11:53:41] [INFO] Saving properties file
+[11:53:49] [INFO] Max sales set to {0}
+[11:53:49] [INFO] Set discounts in cache
+[11:53:49] [INFO] Loading screen and button configurations from the server
+[11:53:49] [INFO] Got {0} screens from the server
+[11:53:49] [INFO] Getting buttons for {0} screen
+[11:53:49] [INFO] Got {0} buttons for this screen
+[11:53:49] [INFO] Getting buttons for {0} screen
+[11:53:49] [INFO] Got {0} buttons for this screen
+[11:53:51] [INFO] Getting all discounts from cache
+[11:53:58] [INFO] Item has been added to a sale
+[11:54:11] [INFO] Getting all discounts from cache
+[11:54:11] [INFO] Max sales set to {0}
+[11:54:11] [INFO] Set discounts in cache
+[11:54:11] [INFO] Loading screen and button configurations from the server
+[11:54:11] [INFO] Got {0} screens from the server
+[11:54:11] [INFO] Getting buttons for {0} screen
+[11:54:11] [INFO] Got {0} buttons for this screen
+[11:54:11] [INFO] Getting buttons for {0} screen
+[11:54:11] [INFO] Got {0} buttons for this screen
+[11:54:13] [INFO] Getting all discounts from cache
+[11:54:15] [INFO] Item has been added to a sale
