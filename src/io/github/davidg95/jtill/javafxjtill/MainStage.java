@@ -2240,7 +2240,7 @@ public class MainStage extends Stage implements GUIInterface {
             if (refundMode) {
                 itemQuantity = -itemQuantity; //If in refund mode, set the quantity to negative.
             }
-            if (p.getMaxCon() > 0) {
+            if (p.getMaxCon() != 0) {
                 List<Condiment> condiments = CondimentDialog.showDialog(this, p);
                 p.setSaleCondiments(condiments);
                 if (condiments == null) {
