@@ -1,6 +1,16 @@
-JTill log Wed Oct 25 16:03:38 BST 2017
-[16:03:38] [INFO] Starting JTill Terminal
-[16:03:38] [INFO] Initalising
-[16:03:39] [INFO] Loading properties file
-[16:03:39] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[16:03:40] [WARNING] Error connecting to the server
+JTill log Thu Oct 26 16:08:08 BST 2017
+[16:08:08] [INFO] Starting JTill Terminal
+[16:08:08] [INFO] Initalising
+[16:08:09] [INFO] Loading properties file
+[16:08:09] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[16:08:09] [INFO] Max sales set to {0}
+[16:08:09] [INFO] Set discounts in cache
+[16:08:09] [INFO] Loading screen and button configurations from the server
+[16:08:09] [INFO] Got {0} screens from the server
+[16:08:09] [INFO] Getting buttons for {0} screen
+[16:08:09] [INFO] Got {0} buttons for this screen
+[16:08:09] [INFO] Getting buttons for {0} screen
+[16:08:09] [INFO] Got {0} buttons for this screen
+[16:08:10] [INFO] Saving properties file
+[16:08:11] [INFO] Getting all discounts from cache
+[16:08:16] [INFO] Getting all discounts from cache
