@@ -67,9 +67,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Box;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Window;
 import javax.swing.Timer;
@@ -450,7 +448,7 @@ public class MainStage extends Stage implements GUIInterface {
             if (!JavaFXJTill.settings.getProperty("UNLOCK_CODE", "OFF").equals("OFF")) {
                 Platform.runLater(() -> {
                     loginPane.getChildren().remove(lock);
-                    loginPane.add(lock, 1, 14, 1, 2);
+                    loginPane.add(lock, 2, 14, 1, 2);
                 });
             } else {
                 Platform.runLater(() -> {
@@ -1433,7 +1431,9 @@ public class MainStage extends Stage implements GUIInterface {
                         setCustomer(c);
                     });
                 } else {
-                    newSale();
+                    Platform.runLater(() -> {
+                        newSale();
+                    });
                 }
                 Platform.runLater(() -> {
                     staffLabel.setText(staff.getName());
@@ -1496,7 +1496,6 @@ public class MainStage extends Stage implements GUIInterface {
 
 //        loginPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
         exit = new Button("Exit JTill");
-        exit.setId("blue");
         exit.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         HBox hExit = new HBox(0);
         hExit.getChildren().add(exit);
@@ -1514,7 +1513,6 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         lock = new Button("Lock");
-        lock.setId("blue");
         lock.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         lock.setOnAction((ActionEvent event) -> {
             Platform.runLater(() -> {
@@ -1523,7 +1521,6 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         login = new Button("Login");
-        login.setId("blue");
         login.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         HBox hLogin = new HBox(0);
         hLogin.getChildren().add(login);
@@ -1559,7 +1556,6 @@ public class MainStage extends Stage implements GUIInterface {
         });
 
         print = new Button("Print Last");
-        print.setId("blue");
         print.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         print.setOnAction((ActionEvent event) -> {
             if (lastSale == null) {
@@ -1582,7 +1578,7 @@ public class MainStage extends Stage implements GUIInterface {
         loginArea = new GridPane();
 
         loginPane.add(exit, 0, 14, 1, 2);
-        loginPane.add(print, 2, 14, 1, 2);
+        loginPane.add(print, 1, 14, 1, 2);
         loginPane.add(loginMessage, 4, 14, 3, 2);
         loginPane.add(loginArea, 1, 0, 8, 12);
     }
@@ -2358,6 +2354,7 @@ public class MainStage extends Stage implements GUIInterface {
                             }
                         });
                     }
+                    button.setId("PRODUCT_BUTTON");
                     button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                     GridPane.setFillHeight(button, true);
                     GridPane.setFillWidth(button, true);
@@ -2468,6 +2465,7 @@ public class MainStage extends Stage implements GUIInterface {
                                 }
                             });
                         }
+                        button.setId("PRODUCT_BUTTON");
                         button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                         GridPane.setFillHeight(button, true);
                         GridPane.setFillWidth(button, true);
@@ -2480,6 +2478,8 @@ public class MainStage extends Stage implements GUIInterface {
         } catch (IOException | SQLException | ScreenNotFoundException ex) {
             showErrorAlert(ex);
         }
+        grid.setVgap(s.getvGap());
+        grid.setHgap(s.gethGap());
         return grid;
     }
 
