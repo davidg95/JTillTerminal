@@ -2177,6 +2177,12 @@ public class MainStage extends Stage implements GUIInterface {
                     double pr = (double) value;
                     p.setPrice(new BigDecimal(p.priceFromScale(pr)).setScale(2, BigDecimal.ROUND_HALF_DOWN));
                 }
+                if (p.getPriceLimit().compareTo(BigDecimal.ZERO) != 0) {
+                    if (p.getPrice().compareTo(p.getPriceLimit()) == 1) {
+                        MessageDialog.showMessage(this, "Add Product", "Price limit exceeded, max £" + p.getPriceLimit().setScale(2, 6));
+                        return;
+                    }
+                }
             }
 
             if (refundMode) {

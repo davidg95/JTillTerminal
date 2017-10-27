@@ -1,23 +1,19 @@
-JTill log Fri Oct 27 16:52:03 BST 2017
-[16:52:03] [INFO] Starting JTill Terminal
-[16:52:03] [INFO] Initalising
-[16:52:03] [INFO] Loading properties file
-[16:52:03] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[16:52:03] [INFO] Max sales set to {0}
-[16:52:04] [INFO] Set discounts in cache
-[16:52:04] [INFO] Loading screen and button configurations from the server
-[16:52:04] [INFO] Got {0} screens from the server
-[16:52:04] [INFO] Getting buttons for {0} screen
-[16:52:04] [INFO] Got {0} buttons for this screen
-[16:52:04] [INFO] Getting buttons for {0} screen
-[16:52:04] [INFO] Got {0} buttons for this screen
-[16:52:04] [INFO] Getting buttons for {0} screen
-[16:52:04] [INFO] Got {0} buttons for this screen
-[16:52:04] [INFO] Saving properties file
-[16:52:07] [INFO] Getting all discounts from cache
-[16:52:23] [INFO] Getting all discounts from cache
-[16:52:26] [INFO] Getting all discounts from cache
-[16:54:18] [INFO] Getting all discounts from cache
-[16:54:20] [INFO] Getting all discounts from cache
-[16:54:53] [INFO] Item has been added to a sale
-[16:54:55] [INFO] Getting all discounts from cache
+JTill log Fri Oct 27 17:16:20 BST 2017
+[17:16:20] [INFO] Starting JTill Terminal
+[17:16:20] [INFO] Initalising
+[17:16:20] [INFO] Loading properties file
+[17:16:20] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[17:16:20] [INFO] Max sales set to {0}
+[17:16:20] [INFO] Set discounts in cache
+[17:16:20] [INFO] Loading screen and button configurations from the server
+[17:16:20] [INFO] Got {0} screens from the server
+[17:16:20] [INFO] Getting buttons for {0} screen
+[17:16:20] [INFO] Got {0} buttons for this screen
+[17:16:20] [INFO] Getting buttons for {0} screen
+[17:16:20] [INFO] Got {0} buttons for this screen
+[17:16:21] [INFO] Getting buttons for {0} screen
+[17:16:21] [INFO] Got {0} buttons for this screen
+[17:16:21] [INFO] Saving properties file
+[17:16:22] [INFO] Getting all discounts from cache
+[17:16:26] [INFO] Item has been added to a sale
+[17:16:30] [INFO] Getting all discounts from cache
