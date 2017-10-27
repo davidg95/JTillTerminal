@@ -87,7 +87,7 @@ public class CondimentDialog extends Stage {
         int col = 0;
         for (Condiment c : product.getCondiments()) {
             Button b = new Button(c.getProduct_con().getName());
-            b.setMinSize(240, 140);
+            b.setMinSize(200, 140);
             b.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
             HBox hb = new HBox(0);
             hb.getChildren().add(b);
