@@ -778,17 +778,9 @@ public class MainStage extends Stage implements GUIInterface {
             row.setVgrow(Priority.ALWAYS);
             pane.getRowConstraints().add(row);
         }
-
-//        mainPane.add(staffLabel, 2, 0, 2, 1);
-//        mainPane.add(mainVersion, 4, 0, 3, 1);
-//        mainPane.add(time, 9, 0, 1, 1);
         mainPane.add(buttonPane, 0, 0, 7, 14);
         mainPane.add(itemsTable, 7, 0, 3, 5);
         mainPane.add(pane, 7, 5, 3, 2);
-//        mainPane.add(total, 7, 6, 2, 1);
-//        mainPane.add(totalItems, 9, 6);
-//        mainPane.add(quantity, 7, 7, 2, 1);
-//        mainPane.add(voidSelected, 9, 7);
         mainPane.add(barcode, 7, 7, 3, 1);
         mainPane.add(numbers, 7, 8, 3, 6);
         mainPane.add(payment, 7, 14, 3, 2);
@@ -797,8 +789,6 @@ public class MainStage extends Stage implements GUIInterface {
         mainPane.add(lookup, 1, 14, 1, 2);
         mainPane.add(assisstance, 3, 14, 1, 2);
         mainPane.add(alertMessage, 4, 14, 3, 2);
-//        mainPane.add(mainRefund, 7, 0);
-//        mainPane.add(screenLabel, 0, 0, 2, 1);
 
         for (int i = 1; i <= 10; i++) {
             ColumnConstraints col = new ColumnConstraints();
@@ -815,9 +805,6 @@ public class MainStage extends Stage implements GUIInterface {
             row.setVgrow(Priority.ALWAYS);
             mainPane.getRowConstraints().add(row);
         }
-
-//        mainPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
-//        mainPane.getColumnConstraints().get(0).setPrefWidth(SCREEN_WIDTH / 8);
     }
 
     private GridPane createNumbersPane() {
@@ -1125,7 +1112,6 @@ public class MainStage extends Stage implements GUIInterface {
                     if (sale.getCustomer() != null) {
                         setCustomer(null);
                         chargeAccount.setDisable(true);
-//                        loyaltyButton.setDisable(true);
                         addCustomer.setText("Add Customer");
                         return;
                     }
@@ -1133,7 +1119,6 @@ public class MainStage extends Stage implements GUIInterface {
                     if (c != null) {
                         setCustomer(c);
                         chargeAccount.setDisable(false);
-//                        loyaltyButton.setDisable(false);
                         addCustomer.setText("Remove Customer");
                     }
                 });
@@ -1327,34 +1312,6 @@ public class MainStage extends Stage implements GUIInterface {
         refundButton.setOnAction((ActionEvent event) -> {
             setRefund(!refundMode);
         });
-
-//        loyaltyButton = new Button("Spend Points");
-//        loyaltyButton.setId("paymentMethods");
-//        loyaltyButton.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-//        loyaltyButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-//        loyaltyButton.setDisable(true);
-//        loyaltyButton.setOnAction((ActionEvent event) -> {
-//            try {
-//                final Customer c = dc.getCustomer(sale.getCustomerID());
-//                int maxSpend = sale.getTotal().divide(new BigDecimal(JavaFXJTill.settings.getProperty("TOTAL_SPEND_VALE"))).intValue();
-//                if (c.getLoyaltyPoints() < maxSpend) {
-//                    maxSpend = c.getLoyaltyPoints();
-//                }
-//                final int toSpend = NumberEntry.showNumberEntryDialog(this, "Points remaining: " + c.getLoyaltyPoints() + ". Max for sale: " + maxSpend + ".", maxSpend);
-//                final int res = c.removeLoyaltyPoints(toSpend);
-//                if (res == -1) {
-//                    MessageDialog.showMessage(this, "Error", "Not Enough Points");
-//                    return;
-//                }
-//                double value = Double.parseDouble(JavaFXJTill.settings.getProperty("LOYALTY_VALUE"));
-//                BigDecimal roRemove = new BigDecimal(Double.toString(toSpend * value));
-//                sale.setTotal(sale.getTotal().subtract(roRemove));
-//                setTotalLabel();
-//                dc.updateCustomer(c);
-//            } catch (IOException | CustomerNotFoundException | SQLException ex) {
-//                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        });
         GridPane pane = new GridPane();
 
         for (int i = 1; i <= 4; i++) {
@@ -1372,21 +1329,6 @@ public class MainStage extends Stage implements GUIInterface {
             row.setVgrow(Priority.ALWAYS);
             pane.getRowConstraints().add(row);
         }
-
-//        coupon = new Button("Coupon");
-//        coupon.setId("paymentMethods");
-//        coupon.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-//        coupon.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-//        coupon.setOnAction((ActionEvent) -> {
-//
-//        });
-//        saveTransaction = new Button("Save Transaction");
-//        saveTransaction.setId("paymentMethods");
-//        saveTransaction.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-//        saveTransaction.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-//        saveTransaction.setOnAction((ActionEvent) -> {
-//
-//        });
         pane.add(fivePounds, 0, 0);
         pane.add(tenPounds, 1, 0);
         pane.add(twentyPounds, 2, 0);
@@ -1395,15 +1337,12 @@ public class MainStage extends Stage implements GUIInterface {
         pane.add(customValue, 1, 1);
         pane.add(card, 2, 1);
         pane.add(cheque, 3, 1);
-//        pane.add(coupon, 3, 1);
         pane.add(addCustomer, 0, 2);
         pane.add(chargeAccount, 1, 2);
         pane.add(zReport, 3, 2);
-//        pane.add(loyaltyButton, 2, 2);
         pane.add(refundButton, 0, 3);
         pane.add(voidSale, 2, 3);
         pane.add(voidItem, 3, 3);
-//        pane.add(saveTransaction, 3, 3);
 
         paymentPane.add(saleCustomer, 8, 6, 2, 1);
         paymentPane.add(pane, 0, 0, 7, 10);
@@ -1468,18 +1407,6 @@ public class MainStage extends Stage implements GUIInterface {
             if (staff == null) {
                 throw new StaffNotFoundException(id + " not found");
             }
-            Platform.runLater(() -> {
-                staffLabel.setText(staff.getName());
-                if (!buttonPanes.isEmpty()) {
-                    buttonPane.getChildren().clear();
-                    buttonPane.getChildren().add(def_screen.getPane());
-                    screenLabel.setText(def_screen.getName());
-                }
-            });
-            Platform.runLater(() -> {
-                setPanel(mainPane);
-                barcode.requestFocus();
-            });
             try {
                 Sale rs = null;
                 for (Sale s : saleCache) {
@@ -1506,11 +1433,21 @@ public class MainStage extends Stage implements GUIInterface {
                         setCustomer(c);
                     });
                 } else {
-                    Platform.runLater(() -> {
-                        newSale();
-                        MessageScreen.hideWindow();
-                    });
+                    newSale();
                 }
+                Platform.runLater(() -> {
+                    staffLabel.setText(staff.getName());
+                    if (!buttonPanes.isEmpty()) {
+                        buttonPane.getChildren().clear();
+                        buttonPane.getChildren().add(def_screen.getPane());
+                        screenLabel.setText(def_screen.getName());
+                    }
+                    setPanel(mainPane);
+                    barcode.requestFocus();
+                });
+                Platform.runLater(() -> {
+                    MessageScreen.hideWindow();
+                });
                 if (logoutTimeout > 0) {
                     if (timer != null) {
                         timer.stop();
@@ -1732,16 +1669,20 @@ public class MainStage extends Stage implements GUIInterface {
             loginNumber.setMaxWidth(400);
             loginNumber.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
             loginNumber.setOnAction((ActionEvent event) -> {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        if (!"".equals(loginNumber.getText())) {
-                            int id = Integer.parseInt(loginNumber.getText());
-                            login(id);
-                            loginNumber.setText("");
-                        }
+                if (!"".equals(loginNumber.getText())) {
+                    if (!Utilities.isNumber(loginNumber.getText())) {
+                        MessageDialog.showMessage(MainStage.this, "Invalid Input", "Invalid input");
+                        return;
                     }
-                }.start();
+                    int id = Integer.parseInt(loginNumber.getText());
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            login(id);
+                        }
+                    }.start();
+                    loginNumber.setText("");
+                }
             });
             nums.add(loginNumber, 1, 2, 4, 1);
 
@@ -1907,16 +1848,20 @@ public class MainStage extends Stage implements GUIInterface {
             nums.add(hEnter, 4, 5, 1, 2);
 
             enter.setOnAction((ActionEvent event) -> {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        if (!"".equals(loginNumber.getText())) {
-                            int id = Integer.parseInt(loginNumber.getText());
-                            login(id);
-                            loginNumber.setText("");
-                        }
+                if (!"".equals(loginNumber.getText())) {
+                    if (!Utilities.isNumber(loginNumber.getText())) {
+                        MessageDialog.showMessage(MainStage.this, "Invalid Input", "Invalid input");
+                        return;
                     }
-                }.start();
+                    int id = Integer.parseInt(loginNumber.getText());
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            login(id);
+                        }
+                    }.start();
+                    loginNumber.setText("");
+                }
             });
 
             staffLayout.add(nums, 1, 1, 3, 3);
@@ -2535,8 +2480,6 @@ public class MainStage extends Stage implements GUIInterface {
         } catch (IOException | SQLException | ScreenNotFoundException ex) {
             showErrorAlert(ex);
         }
-        grid.setHgap(1);
-        grid.setVgap(1);
         return grid;
     }
 
