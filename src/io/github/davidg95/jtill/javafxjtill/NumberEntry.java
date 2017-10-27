@@ -390,6 +390,8 @@ public class NumberEntry extends Stage {
                 } catch (NumberFormatException ex) {
 
                 }
+            } else{
+                MessageDialog.showMessage(this, "Invalid Input", "Invalid input");
             }
         }
     }
