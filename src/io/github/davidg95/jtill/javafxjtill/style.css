@@ -17,49 +17,16 @@ and open the template in the editor.
     -fx-font-family: "Tahoma";
     -fx-font-size: 20px;
     -fx-background-color: linear-gradient(#999, #999);
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+/*    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );*/
 }
 
 .button:pressed{
     -fx-background-color: linear-gradient(#777, #777);
 }
 
-.togglebutton{
-    -fx-text-fill: black;
-    -fx-font-family: "Tahoma";
-    -fx-font-size: 20px;
-    -fx-background-color: linear-gradient(#999, #999);
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
-}
-
-#screenButton{
-    -fx-text-fill: black;
-    -fx-font-family: "Tahoma";
-    -fx-font-size: 20px;
-    -fx-background-color: linear-gradient(#e2e2e2, #bcbcbc);
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
-}
-
-#screenButton:selected{
-    -fx-background-color: linear-gradient(#bcbcbc, #e2e2e2);
-}
-
-.togglebutton:hover{
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
-}
-
 #productButton{
     -fx-background-color: #2a5be7;
     -fx-text-fill: white;
-}
-
-#cBlue{
-    -fx-background-color: #2a5be7;
-    -fx-text-fill: white;
-}
-
-#cBlue:hover{
-    -fx-background-color: #0735b9;
 }
 
 #cRed{
@@ -69,56 +36,6 @@ and open the template in the editor.
 
 #cRed:hover{
     -fx-background-color: #c11e1e;
-}
-
-#cGreen{
-    -fx-background-color: #33ff33;
-    -fx-text-fill: black;
-}
-
-#cGreen:hover{
-    -fx-background-color: #17b017;
-}
-
-#cYellow{
-    -fx-background-color: #ffff33;
-    -fx-text-fill: black;
-}
-
-#cYellow:hover{
-    -fx-background-color: #bcbc20;
-}
-
-#cOrange{
-    -fx-background-color: orange;
-    -fx-text-fill: black;
-}
-
-#cOrange:hover{
-    -fx-background-color: #bc8e20
-}
-
-#cPurple{
-    -fx-background-color: purple;
-    -fx-text-fill: white;
-}
-
-#cPurple:hover{
-    -fx-background-color: #6d16b0;
-}
-
-#cWhite{
-    -fx-background-color: white;
-    -fx-text-fill: black;
-}
-
-#cWhite:hover{
-    -fx-background-color: grey;
-}
-
-#cBlack{
-    -fx-background-color: black;
-    -fx-text-fill: white;
 }
 
 #productsgrid{

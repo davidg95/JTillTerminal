@@ -67,7 +67,9 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Box;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Window;
 import javax.swing.Timer;
@@ -320,7 +322,6 @@ public class MainStage extends Stage implements GUIInterface {
         if (!this.isShowing()) {
             initStyle(StageStyle.UNDECORATED);
         }
-//        setFullScreen(true);
         setResizable(false);
         setMaximized(true);
         show();
@@ -2534,6 +2535,8 @@ public class MainStage extends Stage implements GUIInterface {
         } catch (IOException | SQLException | ScreenNotFoundException ex) {
             showErrorAlert(ex);
         }
+        grid.setHgap(1);
+        grid.setVgap(1);
         return grid;
     }
 
