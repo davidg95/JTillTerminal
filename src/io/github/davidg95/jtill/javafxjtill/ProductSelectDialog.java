@@ -28,8 +28,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import io.github.davidg95.JTill.jtill.DataConnect;
-import io.github.davidg95.JTill.jtill.ServerConnection;
 import io.github.davidg95.JTill.jtill.Utilities;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 
 /**
  *
@@ -65,26 +67,25 @@ public class ProductSelectDialog extends Stage {
         Button searchBarcode = new Button("Barcode");
         Button searchTerms = new Button("Search Terms");
         Button close = new Button("Close");
-        
+
         obProducts = FXCollections.observableArrayList();
 
         productTable = new TableView();
         productTable.setEditable(false);
         productTable.setItems(obProducts);
-        productTable.setMinSize(300, 300);
-        productTable.setMaxSize(300, 300);
+//        productTable.setMinSize(1200, 650);
+//        productTable.setMinSize(300, 300);
+//        productTable.setMaxSize(300, 300);
         TableColumn colID = new TableColumn("ID");
         TableColumn colName = new TableColumn("Name");
         TableColumn colPrice = new TableColumn("Price");
         colID.setCellValueFactory(new PropertyValueFactory<>("id"));
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
-        colID.setMinWidth(30);
-        colID.setMaxWidth(30);
-        colName.setMinWidth(200);
-        colName.setMaxWidth(200);
-        colPrice.setMinWidth(70);
-        colPrice.setMaxWidth(70);
+//        colID.setMinWidth(30);
+//        colID.setMaxWidth(30);
+//        colPrice.setMinWidth(70);
+//        colPrice.setMaxWidth(70);
         productTable.getColumns().addAll(colID, colName, colPrice);
         productTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
             @Override
@@ -104,23 +105,20 @@ public class ProductSelectDialog extends Stage {
             return row;
         });
 
-        pane.add(productTable, 0, 0, 3, 3);
-        
-        searchBarcode.setMinSize(100, 100);
-        searchBarcode.setMaxSize(100, 100);
-        searchBarcode.setId("blue");
-        HBox hSearchBarcode = new HBox(0);
-        hSearchBarcode.getChildren().add(searchBarcode);
+        pane.add(productTable, 0, 0, 8, 3);
+
+        searchBarcode.setMinSize(150, 150);
+        searchBarcode.setMaxSize(150, 150);
         searchBarcode.setOnAction((ActionEvent event) -> {
             String barcode = EntryDialog.show(this, "Product Lookup", "Enter or scan barcode");
-            if(barcode == null){
+            if (barcode == null) {
                 return;
             }
-            if(barcode.length() == 0){
-                MessageDialog.showMessage(this,  "Product Lookup", "A barcode must be entered");
+            if (barcode.length() == 0) {
+                MessageDialog.showMessage(this, "Product Lookup", "A barcode must be entered");
                 return;
             }
-            if(!Utilities.isNumber(barcode)){
+            if (!Utilities.isNumber(barcode)) {
                 MessageDialog.showMessage(this, "Product Lookup", "Only numbers must be entered");
                 return;
             }
@@ -133,13 +131,10 @@ public class ProductSelectDialog extends Stage {
                 MessageDialog.showMessage(this, "Product Search", ex.getMessage());
             }
         });
-        pane.add(hSearchBarcode, 0, 3);
-        
-        searchTerms.setMinSize(100, 100);
-        searchTerms.setMaxSize(100, 100);
-        searchTerms.setId("blue");
-        HBox hSearchTerms = new HBox(0);
-        hSearchTerms.getChildren().add(searchTerms);
+        pane.add(searchBarcode, 0, 3);
+
+        searchTerms.setMinSize(150, 150);
+        searchTerms.setMaxSize(150, 150);
         searchTerms.setOnAction((ActionEvent event) -> {
             String terms = EntryDialog.show(this, "Product Search", "Enter search terms");
             try {
@@ -149,19 +144,33 @@ public class ProductSelectDialog extends Stage {
                 MessageDialog.showMessage(this, "Error", ex.getMessage());
             }
         });
-        pane.add(hSearchTerms, 1, 3);
-        
-        close.setMinSize(100, 100);
-        close.setMaxSize(100, 100);
-        close.setId("blue");
-        HBox hClose = new HBox(0);
-        hClose.getChildren().add(close);
+        pane.add(searchTerms, 1, 3);
+
+        close.setMinSize(150, 150);
+        close.setMaxSize(150, 150);
         close.setOnAction((ActionEvent event) -> {
             hide();
         });
-        pane.add(hClose, 2, 3);
+        pane.add(close, 7, 3);
 
-        Scene scene = new Scene(pane, 300, 400);
+//        for (int i = 1; i <= 8; i++) {
+//            ColumnConstraints col = new ColumnConstraints();
+//            col.setPercentWidth(12.5);
+//            col.setFillWidth(true);
+//            col.setHgrow(Priority.ALWAYS);
+//            pane.getColumnConstraints().add(col);
+//        }
+
+//        for (int i = 1; i <= 4; i++) {
+//            RowConstraints row = new RowConstraints();
+//            row.setPercentHeight(25);
+//            row.setFillHeight(true);
+//            row.setVgrow(Priority.ALWAYS);
+//            pane.getRowConstraints().add(row);
+//        }
+
+        Scene scene = new Scene(pane, 1200, 800);
+
         String stylesheet = MainStage.class.getResource("style.css").toExternalForm();
         scene.getStylesheets().add(stylesheet);
         setScene(scene);

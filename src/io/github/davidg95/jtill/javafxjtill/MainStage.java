@@ -803,6 +803,9 @@ public class MainStage extends Stage implements GUIInterface {
             row.setVgrow(Priority.ALWAYS);
             mainPane.getRowConstraints().add(row);
         }
+        
+        mainPane.setVgap(3);
+        mainPane.setHgap(3);
     }
 
     private GridPane createNumbersPane() {
@@ -1341,6 +1344,9 @@ public class MainStage extends Stage implements GUIInterface {
         pane.add(refundButton, 0, 3);
         pane.add(voidSale, 2, 3);
         pane.add(voidItem, 3, 3);
+        
+        pane.setVgap(3);
+        pane.setHgap(3);
 
         paymentPane.add(saleCustomer, 8, 6, 2, 1);
         paymentPane.add(pane, 0, 0, 7, 10);
@@ -1367,6 +1373,9 @@ public class MainStage extends Stage implements GUIInterface {
             row.setVgrow(Priority.ALWAYS);
             paymentPane.getRowConstraints().add(row);
         }
+        
+        paymentPane.setVgap(3);
+        paymentPane.setHgap(3);
 
 //        paymentPane.getRowConstraints().get(0).setPrefHeight(SCREEN_HEIGHT / 20);
     }
@@ -1581,6 +1590,9 @@ public class MainStage extends Stage implements GUIInterface {
         loginPane.add(print, 1, 14, 1, 2);
         loginPane.add(loginMessage, 4, 14, 3, 2);
         loginPane.add(loginArea, 1, 0, 8, 12);
+        
+        loginPane.setVgap(3);
+        loginPane.setHgap(3);
     }
 
     private void initLock() {
