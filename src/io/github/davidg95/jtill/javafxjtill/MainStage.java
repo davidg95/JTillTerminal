@@ -276,7 +276,20 @@ public class MainStage extends Stage implements GUIInterface {
         mainVersion = new Label("JTill Terminal");
         mainVersion.setId("toplabel");
         mainVersion.setFont(Font.font("Tahoma", FontWeight.NORMAL, topfont));
-
+        mainVersion.setOnMouseClicked((event) -> {
+            if (newData) {
+                if (staff != null) {
+                    MessageDialog.showMessage(this, "New Data", "Must be logged off");
+                } else {
+                    new Thread("InitTill") {
+                        @Override
+                        public void run() {
+                            initTill();
+                        }
+                    }.start();
+                }
+            }
+        });
         mainRefund = new Label();
         mainRefund.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         mainRefund.setMinSize(0, 0);
@@ -2594,7 +2607,7 @@ public class MainStage extends Stage implements GUIInterface {
     public Staff connectionReestablish() {
         sendSalesToServer();
         Platform.runLater(() -> {
-            MainStage.this.mainVersion.setText(terminalName + (newData ? " (New Data)" : ""));
+            mainVersion.setText(terminalName + (newData ? " (New Data)" : ""));
         });
         if (staff != null) {
             return staff;
