@@ -803,7 +803,7 @@ public class MainStage extends Stage implements GUIInterface {
             row.setVgrow(Priority.ALWAYS);
             mainPane.getRowConstraints().add(row);
         }
-        
+
         mainPane.setVgap(3);
         mainPane.setHgap(3);
     }
@@ -1344,7 +1344,7 @@ public class MainStage extends Stage implements GUIInterface {
         pane.add(refundButton, 0, 3);
         pane.add(voidSale, 2, 3);
         pane.add(voidItem, 3, 3);
-        
+
         pane.setVgap(3);
         pane.setHgap(3);
 
@@ -1373,7 +1373,7 @@ public class MainStage extends Stage implements GUIInterface {
             row.setVgrow(Priority.ALWAYS);
             paymentPane.getRowConstraints().add(row);
         }
-        
+
         paymentPane.setVgap(3);
         paymentPane.setHgap(3);
 
@@ -1468,6 +1468,7 @@ public class MainStage extends Stage implements GUIInterface {
             } catch (IOException ex) {
                 if (staff != null) {
                     Platform.runLater(() -> {
+                        setPanel(mainPane);
                         newSale();
                         MessageScreen.hideWindow();
                     });
@@ -1590,7 +1591,7 @@ public class MainStage extends Stage implements GUIInterface {
         loginPane.add(print, 1, 14, 1, 2);
         loginPane.add(loginMessage, 4, 14, 3, 2);
         loginPane.add(loginArea, 1, 0, 8, 12);
-        
+
         loginPane.setVgap(3);
         loginPane.setHgap(3);
     }
@@ -2604,6 +2605,9 @@ public class MainStage extends Stage implements GUIInterface {
 
     @Override
     public void initTill() {
+        if (!dc.isConnected()) {
+            return;
+        }
         Platform.runLater(() -> {
             MessageScreen.changeMessage("Initialising");
             MessageScreen.showWindow();
