@@ -2627,12 +2627,9 @@ public class MainStage extends Stage implements GUIInterface {
         });
         MainStage.this.getServerData();
         Platform.runLater(() -> {
-            MessageScreen.hideWindow();
             loginNumber.requestFocus();
-        });
-        Platform.runLater(() -> {
-            final String temp = terminalName;
-            MainStage.this.mainVersion.setText(temp);
+            mainVersion.setText(terminalName);
+            MessageScreen.hideWindow();
         });
         newData = false;
     }
