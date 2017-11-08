@@ -42,6 +42,7 @@ import javafx.stage.StageStyle;
 import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.ConnectException;
 import java.net.URI;
@@ -375,17 +376,16 @@ public class MainStage extends Stage implements GUIInterface {
                 MessageScreen.changeMessage("Downloading Update");
                 MessageScreen.showWindow();
             });
-            List<byte[]> update = dc.downloadTerminalUpdate();
+            byte[] update = dc.downloadTerminalUpdate();
             File file = new File(System.getProperty("java.io.tmpdir") + "terminalinstaller.exe");
             FileOutputStream out = new FileOutputStream(file);
-            for (byte[] b : update) {
-                out.write(b);
-            }
+            out.write(update);
             out.close();
             Runtime.getRuntime().exec(System.getProperty("java.io.tmpdir") + "terminalinstaller.exe", null, new File(System.getProperty("java.io.tmpdir")));
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
             });
+            System.exit(1);
         } catch (Exception ex) {
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
