@@ -403,6 +403,9 @@ public class MainStage extends Stage implements GUIInterface {
 
     @Override
     public void markNewData() {
+        if(newData){
+            return;
+        }
         newData = true;
         if (staff == null) {
             initTill();
