@@ -1323,6 +1323,22 @@ public class MainStage extends Stage implements GUIInterface {
         refundButton.setOnAction((ActionEvent event) -> {
             setRefund(!refundMode);
         });
+
+        Button downloadData = new Button("Download Data");
+        downloadData.setId("reporting");
+        downloadData.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        downloadData.setOnAction((event) -> {
+            final Runnable run = () -> {
+                if (sale.getSaleItems().isEmpty()) {
+                    this.markNewData();
+                    this.logoff();
+                } else {
+                    this.showMessageAlert("Not allowed in a sale", 5000);
+                }
+            };
+            new Thread(run, "DownloadData").start();
+        });
+
         GridPane pane = new GridPane();
 
         for (int i = 1; i <= 4; i++) {
@@ -1340,6 +1356,7 @@ public class MainStage extends Stage implements GUIInterface {
             row.setVgrow(Priority.ALWAYS);
             pane.getRowConstraints().add(row);
         }
+
         pane.add(fivePounds, 0, 0);
         pane.add(tenPounds, 1, 0);
         pane.add(twentyPounds, 2, 0);
@@ -1350,6 +1367,7 @@ public class MainStage extends Stage implements GUIInterface {
         pane.add(cheque, 3, 1);
         pane.add(addCustomer, 0, 2);
         pane.add(chargeAccount, 1, 2);
+        pane.add(downloadData, 2, 2);
         pane.add(zReport, 3, 2);
         pane.add(refundButton, 0, 3);
         pane.add(voidSale, 2, 3);
