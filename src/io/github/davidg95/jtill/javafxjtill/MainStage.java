@@ -50,6 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Properties;
 import java.util.UUID;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -455,8 +456,8 @@ public class MainStage extends Stage implements GUIInterface {
             Platform.runLater(() -> {
                 MessageScreen.changeMessage("Getting configuration");
             });
-            JavaFXJTill.settings = null;
-            JavaFXJTill.settings = dc.getSettings();
+            Object init[] = dc.terminalInit();
+            JavaFXJTill.settings = (Properties) init[0];
             MAX_SALES = Integer.parseInt(JavaFXJTill.settings.getProperty("MAX_CACHE_SALES"));
             logoutTimeout = Integer.parseInt(JavaFXJTill.settings.getProperty("LOGOUT_TIMEOUT"));
             if (!JavaFXJTill.settings.getProperty("UNLOCK_CODE", "OFF").equals("OFF")) {
@@ -481,22 +482,13 @@ public class MainStage extends Stage implements GUIInterface {
             } catch (SQLException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
-            try {
-                till = dc.getTill(till.getId());
-            } catch (JTillException ex) {
-                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
-                int color = Integer.parseInt(dc.getSetting("TERMINAL_BG"));
-                if (color != 0) {
-                    java.awt.Color col = new java.awt.Color(color);
-                    Color c = Color.color((double) col.getRed() / 255, (double) col.getGreen() / 255, (double) col.getBlue() / 255);
-                    parentPane.setBackground(new Background(new BackgroundFill(c, CornerRadii.EMPTY, Insets.EMPTY)));
-                } else {
-                    parentPane.setBackground(null);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+            int color = Integer.parseInt(JavaFXJTill.settings.getProperty("TERMINAL_BG"));
+            if (color != 0) {
+                java.awt.Color col = new java.awt.Color(color);
+                Color c = Color.color((double) col.getRed() / 255, (double) col.getGreen() / 255, (double) col.getBlue() / 255);
+                parentPane.setBackground(new Background(new BackgroundFill(c, CornerRadii.EMPTY, Insets.EMPTY)));
+            } else {
+                parentPane.setBackground(null);
             }
             symbol = JavaFXJTill.settings.getProperty("CURRENCY_SYMBOL");
             terminalName = till.getName() + " - " + JavaFXJTill.settings.getProperty("SITE_NAME");
@@ -509,7 +501,7 @@ public class MainStage extends Stage implements GUIInterface {
                 tenPounds.setText(symbol + "10");
                 fivePounds.setText(symbol + "5");
             });
-            List<Discount> discounts = dc.getValidDiscounts();
+            List<Discount> discounts = (List<Discount>) init[1];
             for (Discount d : discounts) {
                 try {
                     List<DiscountBucket> buckets = dc.getDiscountBuckets(d.getId());
@@ -523,7 +515,7 @@ public class MainStage extends Stage implements GUIInterface {
             }
             DiscountCache.getInstance().setDiscounts(discounts);
             LOG.log(Level.INFO, "Loading screen and button configurations from the server");
-            screens = dc.getAllScreens(); //Get all the screens from the server.
+            screens = (List<Screen>) init[2]; //Get all the screens from the server.
             buttonPane.getChildren().clear();
             if (!buttonPanes.isEmpty()) {
                 buttonPane.getChildren().clear();
@@ -535,18 +527,22 @@ public class MainStage extends Stage implements GUIInterface {
             } else {
                 setLoginType(BUTTONS);
             }
-            try {
-                BackgroundImage myBi = new BackgroundImage(new Image(dc.getLoginBackground().toURI().toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+            if (init[3] != null) {
+                BackgroundImage myBi = new BackgroundImage(new Image(((File) init[3]).toURI().toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
                 loginPane.setBackground(new Background(myBi));
-            } catch (IOException | JTillException e) {
-
             }
-            staffCache = dc.getAllStaff();
+            staffCache = (List<Staff>) init[4];
         } catch (IOException | SQLException ex) {
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
                 MessageDialog.showMessage(this, "Error", ex.getMessage());
             });
+        } finally {
+            try {
+                dc.initComplete();
+            } catch (IOException ex) {
+                Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
