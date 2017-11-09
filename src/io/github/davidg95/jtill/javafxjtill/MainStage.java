@@ -50,6 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.UUID;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -2635,7 +2636,7 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     @Override
-    public Till showTillSetupWindow(String name) {
+    public Till showTillSetupWindow(String name, UUID uuid) {
         return null;
     }
 

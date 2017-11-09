@@ -28,19 +28,19 @@ public class JavaFXJTill extends Application {
 
     private static final Logger LOG = Logger.getGlobal();
 
-    /**
-     * The data connection.
-     */
     private static ServerConnection dc;
+
     /**
      * The properties for the terminal.
      */
     private static Properties properties;
+
     /**
      * The UUID of the terminal, assigned by the server. This is empty until
      * assigned by the server.
      */
     public static UUID uuid;
+
     /**
      * The name of the terminal.
      */
@@ -54,10 +54,13 @@ public class JavaFXJTill extends Application {
      */
     public static int PORT = 52341;
     /**
-     * The graphics user interface object.
+     * The graphical user interface object.
      */
     private static MainStage mainStage;
-    
+
+    /**
+     * The settings for the server.
+     */
     public static volatile Properties settings;
 
     @Override
@@ -100,6 +103,7 @@ public class JavaFXJTill extends Application {
             in.close();
         } catch (FileNotFoundException | UnknownHostException ex) {
             LOG.log(Level.INFO, "Properties file not found, going into initial configuration");
+            uuid = UUID.randomUUID();
             SetupDialog.showDialog(null);
             saveProperties();
         } catch (IOException ex) {
@@ -117,11 +121,7 @@ public class JavaFXJTill extends Application {
             properties.setProperty("name", NAME);
             properties.setProperty("host", SERVER);
             properties.setProperty("port", Integer.toString(PORT));
-            if (uuid == null) {
-                properties.setProperty("uuid", "NONE");
-            } else {
-                properties.setProperty("uuid", uuid.toString());
-            }
+            properties.setProperty("uuid", uuid.toString());
 
             properties.store(out, null);
             out.close();
