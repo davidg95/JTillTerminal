@@ -403,7 +403,7 @@ public class MainStage extends Stage implements GUIInterface {
 
     @Override
     public void markNewData() {
-        if(newData){
+        if (newData) {
             return;
         }
         newData = true;
@@ -474,17 +474,8 @@ public class MainStage extends Stage implements GUIInterface {
                 });
             }
             LOG.log(Level.INFO, "Max sales set to {0}", MAX_SALES);
-            try {
-                if (JavaFXJTill.settings.getProperty("SEND_PRODUCTS_START").equals("TRUE")) {
-                    LOG.log(Level.INFO, "Downloading products list from server");
-                    ProductCache.getInstance().setProducts(dc.getAllProducts());
-                    LOG.log(Level.INFO, "Downloaded " + ProductCache.getInstance().getAllProducts().size() + " products from the server");
-                    LOG.log(Level.INFO, "Downloading plu list from server");
-                    LOG.log(Level.INFO, "Downloaded " + ProductCache.getInstance().getAllProducts().size() + " plus from the server");
-                }
-            } catch (SQLException ex) {
-                LOG.log(Level.SEVERE, null, ex);
-            }
+            ProductCache.getInstance().setProducts((List<Product>) init[5]);
+            LOG.log(Level.INFO, "Downloaded " + ProductCache.getInstance().getAllProducts().size() + " products from the server");
             int color = Integer.parseInt(JavaFXJTill.settings.getProperty("TERMINAL_BG"));
             if (color != 0) {
                 java.awt.Color col = new java.awt.Color(color);
