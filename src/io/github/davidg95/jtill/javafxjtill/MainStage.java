@@ -2362,8 +2362,12 @@ public class MainStage extends Stage implements GUIInterface {
                         });
                     } else if (b.getType() == TillButton.SCREEN) {
                         final Screen sc = getScreen(b.getItem());
-                        if (sc == null) {
-                            throw new ScreenNotFoundException("Screen Missing");
+                        String p = JavaFXJTill.settings.getProperty("BORDER_SCREEN_BUTTON");
+                        String c = JavaFXJTill.settings.getProperty("BORDER_COLOR");
+                        if (JavaFXJTill.settings.getProperty("BORDER_SCREEN_BUTTON").equals("true")) {
+                            if (sc.getId() == s.getId()) {
+                                button.setStyle("-fx-background-color: #" + b.getColorValue() + ";-fx-text-fill: #" + b.getFontColor() + ";-fx-border-color: #" + JavaFXJTill.settings.getProperty("BORDER_COLOR") + "; -fx-border-width: 3px;");
+                            }
                         }
                         button.setOnAction((ActionEvent e) -> {
                             if (staff.getPosition() >= b.getAccessLevel()) {
@@ -2418,7 +2422,7 @@ public class MainStage extends Stage implements GUIInterface {
                     GridPane.setFillHeight(button, true);
                     GridPane.setFillWidth(button, true);
                     grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
-                } catch (IOException | ProductNotFoundException | SQLException | ScreenNotFoundException ex) {
+                } catch (IOException | ProductNotFoundException | SQLException ex) {
                     Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -2473,8 +2477,10 @@ public class MainStage extends Stage implements GUIInterface {
                             });
                         } else if (b.getType() == TillButton.SCREEN) {
                             final Screen sc = getScreen(b.getItem());
-                            if (sc == null) {
-                                throw new ScreenNotFoundException("Screen Missing");
+                            if (JavaFXJTill.settings.getProperty("BORDER_SCREEN_BUTTON").equals("TRUE")) {
+                                if (sc.getId() == s.getId()) {
+                                    button.setStyle("-fx-background-color: #" + b.getColorValue() + ";-fx-text-fill: #" + b.getFontColor() + ";-fx-border-color: #" + JavaFXJTill.settings.getProperty("BORDER_COLOR") + "; -fx-border-width: 3px;");
+                                }
                             }
                             button.setOnAction((ActionEvent e) -> {
                                 if (staff.getPosition() >= b.getAccessLevel()) {
@@ -2529,7 +2535,7 @@ public class MainStage extends Stage implements GUIInterface {
                         GridPane.setFillHeight(button, true);
                         GridPane.setFillWidth(button, true);
                         grid.add(button, b.getX() - 1, b.getY() - 1, b.getWidth(), b.getHeight()); //Add the button to the grid.
-                    } catch (IOException | ProductNotFoundException | SQLException | ScreenNotFoundException ex) {
+                    } catch (IOException | ProductNotFoundException | SQLException ex) {
                         Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
