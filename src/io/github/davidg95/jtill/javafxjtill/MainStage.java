@@ -49,7 +49,9 @@ import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import javafx.event.Event;
@@ -208,6 +210,7 @@ public class MainStage extends Stage implements GUIInterface {
     private final List<Sale> saleCache;
 
     private boolean newData = false;
+    private String[] data;
 
     private String lastScreen;
 
@@ -402,10 +405,11 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     @Override
-    public void markNewData() {
+    public void markNewData(String[] data) {
         if (newData) {
             return;
         }
+        this.data = data;
         newData = true;
         if (staff == null) {
             initTill();
@@ -459,8 +463,50 @@ public class MainStage extends Stage implements GUIInterface {
             Platform.runLater(() -> {
                 MessageScreen.changeMessage("Getting configuration");
             });
-            Object init[] = dc.terminalInit();
-            JavaFXJTill.settings = (Properties) init[0];
+            HashMap<String, Object> init = dc.terminalInit((String[]) data);
+            for (Map.Entry me : init.entrySet()) {
+                String s = (String) me.getKey();
+                if (s.equals("settings")) {
+                    JavaFXJTill.settings = (Properties) me.getValue();
+                } else if (s.equals("discounts")) {
+                    List<Discount> discounts = (List<Discount>) me.getValue();
+                    for (Discount d : discounts) {
+                        try {
+                            List<DiscountBucket> buckets = dc.getDiscountBuckets(d.getId());
+                            for (DiscountBucket b : buckets) {
+                                b.setTriggers(dc.getBucketTriggers(b.getId()));
+                            }
+                            d.setBuckets(buckets);
+                        } catch (DiscountNotFoundException | JTillException ex) {
+                            Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    DiscountCache.getInstance().setDiscounts(discounts);
+                } else if (s.equals("screens")) {
+                    List<Screen> scs = (List<Screen>) me.getValue();
+                    if (scs != null) {
+                        screens = scs;
+                        LOG.log(Level.INFO, "Loading screen and button configurations from the server");
+                        buttonPane.getChildren().clear();
+                        if (!buttonPanes.isEmpty()) {
+                            buttonPane.getChildren().clear();
+                            buttonPane.getChildren().add(buttonPanes.get(0));
+                        }
+                        addScreens(screens); //Add the screens to the main interface.
+                    }
+                } else if (s.equals("background")) {
+                    File f = (File) me.getValue();
+                    if (f != null) {
+                        BackgroundImage myBi = new BackgroundImage(new Image(((File) f).toURI().toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+                        loginPane.setBackground(new Background(myBi));
+                    }
+                } else if (s.equals("products")) {
+                    ProductCache.getInstance().setProducts((List<Product>) me.getValue());
+                    LOG.log(Level.INFO, "Downloaded " + ProductCache.getInstance().getAllProducts().size() + " products from the server");
+                } else if (s.equals("staff")) {
+                    staffCache = (List<Staff>) me.getValue();
+                }
+            }
             MAX_SALES = Integer.parseInt(JavaFXJTill.settings.getProperty("MAX_CACHE_SALES"));
             logoutTimeout = Integer.parseInt(JavaFXJTill.settings.getProperty("LOGOUT_TIMEOUT"));
             if (!JavaFXJTill.settings.getProperty("UNLOCK_CODE", "OFF").equals("OFF")) {
@@ -474,8 +520,6 @@ public class MainStage extends Stage implements GUIInterface {
                 });
             }
             LOG.log(Level.INFO, "Max sales set to {0}", MAX_SALES);
-            ProductCache.getInstance().setProducts((List<Product>) init[5]);
-            LOG.log(Level.INFO, "Downloaded " + ProductCache.getInstance().getAllProducts().size() + " products from the server");
             int color = Integer.parseInt(JavaFXJTill.settings.getProperty("TERMINAL_BG"));
             if (color != 0) {
                 java.awt.Color col = new java.awt.Color(color);
@@ -495,37 +539,11 @@ public class MainStage extends Stage implements GUIInterface {
                 tenPounds.setText(symbol + "10");
                 fivePounds.setText(symbol + "5");
             });
-            List<Discount> discounts = (List<Discount>) init[1];
-            for (Discount d : discounts) {
-                try {
-                    List<DiscountBucket> buckets = dc.getDiscountBuckets(d.getId());
-                    for (DiscountBucket b : buckets) {
-                        b.setTriggers(dc.getBucketTriggers(b.getId()));
-                    }
-                    d.setBuckets(buckets);
-                } catch (DiscountNotFoundException | JTillException ex) {
-                    Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            DiscountCache.getInstance().setDiscounts(discounts);
-            LOG.log(Level.INFO, "Loading screen and button configurations from the server");
-            screens = (List<Screen>) init[2]; //Get all the screens from the server.
-            buttonPane.getChildren().clear();
-            if (!buttonPanes.isEmpty()) {
-                buttonPane.getChildren().clear();
-                buttonPane.getChildren().add(buttonPanes.get(0));
-            }
-            addScreens(screens); //Add the screens to the main interface.
             if (JavaFXJTill.settings.get("LOGINTYPE").equals("CODE")) {
                 setLoginType(CODE);
             } else {
                 setLoginType(BUTTONS);
             }
-            if (init[3] != null) {
-                BackgroundImage myBi = new BackgroundImage(new Image(((File) init[3]).toURI().toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-                loginPane.setBackground(new Background(myBi));
-            }
-            staffCache = (List<Staff>) init[4];
         } catch (IOException | SQLException ex) {
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
@@ -1324,7 +1342,7 @@ public class MainStage extends Stage implements GUIInterface {
         downloadData.setOnAction((event) -> {
             final Runnable run = () -> {
                 if (sale.getSaleItems().isEmpty()) {
-                    this.markNewData();
+                    this.markNewData(null);
                     this.logoff();
                 } else {
                     this.showMessageAlert("Not allowed in a sale", 5000);
@@ -2641,6 +2659,7 @@ public class MainStage extends Stage implements GUIInterface {
             MessageScreen.hideWindow();
         });
         newData = false;
+        data = null;
     }
 
     @Override
