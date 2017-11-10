@@ -463,7 +463,7 @@ public class MainStage extends Stage implements GUIInterface {
             Platform.runLater(() -> {
                 MessageScreen.changeMessage("Getting Server Data");
             });
-            HashMap<String, Object> init = dc.terminalInit((String[]) data);
+            HashMap<String, Object> init = dc.terminalInit(till.getId(), (String[]) data);
             for (Map.Entry me : init.entrySet()) {
                 String s = (String) me.getKey();
                 if (s.equals("settings")) {
@@ -505,6 +505,8 @@ public class MainStage extends Stage implements GUIInterface {
                     LOG.log(Level.INFO, "Downloaded " + ProductCache.getInstance().getAllProducts().size() + " products from the server");
                 } else if (s.equals("staff")) {
                     staffCache = (List<Staff>) me.getValue();
+                } else if (s.equals("terminal")) {
+                    till = (Till) me.getValue();
                 }
             }
             MAX_SALES = Integer.parseInt(JavaFXJTill.settings.getProperty("MAX_CACHE_SALES"));
