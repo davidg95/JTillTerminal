@@ -461,7 +461,7 @@ public class MainStage extends Stage implements GUIInterface {
     private void getServerData() {
         try {
             Platform.runLater(() -> {
-                MessageScreen.changeMessage("Getting configuration");
+                MessageScreen.changeMessage("Getting Server Data");
             });
             HashMap<String, Object> init = dc.terminalInit((String[]) data);
             for (Map.Entry me : init.entrySet()) {
