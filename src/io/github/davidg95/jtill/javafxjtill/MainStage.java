@@ -42,7 +42,6 @@ import javafx.stage.StageStyle;
 import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.ConnectException;
 import java.net.URI;

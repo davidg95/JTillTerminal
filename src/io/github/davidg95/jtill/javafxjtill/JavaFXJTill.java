@@ -28,8 +28,6 @@ public class JavaFXJTill extends Application {
 
     private static final Logger LOG = Logger.getGlobal();
 
-    private static ServerConnection dc;
-
     /**
      * The properties for the terminal.
      */
@@ -67,8 +65,8 @@ public class JavaFXJTill extends Application {
     public void start(Stage primaryStage) {
         LOG.addHandler(new LogFileHandler());
         LOG.log(Level.INFO, "Starting JTill Terminal");
-        dc = new ServerConnection();
-        mainStage = new MainStage(dc);
+        DataConnect.dataconnect = new ServerConnection();
+        mainStage = new MainStage((ServerConnection) DataConnect.dataconnect);
         LOG.log(Level.INFO, "Initalising");
         mainStage.initalise();
     }

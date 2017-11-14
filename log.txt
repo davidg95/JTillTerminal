@@ -1,36 +1,49 @@
-JTill log Mon Nov 13 11:16:28 GMT 2017
-[11:16:28] [INFO] Starting JTill Terminal
-[11:16:28] [INFO] Initalising
-[11:16:29] [INFO] Loading properties file
-[11:16:29] [INFO] Attempting connection to the server on IP address 127.0.0.1
-[11:16:29] [INFO] Set discounts in cache
-[11:16:29] [INFO] Loading screen and button configurations from the server
-[11:16:29] [INFO] Got {0} screens from the server
-[11:16:29] [INFO] Getting buttons for {0} screen
-[11:16:29] [INFO] Got {0} buttons for this screen
-[11:16:29] [INFO] Getting buttons for {0} screen
-[11:16:29] [INFO] Got {0} buttons for this screen
-[11:16:29] [INFO] Getting buttons for {0} screen
-[11:16:29] [INFO] Got {0} buttons for this screen
-[11:16:29] [INFO] Downloaded 3 products from the server
-[11:16:29] [INFO] Max sales set to {0}
-[11:16:29] [INFO] Saving properties file
-[11:16:34] [INFO] Getting all discounts from cache
-[11:16:44] [INFO] Item has been added to a sale
-[11:16:47] [INFO] Item has been added to a sale
-[11:16:49] [WARNING] Error connecting to server
-[11:16:49] [INFO] Adding sale
-[11:16:49] [INFO] Getting all discounts from cache
-[11:16:53] [INFO] Item has been added to a sale
-[11:16:54] [WARNING] Error connecting to server
-[11:16:54] [INFO] Adding sale
-[11:16:54] [INFO] Getting all discounts from cache
-[11:16:57] [INFO] Item has been added to a sale
-[11:16:58] [WARNING] Error connecting to server
-[11:16:58] [INFO] Adding sale
-[11:16:58] [INFO] Getting all discounts from cache
-[11:17:04] [INFO] Sending sales data to the server
-[11:17:04] [INFO] Getting all sales
-[11:17:04] [INFO] Sales data has been sent to the server
-[11:17:04] [INFO] Clearing all sales
-[11:17:54] [INFO] Getting all discounts from cache
+JTill log Tue Nov 14 16:49:12 GMT 2017
+[16:49:12] [INFO] Starting JTill Terminal
+[16:49:12] [INFO] Initalising
+[16:49:12] [INFO] Loading properties file
+[16:49:12] [INFO] Attempting connection to the server on IP address 127.0.0.1
+[16:49:12] [INFO] Set discounts in cache
+[16:49:12] [INFO] Loading screen and button configurations from the server
+[16:49:12] [INFO] Got {0} screens from the server
+[16:49:12] [INFO] Getting buttons for {0} screen
+[16:49:13] [INFO] Got {0} buttons for this screen
+[16:49:13] [INFO] Getting buttons for {0} screen
+[16:49:13] [INFO] Got {0} buttons for this screen
+[16:49:13] [INFO] Getting buttons for {0} screen
+[16:49:13] [INFO] Got {0} buttons for this screen
+[16:49:13] [INFO] Getting buttons for {0} screen
+[16:49:13] [INFO] Got {0} buttons for this screen
+[16:49:13] [INFO] Downloaded 7 products from the server
+[16:49:13] [INFO] Max sales set to {0}
+[16:49:13] [INFO] Saving properties file
+[16:49:19] [INFO] Getting all discounts from cache
+[16:49:23] [INFO] Getting all discounts from cache
+[16:49:23] [INFO] Set discounts in cache
+[16:49:23] [INFO] Loading screen and button configurations from the server
+[16:49:23] [INFO] Got {0} screens from the server
+[16:49:23] [INFO] Getting buttons for {0} screen
+[16:49:23] [INFO] Got {0} buttons for this screen
+[16:49:23] [INFO] Getting buttons for {0} screen
+[16:49:23] [INFO] Got {0} buttons for this screen
+[16:49:23] [INFO] Getting buttons for {0} screen
+[16:49:23] [INFO] Got {0} buttons for this screen
+[16:49:23] [INFO] Getting buttons for {0} screen
+[16:49:24] [INFO] Got {0} buttons for this screen
+[16:49:24] [INFO] Downloaded 7 products from the server
+[16:49:24] [INFO] Max sales set to {0}
+[16:49:26] [INFO] Getting all discounts from cache
+[16:49:32] [INFO] Getting all discounts from cache
+[16:49:32] [INFO] Set discounts in cache
+[16:49:32] [INFO] Loading screen and button configurations from the server
+[16:49:32] [INFO] Got {0} screens from the server
+[16:49:33] [INFO] Getting buttons for {0} screen
+[16:49:33] [INFO] Got {0} buttons for this screen
+[16:49:33] [INFO] Getting buttons for {0} screen
+[16:49:33] [INFO] Got {0} buttons for this screen
+[16:49:33] [INFO] Getting buttons for {0} screen
+[16:49:33] [INFO] Got {0} buttons for this screen
+[16:49:33] [INFO] Getting buttons for {0} screen
+[16:49:33] [INFO] Got {0} buttons for this screen
+[16:49:33] [INFO] Downloaded 7 products from the server
+[16:49:33] [INFO] Max sales set to {0}
