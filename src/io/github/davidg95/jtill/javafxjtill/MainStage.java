@@ -1288,7 +1288,7 @@ public class MainStage extends Stage implements GUIInterface {
                             }
                         }.start();
                     }
-                } catch (IOException | SQLException | JTillException ex) {
+                } catch (IOException | SQLException ex) {
                     MessageDialog.showMessage(this, "Cash Up", ex.getMessage());
                 }
             } else {
