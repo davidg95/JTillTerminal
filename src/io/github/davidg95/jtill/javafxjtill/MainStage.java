@@ -2164,6 +2164,10 @@ public class MainStage extends Stage implements GUIInterface {
 
     private void getProductByBarcode(String barcode) {
         this.barcode.setText("");
+        if (!Utilities.validateBarcode(barcode)) {
+            showMessageAlert("Invalid check digit", 2000);
+            return;
+        }
         try {
             Product p;
             try {
