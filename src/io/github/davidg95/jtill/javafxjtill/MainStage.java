@@ -2591,7 +2591,7 @@ public class MainStage extends Stage implements GUIInterface {
     }
 
     @Override
-    public void setClientLabel(String text) {
+    public void setClientLabel(int count) {
     }
 
     @Override
