@@ -106,6 +106,7 @@ public class MainStage extends Stage implements GUIInterface {
 
     public static boolean printOk;
     private boolean refundMode;
+    private RefundReason refundReason;
 
     private final String stylesheet;
 
@@ -1334,6 +1335,12 @@ public class MainStage extends Stage implements GUIInterface {
         refundButton.setId("payRed");
         refundButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         refundButton.setOnAction((ActionEvent event) -> {
+            if (!refundMode) {
+                refundReason = RefundReasonDialog.showDialog(this);
+                if(refundReason == null){
+                    return;
+                }
+            }
             setRefund(!refundMode);
         });
 
