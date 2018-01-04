@@ -1337,7 +1337,11 @@ public class MainStage extends Stage implements GUIInterface {
         refundButton.setOnAction((ActionEvent event) -> {
             if (!refundMode) {
                 refundReason = RefundReasonDialog.showDialog(this);
-                if(refundReason == null){
+                if (refundReason == null) {
+                    return;
+                }
+                if ((refundReason.getPriviledgeLevel() + 1) > staff.getPosition()) {
+                    MessageDialog.showMessage(this, "Refund Reason", "You are not authorised to use this reason");
                     return;
                 }
             }
