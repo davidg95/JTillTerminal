@@ -107,7 +107,7 @@ public class DiscountSelectDialog extends Stage {
             updateList(d);
 
             pane.add(discountsTable, 0, 0, 3, 3);
-            
+
             searchID.setMinSize(100, 100);
             searchID.setMaxSize(100, 100);
             HBox hSearchID = new HBox(0);
@@ -124,7 +124,7 @@ public class DiscountSelectDialog extends Stage {
                 MessageDialog.showMessage(this, "Discounts", "No match");
             });
             pane.add(hSearchID, 0, 3);
-            
+
             searchTerms.setMinSize(100, 100);
             searchTerms.setMaxSize(100, 100);
             HBox hSearchTerms = new HBox(0);
@@ -144,7 +144,7 @@ public class DiscountSelectDialog extends Stage {
                 updateList(newList);
             });
             pane.add(hSearchTerms, 1, 3);
-            
+
             close.setMinSize(100, 100);
             close.setMaxSize(100, 100);
             HBox hClose = new HBox(0);

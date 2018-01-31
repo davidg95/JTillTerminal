@@ -63,7 +63,7 @@ public class EntryDialog extends Stage {
         enter.setOnAction((ActionEvent event) -> {
             onEnter(input.getText());
         });
-        
+
         pane.add(input, 0, 1);
         pane.add(enter, 0, 2);
 

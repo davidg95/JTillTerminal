@@ -65,8 +65,8 @@ public class JavaFXJTill extends Application {
     public void start(Stage primaryStage) {
         LOG.addHandler(new LogFileHandler());
         LOG.log(Level.INFO, "Starting JTill Terminal");
-        DataConnect.dataconnect = new ServerConnection();
-        mainStage = new MainStage((ServerConnection) DataConnect.dataconnect);
+        DataConnect.set(new ServerConnection());
+        mainStage = new MainStage((ServerConnection) DataConnect.get());
         LOG.log(Level.INFO, "Initalising");
         mainStage.initalise();
     }

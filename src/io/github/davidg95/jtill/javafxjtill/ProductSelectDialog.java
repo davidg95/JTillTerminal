@@ -156,7 +156,6 @@ public class ProductSelectDialog extends Stage {
 //            col.setHgrow(Priority.ALWAYS);
 //            pane.getColumnConstraints().add(col);
 //        }
-
 //        for (int i = 1; i <= 4; i++) {
 //            RowConstraints row = new RowConstraints();
 //            row.setPercentHeight(25);
@@ -164,7 +163,6 @@ public class ProductSelectDialog extends Stage {
 //            row.setVgrow(Priority.ALWAYS);
 //            pane.getRowConstraints().add(row);
 //        }
-
         Scene scene = new Scene(pane, 1200, 800);
 
         String stylesheet = MainStage.class.getResource("style.css").toExternalForm();

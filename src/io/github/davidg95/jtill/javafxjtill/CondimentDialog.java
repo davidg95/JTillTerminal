@@ -76,7 +76,7 @@ public class CondimentDialog extends Stage {
         selectLabel.setMinHeight(100);
         selectLabel.setMaxHeight(100);
         selectLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
-        
+
         pane.add(selectLabel, 0, 0, 4, 1);
 
         Button cancel = new Button("Cancel");

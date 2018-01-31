@@ -41,7 +41,7 @@ public class RefundReasonDialog extends Stage {
     private ObservableList<RefundReason> obReasons;
 
     public RefundReasonDialog(Window parent) {
-        this.dc = DataConnect.dataconnect;
+        this.dc = DataConnect.get();
         init();
         setTitle("Select Reason");
         initOwner(parent);
