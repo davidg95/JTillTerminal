@@ -1273,7 +1273,7 @@ public class MainStage extends Stage implements GUIInterface {
                     LOG.log(Level.INFO, "Submitting all sales to the server");
                     sendSalesToServer();
                     SaleCache.getInstance().clearAll();
-                    if (dc.getTerminalSales(till.getId(), true).isEmpty()) {
+                    if (dc.getAllTerminalSales(till.getId(), true).isEmpty()) {
                         MessageDialog.showMessage(this, "Cash Up", "No sales since last cashup");
                         return;
                     }
