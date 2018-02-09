@@ -6,6 +6,7 @@
 package io.github.davidg95.jtill.javafxjtill;
 
 import io.github.davidg95.JTill.jtill.*;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -61,9 +62,11 @@ public class JavaFXJTill extends Application {
      */
     public static volatile Properties settings;
 
+    private static final String propertiesFile = System.getenv("APPDATA") + "\\JTill Terminal\\server.properties";
+
     @Override
     public void start(Stage primaryStage) {
-        LOG.addHandler(new LogFileHandler());
+        LOG.addHandler(new LogFileHandler(System.getenv("APPDATA") + "\\JTill Terminal\\"));
         LOG.log(Level.INFO, "Starting JTill Terminal");
         DataConnect.set(new ServerConnection());
         mainStage = new MainStage((ServerConnection) DataConnect.get());
@@ -75,6 +78,16 @@ public class JavaFXJTill extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        File appData = new File(System.getenv("APPDATA") + "\\JTill Terminal\\logs\\");
+        if (!appData.exists()) {
+            Logger.getGlobal().warning("JTill Terminal folder does not exists in app data, so it is being created.");
+            if (appData.mkdir()) {
+                new File(System.getenv("APPDATA") + "\\JTill Terminal\\logs\\").mkdir();
+                Logger.getGlobal().info("Created folder at " + appData);
+            } else {
+                Logger.getGlobal().severe("Error creating " + appData);
+            }
+        }
         launch(args);
     }
 
@@ -84,7 +97,7 @@ public class JavaFXJTill extends Application {
         InputStream in;
 
         try {
-            in = new FileInputStream("server.properties");
+            in = new FileInputStream(propertiesFile);
 
             properties.load(in);
 
@@ -114,7 +127,7 @@ public class JavaFXJTill extends Application {
         OutputStream out;
 
         try {
-            out = new FileOutputStream("server.properties");
+            out = new FileOutputStream(propertiesFile);
 
             properties.setProperty("name", NAME);
             properties.setProperty("host", SERVER);
