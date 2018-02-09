@@ -78,7 +78,7 @@ public class JavaFXJTill extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        File appData = new File(System.getenv("APPDATA") + "\\JTill Terminal\\logs\\");
+        File appData = new File(System.getenv("APPDATA") + "\\JTill Terminal\\");
         if (!appData.exists()) {
             Logger.getGlobal().warning("JTill Terminal folder does not exists in app data, so it is being created.");
             if (appData.mkdir()) {
