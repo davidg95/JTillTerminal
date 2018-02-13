@@ -2205,26 +2205,6 @@ public class MainStage extends Stage implements GUIInterface {
             final Product p = (Product) i;
             if (!refundMode) {
                 sale.notifyAllListeners(new ProductEvent(p), itemQuantity);
-                Category cat = p.getCategory();
-                if (cat.isTimeRestrict()) { //Check for time restrictions
-                    final Calendar c = Calendar.getInstance();
-                    final long now = c.getTimeInMillis();
-                    c.set(Calendar.HOUR_OF_DAY, 1);
-                    c.set(Calendar.MINUTE, 0);
-                    c.set(Calendar.SECOND, 0);
-                    c.set(Calendar.MILLISECOND, 0);
-                    final long passed = now - c.getTimeInMillis();
-                    if (!cat.isSellTime(new Time(passed))) { //If the item can not be sold now due to the time
-                        MessageDialog.showMessage(this, "Time Restriction", "This item cannot be sold now");
-                        return;
-                    }
-                }
-                if (cat.getMinAge() > age) { //Check for age restrictions
-                    if (YesNoDialog.showDialog(this, "Age Restriction", "Is customer over " + cat.getMinAge() + "?") == YesNoDialog.NO) {
-                        return;
-                    }
-                    age = cat.getMinAge();
-                }
             }
             if (p.isOpen()) { //Check if the product is open price
                 int value;
