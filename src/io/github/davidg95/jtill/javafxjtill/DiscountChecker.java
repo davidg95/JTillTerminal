@@ -35,7 +35,7 @@ public class DiscountChecker implements ProductListener {
     public void onProductAdd(ProductEvent pe) {
         for (DiscountBucket b : d.getBuckets()) {
             for (Trigger t : b.getTriggers()) {
-                if (t.getProduct() == pe.getProduct().getId()) { //Check if the product matches
+                if (t.getProduct().equals(pe.getProduct().getBarcode())) { //Check if the product matches
                     t.addHit(); //Increase the trigger hit count
                     if (t.getCurrentQuantity() >= t.getQuantityRequired()) { //Check if the trigger has been triggered
                         b.addHit(); //If so, increase the bucket hit count
@@ -49,7 +49,7 @@ public class DiscountChecker implements ProductListener {
                                 if (d.checkRequiredTriggers()) { //Check if the required buckets have been activated.
                                     d.reset(); //If so, reset the discount hit count
                                     Platform.runLater(() -> {
-                                        ms.addItemToSale(d); //Add the discount to the sale.
+                                        //ms.addItemToSale(d); //Add the discount to the sale.
                                     });
                                 }
                             }
