@@ -716,13 +716,9 @@ public class MainStage extends Stage implements GUIInterface {
         halfPrice.setOnAction((ActionEvent event) -> {
             if (itemsTable.getSelectionModel().getSelectedIndex() > -1) {
                 SaleItem item = (SaleItem) itemsTable.getSelectionModel().getSelectedItem();
-                if (!(item.getType() == SaleItem.DISCOUNT)) {
-                    sale.halfPriceItem(item);
-                    setTotalLabel();
-                    itemsTable.refresh();
-                } else {
-                    showMessageAlert("Item not discountable", 2000);
-                }
+                sale.halfPriceItem(item);
+                setTotalLabel();
+                itemsTable.refresh();
             }
             if (!barcode.isFocused()) {
                 barcode.requestFocus();
@@ -764,7 +760,7 @@ public class MainStage extends Stage implements GUIInterface {
         voidLast.setOnAction((ActionEvent event) -> {
             SaleItem last = sale.getLastAdded();
             for (SaleItem i : sale.getSaleItems()) {
-                if (i.getItem() == last.getItem()) {
+                if (i.getProduct() == last.getProduct()) {
                     if (i.getQuantity() == last.getQuantity()) {
                         obTable.remove(last);
                     } else {
@@ -2200,67 +2196,53 @@ public class MainStage extends Stage implements GUIInterface {
         }
     }
 
-    public void addItemToSale(Item i) {
-        if (i instanceof Product) { //If the item is a product
-            final Product p = (Product) i;
-            if (!refundMode) {
-                sale.notifyAllListeners(new ProductEvent(p), itemQuantity);
+    public void addItemToSale(Product p) {
+        if (!refundMode) {
+            sale.notifyAllListeners(new ProductEvent(p), itemQuantity);
+        }
+        if (p.isOpen()) { //Check if the product is open price
+            int value;
+            if (barcode.getText().equals("")) {
+                value = NumberEntry.showNumberEntryDialog(this, "Enter " + p.getScaleName()); //Show the dialog asking for the price
+            } else {
+                final String bc = barcode.getText();
+                if (bc.contains(".") || !Utilities.isNumber(bc)) {
+                    showMessageAlert("Illegal character", 2000L);
+                    return;
+                }
+                value = Integer.parseInt(bc); //Get the price value from the input field
+                barcode.setText("");
             }
-            if (p.isOpen()) { //Check if the product is open price
-                int value;
-                if (barcode.getText().equals("")) {
-                    value = NumberEntry.showNumberEntryDialog(this, "Enter " + p.getScaleName()); //Show the dialog asking for the price
-                } else {
-                    final String bc = barcode.getText();
-                    if (bc.contains(".") || !Utilities.isNumber(bc)) {
-                        showMessageAlert("Illegal character", 2000L);
-                        return;
-                    }
-                    value = Integer.parseInt(bc); //Get the price value from the input field
-                    barcode.setText("");
-                }
-                if (value == 0) {
-                    return; //Exit the method if nothing was entered
-                }
-                if (p.getScale() == -1) {
-                    double pr = (double) value / 100;
-                    p.setPrice(new BigDecimal(pr).setScale(2, BigDecimal.ROUND_HALF_DOWN));
+            if (value == 0) {
+                return; //Exit the method if nothing was entered
+            }
+            if (p.getScale() == -1) {
+                double pr = (double) value / 100;
+                p.setPrice(new BigDecimal(pr).setScale(2, BigDecimal.ROUND_HALF_DOWN));
 
-                } else {
-                    double pr = (double) value;
-                    p.setPrice(new BigDecimal(p.priceFromScale(pr)).setScale(2, BigDecimal.ROUND_HALF_DOWN));
-                }
-                if (p.getPriceLimit().compareTo(BigDecimal.ZERO) != 0) {
-                    if (p.getPrice().compareTo(p.getPriceLimit()) == 1) {
-                        MessageDialog.showMessage(this, "Add Product", "Price limit exceeded, max £" + p.getPriceLimit().setScale(2, 6));
-                        return;
-                    }
-                }
+            } else {
+                double pr = (double) value;
+                p.setPrice(new BigDecimal(p.priceFromScale(pr)).setScale(2, BigDecimal.ROUND_HALF_DOWN));
             }
-
-            if (refundMode) {
-                itemQuantity = -itemQuantity; //If in refund mode, set the quantity to negative.
-            }
-            if (p.getMaxCon() != 0) {
-                List<Condiment> condiments = CondimentDialog.showDialog(this, p);
-                p.setSaleCondiments(condiments);
-                if (condiments == null) {
+            if (p.getPriceLimit().compareTo(BigDecimal.ZERO) != 0) {
+                if (p.getPrice().compareTo(p.getPriceLimit()) == 1) {
+                    MessageDialog.showMessage(this, "Add Product", "Price limit exceeded, max £" + p.getPriceLimit().setScale(2, 6));
                     return;
                 }
             }
-        } else { //If the item was a discount
-            final Discount d = (Discount) i;
-            //Check to see if it is a percentage discount for a price discount
-            if (d.getAction() == Discount.PERCENTAGE_OFF) {
-                //If it is a percentage discounts then the price to take of must be calculated
-                d.setPrice(sale.getTotal().multiply(new BigDecimal(Double.toString(d.getPercentage() / 100)).negate()));
-            } else {
-                if (d.getPrice().doubleValue() > 0) {
-                    d.setPrice(d.getPrice().negate());
-                }
+        }
+
+        if (refundMode) {
+            itemQuantity = -itemQuantity; //If in refund mode, set the quantity to negative.
+        }
+        if (p.getMaxCon() != 0) {
+            List<Condiment> condiments = CondimentDialog.showDialog(this, p);
+            p.setSaleCondiments(condiments);
+            if (condiments == null) {
+                return;
             }
         }
-        final boolean inSale = sale.addItem(i, itemQuantity); //Add the item to the sale
+        final boolean inSale = sale.addItem(p, itemQuantity); //Add the item to the sale
         if (!inSale) {
             obTable.add(sale.getLastAdded());
             itemsTable.scrollTo(obTable.size() - 1);
@@ -2345,13 +2327,13 @@ public class MainStage extends Stage implements GUIInterface {
                 Button button = new Button(b.getName()); //Create the button for this button.
                 button.wrapTextProperty().setValue(true);
                 button.setStyle("-fx-background-color: #" + b.getColorValue() + ";-fx-text-fill: #" + b.getFontColor() + ";");
-                int id = b.getItem();
+                String id = b.getItem();
                 try {
                     if (b.getType() == TillButton.ITEM) {
-                        final Item i = dc.getProduct(id); //Get the item associated with this product.
+                        final Product p = dc.getProduct(id); //Get the item associated with this product.
                         button.setOnAction((ActionEvent e) -> {
                             if (staff.getPosition() >= b.getAccessLevel()) {
-                                onProductButton(i); //When clicked, add the item to the sale.
+                                onProductButton(p); //When clicked, add the item to the sale.
                                 barcode.setText("");
                                 if (!barcode.isFocused()) {
                                     barcode.requestFocus();
@@ -2361,7 +2343,7 @@ public class MainStage extends Stage implements GUIInterface {
                             }
                         });
                     } else if (b.getType() == TillButton.SCREEN) {
-                        final Screen sc = getScreen(b.getItem());
+                        final Screen sc = getScreen(Integer.parseInt(b.getItem()));
                         String p = JavaFXJTill.settings.getProperty("BORDER_SCREEN_BUTTON");
                         String c = JavaFXJTill.settings.getProperty("BORDER_COLOR");
                         if (JavaFXJTill.settings.getProperty("BORDER_SCREEN_BUTTON").equals("true")) {
@@ -2464,19 +2446,19 @@ public class MainStage extends Stage implements GUIInterface {
                     Button button = new Button(b.getName()); //Create the button for this button.
                     button.wrapTextProperty().setValue(true);
                     button.setStyle("-fx-background-color: #" + b.getColorValue() + ";-fx-text-fill: #" + b.getFontColor() + ";");
-                    int id = b.getItem();
+                    String item = b.getItem();
                     try {
                         if (b.getType() == TillButton.ITEM) {
-                            final Item i = dc.getProduct(id); //Get the item associated with this product.
+                            final Product p = dc.getProduct(item); //Get the item associated with this product.
                             button.setOnAction((ActionEvent e) -> {
-                                onProductButton(i); //When clicked, add the item to the sale.
+                                onProductButton(p); //When clicked, add the item to the sale.
                                 barcode.setText("");
                                 if (!barcode.isFocused()) {
                                     barcode.requestFocus();
                                 }
                             });
                         } else if (b.getType() == TillButton.SCREEN) {
-                            final Screen sc = getScreen(b.getItem());
+                            final Screen sc = getScreen(Integer.parseInt(b.getItem()));
                             if (JavaFXJTill.settings.getProperty("BORDER_SCREEN_BUTTON").equals("TRUE")) {
                                 if (sc.getId() == s.getId()) {
                                     button.setStyle("-fx-background-color: #" + b.getColorValue() + ";-fx-text-fill: #" + b.getFontColor() + ";-fx-border-color: #" + JavaFXJTill.settings.getProperty("BORDER_COLOR") + "; -fx-border-width: 3px;");
@@ -2557,8 +2539,8 @@ public class MainStage extends Stage implements GUIInterface {
         return null;
     }
 
-    private void onProductButton(Item i) {
-        addItemToSale(i);
+    private void onProductButton(Product p) {
+        addItemToSale(p);
     }
 
     private void changeScreen(Screen sc) {

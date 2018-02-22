@@ -70,16 +70,16 @@ public class ProductCache {
      * Searches for a product in the cache. Will return a
      * ProductNotFoundException if none was found.
      *
-     * @param id the ID to search for.
+     * @param barcode the ID to search for.
      * @return the Product that was found.
      * @throws ProductNotFoundException if no product was found.
      */
-    public Product getProduct(int id) throws ProductNotFoundException {
-        LOG.log(Level.INFO, "Check cache for {0}", id);
+    public Product getProduct(String barcode) throws ProductNotFoundException {
+        LOG.log(Level.INFO, "Check cache for {0}", barcode);
         long stamp = lock.readLock();
         try {
             for (Product p : products) {
-                if (p.getId() == id) {
+                if (p.getBarcode().equals(barcode)) {
                     LOG.log(Level.INFO, "Product found in cache");
                     return p;
                 }
@@ -88,18 +88,18 @@ public class ProductCache {
             lock.unlockRead(stamp);
         }
         LOG.log(Level.INFO, "Product not found in cache");
-        throw new ProductNotFoundException("Product " + id + " not found");
+        throw new ProductNotFoundException("Product " + barcode + " not found");
     }
 
     /**
      * Searches the cache for a product matching the barcode. Will throw a
-     * ProductNotfoundException if none was fonud.
+     * ProductNotfoundException if none was found.
      *
      * @param barcode the barcode to search.
      * @return the Product matching the barcode.
      * @throws ProductNotFoundException if no product was found.
-     * @throws io.github.davidg95.JTill.jtill.JTillException if the plu was not
-     * found.
+     * @throws io.github.davidg95.JTill.jtill.JTillException if the barcode was
+     * not found.
      */
     public Product getProductByBarcode(String barcode) throws ProductNotFoundException, JTillException {
         long stamp = lock.readLock();

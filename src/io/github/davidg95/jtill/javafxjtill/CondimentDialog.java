@@ -39,7 +39,7 @@ public class CondimentDialog extends Stage {
     public CondimentDialog(Window parent, Product p) {
         this.product = p;
         init();
-        setTitle("Condiments for " + p.getName());
+        setTitle("Condiments for " + p.getShortName());
         initOwner(parent);
         initModality(Modality.APPLICATION_MODAL);
     }
@@ -86,7 +86,7 @@ public class CondimentDialog extends Stage {
         int row = 1;
         int col = 0;
         for (Condiment c : product.getCondiments()) {
-            Button b = new Button(c.getProduct_con().getName());
+            Button b = new Button(c.getProduct_con().getShortName());
             b.setMinSize(200, 140);
             b.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
             HBox hb = new HBox(0);
