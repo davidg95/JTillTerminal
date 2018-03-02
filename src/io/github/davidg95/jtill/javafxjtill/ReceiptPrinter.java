@@ -121,7 +121,7 @@ public class ReceiptPrinter implements Printable {
             final Product p = (Product) it.getProduct();
             g2.drawString(p.getShortName(), item, y);
             g2.drawString("" + it.getQuantity(), quantity, y);
-            g2.drawString("£" + it.getPrice(), total, y);
+            g2.drawString("£" + it.getTotalPrice(), total, y);
             y += 30;
         }
         g2.drawLine(item - 30, y - 20, total + 100, y - 20);

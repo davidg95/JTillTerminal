@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +45,6 @@ import java.io.FileOutputStream;
 import java.net.ConnectException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -97,7 +95,6 @@ public class MainStage extends Stage implements GUIInterface {
     private Till till;
     private Sale sale;
     private Sale lastSale;
-    private int age;
     private int itemQuantity;
     private BigDecimal amountDue;
     private final ServerConnection dc;
@@ -764,7 +761,7 @@ public class MainStage extends Stage implements GUIInterface {
                     if (i.getQuantity() == last.getQuantity()) {
                         obTable.remove(last);
                     } else {
-                        i.decreaseQuantity(last.getQuantity());
+                        i.decreaceQuantity(last.getQuantity());
                     }
                 }
             }
@@ -2137,11 +2134,6 @@ public class MainStage extends Stage implements GUIInterface {
         } else {
             sale = new Sale(till, staff);
         }
-        List<Discount> discounts = DiscountCache.getInstance().getAllDiscounts();
-        //Create the discount checkers for the discounts.
-        discounts.stream().map((d) -> new DiscountChecker(this, d)).forEachOrdered((checker) -> {
-            sale.addListener(checker);
-        });
         obTable = FXCollections.observableArrayList();
         obPayments = FXCollections.observableArrayList();
         payObTable = FXCollections.observableArrayList();
@@ -2156,12 +2148,10 @@ public class MainStage extends Stage implements GUIInterface {
         saleCustomer.setText("No Customer");
         addCustomer.setText("Add Customer");
         chargeAccount.setDisable(true);
-//        loyaltyButton.setDisable(true);
         buttonPane.getChildren().clear();
         if (def_screen != null) {
             changeScreen(def_screen);
         }
-        age = 0;
         barcode.requestFocus();
     }
 
@@ -2200,6 +2190,7 @@ public class MainStage extends Stage implements GUIInterface {
         if (!refundMode) {
             sale.notifyAllListeners(new ProductEvent(p), itemQuantity);
         }
+        BigDecimal price = BigDecimal.ZERO;
         if (p.isOpen()) { //Check if the product is open price
             int value;
             if (barcode.getText().equals("")) {
@@ -2218,11 +2209,11 @@ public class MainStage extends Stage implements GUIInterface {
             }
             if (p.getScale() == -1) {
                 double pr = (double) value / 100;
-                p.setPrice(new BigDecimal(pr).setScale(2, BigDecimal.ROUND_HALF_DOWN));
+                price = new BigDecimal(pr).setScale(2, BigDecimal.ROUND_HALF_DOWN);
 
             } else {
                 double pr = (double) value;
-                p.setPrice(new BigDecimal(p.priceFromScale(pr)).setScale(2, BigDecimal.ROUND_HALF_DOWN));
+                price = new BigDecimal(p.priceFromScale(pr)).setScale(2, BigDecimal.ROUND_HALF_DOWN);
             }
             if (p.getPriceLimit().compareTo(BigDecimal.ZERO) != 0) {
                 if (p.getPrice().compareTo(p.getPriceLimit()) == 1) {
@@ -2230,6 +2221,8 @@ public class MainStage extends Stage implements GUIInterface {
                     return;
                 }
             }
+        } else{
+            price = p.getPrice();
         }
 
         if (refundMode) {
@@ -2242,7 +2235,7 @@ public class MainStage extends Stage implements GUIInterface {
                 return;
             }
         }
-        final boolean inSale = sale.addItem(p, itemQuantity); //Add the item to the sale
+        final boolean inSale = sale.addItem(p, price, itemQuantity); //Add the item to the sale
         if (!inSale) {
             obTable.add(sale.getLastAdded());
             itemsTable.scrollTo(obTable.size() - 1);
