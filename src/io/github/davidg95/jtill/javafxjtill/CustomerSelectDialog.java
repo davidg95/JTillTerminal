@@ -6,7 +6,7 @@
 package io.github.davidg95.jtill.javafxjtill;
 
 import io.github.davidg95.JTill.jtill.Customer;
-import io.github.davidg95.JTill.jtill.CustomerNotFoundException;
+import io.github.davidg95.JTill.jtill.JTillException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import io.github.davidg95.JTill.jtill.DataConnect;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -105,13 +106,13 @@ public class CustomerSelectDialog extends Stage {
         HBox hSearch = new HBox(0);
         hSearch.getChildren().add(searchID);
         searchID.setOnAction((ActionEvent event) -> {
-            int id = NumberEntry.showNumberEntryDialog(this, "Enter Customer ID");
+            String name = JOptionPane.showInputDialog("Enter customer ID");
             try {
-                Customer c = dc.getCustomer(id);
+                Customer c = dc.getCustomer(name);
                 List<Customer> res = new ArrayList<>();
                 res.add(c);
                 updateList(res);
-            } catch (IOException | CustomerNotFoundException | SQLException ex) {
+            } catch (IOException | JTillException | SQLException ex) {
                 MessageDialog.showMessage(this, "Customer Search", ex.getMessage());
             }
         });
@@ -122,13 +123,6 @@ public class CustomerSelectDialog extends Stage {
         HBox hSearchTerms = new HBox(0);
         hSearchTerms.getChildren().add(searchTerms);
         searchTerms.setOnAction((ActionEvent event) -> {
-            String terms = EntryDialog.show(this, "Customer Search", "Enter search terms");
-            try {
-                List<Customer> customers = dc.customerLookup(terms);
-                updateList(customers);
-            } catch (IOException | SQLException ex) {
-                MessageDialog.showMessage(this, "Customer Search", ex.getMessage());
-            }
         });
         pane.add(searchTerms, 1, 3);
 

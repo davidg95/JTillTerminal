@@ -1319,7 +1319,7 @@ public class MainStage extends Stage implements GUIInterface {
             try {
                 dc.clockOff(staff.getId());
                 MessageDialog.showMessage(this, "Clock Off", "Clocked off at " + new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(new Date()));
-            } catch (IOException | SQLException | StaffNotFoundException ex) {
+            } catch (IOException | SQLException | JTillException ex) {
                 Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
@@ -1457,7 +1457,7 @@ public class MainStage extends Stage implements GUIInterface {
                 }
             }
             if (staff == null) {
-                throw new StaffNotFoundException(id + " not found");
+                throw new JTillException(id + " not found");
             }
             try {
                 Sale rs = null;
@@ -1519,7 +1519,7 @@ public class MainStage extends Stage implements GUIInterface {
                     });
                 }
             }
-        } catch (LoginException | SQLException | StaffNotFoundException ex) {
+        } catch (LoginException | SQLException | JTillException ex) {
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
                 MessageDialog.showMessage(MainStage.this, "Error", ex.getMessage());
@@ -1602,7 +1602,7 @@ public class MainStage extends Stage implements GUIInterface {
                         x = 0;
                         y++;
                     }
-                } catch (StaffNotFoundException | SQLException ex) {
+                } catch (JTillException | SQLException ex) {
                     MessageDialog.showMessage(MainStage.this, "Log on", ex.getMessage());
                 } catch (IOException ex) {
                     MessageDialog.showMessage(MainStage.this, "Error", "Server offline");
@@ -2022,7 +2022,7 @@ public class MainStage extends Stage implements GUIInterface {
             if (JavaFXJTill.settings.getProperty("AUTO_LOGOUT").equals("TRUE")) {
                 try {
                     dc.tillLogout(staff);
-                } catch (StaffNotFoundException ex) {
+                } catch (JTillException ex) {
                     Logger.getLogger(MainStage.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 newSale();
@@ -2092,7 +2092,7 @@ public class MainStage extends Stage implements GUIInterface {
             });
             setRefund(false);
             dc.tillLogout(staff);
-        } catch (IOException | StaffNotFoundException ex) {
+        } catch (IOException | JTillException ex) {
             Platform.runLater(() -> {
                 MessageScreen.hideWindow();
             });
